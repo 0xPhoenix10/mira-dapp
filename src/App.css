@@ -1,0 +1,24 @@
+body {
+  user-select: none;
+}
+#root {
+  background: #101012;
+  height: 100vh;
+  font-size: 14px;
+  color: #fafafa;
+  overflow: auto;
+}
+::-webkit-scrollbar {
+  background: transparent;
+  width: 15px;
+  height: 15px;
+  border: 1px solid transparent;
+  border-radius: 100px;
+  -webkit-background-clip: content-box;
+}
+::-webkit-scrollbar-thumb {
+  background: #111113;
+  border: 4px solid transparent;
+  border-radius: 100px;
+  -webkit-background-clip: content-box;
+}
