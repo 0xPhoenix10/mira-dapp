@@ -82,7 +82,7 @@ const LayoutHeader = () => {
       )}
       <ArtButton
         btnColor={walletConnected ? "#0d3d3b" : "#000000"}
-        color={walletConnected ? "#74bd7b" : "white"}
+        color={walletConnected ? "#74bd7b" : "green"}
         onClick={() => {
           walletConnected ? walletDisconnect():openConnectModal();
         }}

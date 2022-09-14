@@ -25,12 +25,12 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
   ...props
 }) => {
   const data = [
-    { name: "Group A", value: 400 },
-    { name: "Group B", value: 300 },
-    { name: "Group C", value: 300 },
-    { name: "Group D", value: 200 },
+    { name: "APT", value: 400 },
+    { name: "ETH", value: 300 },
+    { name: "BTC", value: 300 },
+    { name: "DOT", value: 200 },
   ];
-  const COLORS = ["#0d3d3b", "#74bd7b", "#2a3e5b", "#49abc9"];
+  const COLORS = ["#395f8d", "#4d7fba", "#97acd0", "#bdc9df"];
 
   const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({
@@ -42,7 +42,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
     percent,
     index,
   }: any) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.45;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
@@ -54,14 +54,15 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
         textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
       >
-        {`${(percent * 100).toFixed(0)}%`}
+        {/* {`${(percent * 100).toFixed(0)}%`} */}
+        {`${data[index].name}`}
       </text>
     );
   };
   return (
     <Flex
       col
-      background={"#101012"}
+      background={"#27282c"}
       p={"20px"}
       border={"1px solid #34383b"}
       borderRadius={"20px"}
@@ -90,11 +91,11 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
             </PieChart>
           </ResponsiveContainer>
         </Flex>
-        <Flex col gridGap={"4px"}>
-          <Flex mb={"8px"} fontSize={"18px"} fontWeight={"bold"} mx={"auto"}>
+        <Flex col gridGap={"4px"} color={"#b8b9ba"}>
+          <Flex mb={"8px"} fontSize={"14px"} fontStyle={"italic"} fontWeight={"bold"} mx={"auto"} color={"#74BD7B"}>
             Mira
           </Flex>
-          <Flex gridGap={"8px"}>
+          <Flex gridGap={"8px"} >
             <Box>1d</Box>
             <Box>:</Box>
             <Box>0.2%</Box>
@@ -126,7 +127,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
           </Flex>
         </Flex>
       </Flex>
-      <Box fontSize={"16px"} fontWeight={"bold"} opacity={"0.3"}>
+      <Box fontSize={"16px"} fontWeight={"bold"} opacity={"0.7"} color={"white"}>
         {title}
       </Box>
     </Flex>

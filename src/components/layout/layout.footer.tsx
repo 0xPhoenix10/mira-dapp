@@ -57,14 +57,14 @@ const FooterBtn: React.FC<FooterBtnProps> = ({
 }) => {
   return (
     <FooterBtnBase
-      background={active ? "linear-gradient(#0d3d3b, #74bd7b)" : "none"}
+      background={active ? "linear-gradient(#298a63, #70cee6)" : "none"}
       boxShadow={`${
         active ? `0px 0px 7px 0px black, ` : ``
       }-5px -3px 10px 0px #fff1, -5px 5px 10px 0px #fff1, 5px 3px 10px 0px #0006`}
       borderRadius={"10px 10px 0px 0px"}
       border={active ? "3px solid #0d3d3b" : "0px"}
       borderBottom={"none"}
-      color={active ? "#fff" : "#fff8"}
+      color={active ? "#000000" : "#fff8"}
       onClick={onClick}
     >
       <Flex alignCenter gridGap={"8px"}>
