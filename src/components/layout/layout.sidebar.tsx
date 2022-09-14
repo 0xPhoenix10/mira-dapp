@@ -18,8 +18,8 @@ const LayoutSidebar = () => {
     <Flex
       col
       spaceBetween
-      p={"20px"}
-      minWidth={visibleSidebar ? "280px" : "0px"}
+      p={"7px"}
+      minWidth={visibleSidebar ? "220px" : "0px"}
       borderRight={"1px solid #1e2022"}
       transition={"200ms"}
     >
@@ -67,7 +67,7 @@ const LayoutSidebar = () => {
         overflow={"hidden"}
         transition={"200ms"}
       >
-        <Flex cursor={"pointer"}>
+        <Flex cursor={"pointer"} onClick={() => "location.href='https://discord.gg/yR3UzjZuxB';"}>
           <DiscordIcon />
         </Flex>
         <Flex cursor={"pointer"}>

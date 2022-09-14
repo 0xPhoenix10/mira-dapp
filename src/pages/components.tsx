@@ -30,7 +30,10 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
     { name: "BTC", value: 300 },
     { name: "DOT", value: 200 },
   ];
-  const COLORS = ["#395f8d", "#4d7fba", "#97acd0", "#bdc9df"];
+  const COLORS = ["#97acd0", "#5c87bf", "#4a7ab2", "#4470a5", "#3d6595", "#345882"]
+  
+  // ["#d3dae9", "#c9d3e4", "#bdc9df", "#b2c1db", "#97acd0", "#87a2cb", "#7696c6", "#5c87bf", "#4d7fba",
+  //   "#4a7ab2", "#4775ac", "#4470a5", "#406a9d", "#3d6595", "#395f8d", "#345882", "#2f5078"];
 
   const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({
@@ -48,6 +51,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
 
     return (
       <text
+        fontSize={"10px"}
         x={x}
         y={y}
         fill="white"
@@ -63,14 +67,14 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
     <Flex
       col
       background={"#27282c"}
-      p={"20px"}
+      p={"15px"}
       border={"1px solid #34383b"}
       borderRadius={"20px"}
-      gridGap={"12px"}
+      gridGap={"2px"}
       {...props}
     >
-      <Flex justifyCenter alignCenter gridGap={"16px"} cursor={cursorAll} onClick={onClickAll}>
-        <Flex width={"40%"} aspectRatio={"1"}>
+      <Flex gridGap={"50px"} cursor={cursorAll} onClick={onClickAll}>
+        <Flex width={"36%"} aspectRatio={"1"}>
           <ResponsiveContainer>
             <PieChart width={300} height={300} onClick={onClick} style={{ cursor: cursor }}>
               <Pie
@@ -85,13 +89,13 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
                 dataKey="value"
               >
                 {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>
                 ))}
               </Pie>
             </PieChart>
           </ResponsiveContainer>
         </Flex>
-        <Flex col gridGap={"4px"} color={"#b8b9ba"}>
+        <Flex col fontSize={"13px"} gridGap={"4px"} color={"#b8b9ba"}>
           <Flex mb={"8px"} fontSize={"14px"} fontStyle={"italic"} fontWeight={"bold"} mx={"auto"} color={"#74BD7B"}>
             Mira
           </Flex>
@@ -127,7 +131,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
           </Flex>
         </Flex>
       </Flex>
-      <Box fontSize={"16px"} fontWeight={"bold"} opacity={"0.7"} color={"white"}>
+      <Box fontSize={"15px"} fontWeight={"bold"} opacity={"0.7"} color={"white"}>
         {title}
       </Box>
     </Flex>
