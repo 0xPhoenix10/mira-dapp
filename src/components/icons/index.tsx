@@ -612,6 +612,39 @@ export const ArrowIcon: React.FC<ArrowIconProps> = ({
     </svg>
   );
 };
+export const IconNarrow: React.FC<ArrowIconProps> = ({
+  size = "1em",
+  color = "currentColor",
+  dir = "down",
+}) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 22"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{
+        transform:
+          dir === "up"
+            ? "scaleY(-1)"
+            : dir === "right"
+            ? "rotate(-90deg)"
+            : dir === "left"
+            ? "rotate(90deg)"
+            : "",
+      }}
+    >
+      <path
+        d="M5.60156 8.85547L9.80402 13.2964L14.0065 8.85547"
+        stroke={color}
+        strokeWidth="1.13337"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
 // export const Icon: React.FC<IconProps> = ({ size = "1em", color = "currentColor" }) => {
 //   return <></>;
 // };

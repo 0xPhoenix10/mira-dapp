@@ -1,5 +1,6 @@
 import { Box, Input, Table, Tbody, Td, Th, Thead, Tr } from "components/base";
 import { Flex } from "components/base/container";
+import { CustomSelect, RadioBtn, SmOption } from "components/form";
 import {
   ArrowIcon,
   CheckIcon,
@@ -9,8 +10,12 @@ import {
   SearchIcon,
   TimesIcon,
 } from "components/icons";
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import {FEE_DECIMAL, MODULE_ADDR} from "../config";
+import {useWalletHook} from "../common/hooks/wallet";
+import {UpdateIndexProviderContext} from "./dashboard";
+import {PortfolioModalBody} from "./dashboard/portfolio.modal.body";
 
 interface ChartBoxProps {
   title?: string;
@@ -25,15 +30,12 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
   ...props
 }) => {
   const data = [
-    { name: "APT", value: 400 },
-    { name: "ETH", value: 300 },
-    { name: "BTC", value: 300 },
-    { name: "DOT", value: 200 },
+    { name: "Group A", value: 400 },
+    { name: "Group B", value: 300 },
+    { name: "Group C", value: 300 },
+    { name: "Group D", value: 200 },
   ];
-  const COLORS = ["#97acd0", "#5c87bf", "#4a7ab2", "#4470a5", "#3d6595", "#345882"]
-  
-  // ["#d3dae9", "#c9d3e4", "#bdc9df", "#b2c1db", "#97acd0", "#87a2cb", "#7696c6", "#5c87bf", "#4d7fba",
-  //   "#4a7ab2", "#4775ac", "#4470a5", "#406a9d", "#3d6595", "#395f8d", "#345882", "#2f5078"];
+  const COLORS = ["#0d3d3b", "#74bd7b", "#2a3e5b", "#49abc9"];
 
   const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({
@@ -45,36 +47,34 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
     percent,
     index,
   }: any) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.45;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
     return (
       <text
-        fontSize={"10px"}
         x={x}
         y={y}
         fill="white"
         textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
       >
-        {/* {`${(percent * 100).toFixed(0)}%`} */}
-        {`${data[index].name}`}
+        {`${(percent * 100).toFixed(0)}%`}
       </text>
     );
   };
   return (
     <Flex
       col
-      background={"#27282c"}
-      p={"15px"}
+      background={"#101012"}
+      p={"20px"}
       border={"1px solid #34383b"}
       borderRadius={"20px"}
-      gridGap={"2px"}
+      gridGap={"12px"}
       {...props}
     >
-      <Flex gridGap={"50px"} cursor={cursorAll} onClick={onClickAll}>
-        <Flex width={"36%"} aspectRatio={"1"}>
+      <Flex justifyCenter alignCenter gridGap={"16px"} cursor={cursorAll} onClick={onClickAll}>
+        <Flex width={"40%"} aspectRatio={"1"}>
           <ResponsiveContainer>
             <PieChart width={300} height={300} onClick={onClick} style={{ cursor: cursor }}>
               <Pie
@@ -89,17 +89,17 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
                 dataKey="value"
               >
                 {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
             </PieChart>
           </ResponsiveContainer>
         </Flex>
-        <Flex col fontSize={"13px"} gridGap={"4px"} color={"#b8b9ba"}>
-          <Flex mb={"8px"} fontSize={"14px"} fontStyle={"italic"} fontWeight={"bold"} mx={"auto"} color={"#74BD7B"}>
+        <Flex col gridGap={"4px"}>
+          <Flex mb={"8px"} fontSize={"18px"} fontWeight={"bold"} mx={"auto"}>
             Mira
           </Flex>
-          <Flex gridGap={"8px"} >
+          <Flex gridGap={"8px"}>
             <Box>1d</Box>
             <Box>:</Box>
             <Box>0.2%</Box>
@@ -131,7 +131,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
           </Flex>
         </Flex>
       </Flex>
-      <Box fontSize={"15px"} fontWeight={"bold"} opacity={"0.7"} color={"white"}>
+      <Box fontSize={"16px"} fontWeight={"bold"} opacity={"0.3"}>
         {title}
       </Box>
     </Flex>
@@ -147,6 +147,16 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   setVisible = () => {},
   ...props
 }) => {
+  const { walletConnected, signAndSubmitTransaction} = useWalletHook();
+  const [nameValue, setNameValue] = useState<string>('');
+  const [totalAmount, setTotalAmount] = useState<number>(0);
+  const [managementFee, setManagementFee] = useState<number>(0);
+  const [rebalancingPeriod, setRebalancingPeriod] = useState<number>(0);
+  const [minimumContribution, setMiniumContribution] = useState<number>(0);
+  const [miniumWithdrawal, setMiniumWithdrawal] = useState<number>(0);
+  const [privateAllocation, setPrivateAlloation] = useState<boolean>(false);
+  const [referralReward, setReferralReward ] =useState<number>(0);
+
   const data = [
     { name: "Group A", value: 400 },
     { name: "Group B", value: 300 },
@@ -183,6 +193,44 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   };
   const [visibleAllocation, setVisibleAllocation] = useState(false);
 
+  const { updateIndex, setUpdateIndex} = useContext(UpdateIndexProviderContext);
+
+  const create_index = async()=>{
+    if (!walletConnected) return;
+    let pool_name = nameValue;
+    let total_amount = totalAmount;
+    let management_fee = managementFee * FEE_DECIMAL;
+    let rebalancing_period = rebalancingPeriod;
+    let minimum_contribution = minimumContribution * FEE_DECIMAL;
+    let minimum_withdrawal = miniumWithdrawal * FEE_DECIMAL;
+    let referral_reward = referralReward * FEE_DECIMAL;
+    let index_allocation_key = ['BTC','ETC'];
+    let index_allocation_value = [50,50];
+    let private_allocation = privateAllocation;
+
+    const transaction = {
+      type: 'entry_function_payload',
+      function: `${MODULE_ADDR}::mira::create_pool`,
+      type_arguments:[],
+      arguments:[
+        pool_name,
+        total_amount,
+        management_fee,
+        rebalancing_period,
+        minimum_contribution,
+        minimum_withdrawal,
+        referral_reward,
+        index_allocation_key,
+        index_allocation_value,
+        private_allocation
+      ]
+    };
+    const result = await signAndSubmitTransaction(transaction);
+    if (result){
+      setUpdateIndex(!updateIndex);
+      setVisible(false);
+    }
+  }
   return (
     <>
       {visibleAllocation ? (
@@ -250,118 +298,195 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                 </Flex>
                 <Flex col gridGap={"4px"}>
                   <Table>
-                    <Tr>
-                      <Td px={"0px"} py={"2px"} borderBottom={"none"}>
-                        Name :
-                      </Td>
-                      <Td px={"0px"} py={"2px"} borderBottom={"none"}>
-                        <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
-                          <Input
-                            border={"none"}
-                            background={"transparent"}
-                            color={"white"}
-                            placeholder={"input here..."}
-                            readOnly={type === "modify"}
-                          />
-                        </Flex>
-                      </Td>
-                    </Tr>
-                    <Tr>
-                      <Td px={"0px"} py={"2px"} borderBottom={"none"}>
-                        Management fee :
-                      </Td>
-                      <Td px={"0px"} py={"2px"} borderBottom={"none"}>
-                        <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
-                          <Input
-                            border={"none"}
-                            background={"transparent"}
-                            color={"white"}
-                            placeholder={"input here..."}
-                            readOnly={type === "modify"}
-                          />
-                        </Flex>
-                      </Td>
-                    </Tr>
-                    <Tr>
-                      <Td px={"0px"} py={"2px"} borderBottom={"none"}>
-                        Rebalancing :
-                      </Td>
-                      <Td px={"0px"} py={"2px"} borderBottom={"none"}>
-                        <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
-                          <Input
-                            border={"none"}
-                            background={"transparent"}
-                            color={"white"}
-                            placeholder={"input here..."}
-                            readOnly={type === "modify"}
-                          />
-                        </Flex>
-                      </Td>
-                    </Tr>
-                    <Tr>
-                      <Td px={"0px"} py={"2px"} borderBottom={"none"}>
-                        Minimum Contribution :
-                      </Td>
-                      <Td px={"0px"} py={"2px"} borderBottom={"none"}>
-                        <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
-                          <Input
-                            border={"none"}
-                            background={"transparent"}
-                            color={"white"}
-                            placeholder={"input here..."}
-                            readOnly={type === "modify"}
-                          />
-                        </Flex>
-                      </Td>
-                    </Tr>
-                    <Tr>
-                      <Td px={"0px"} py={"2px"} borderBottom={"none"}>
-                        Minimum Withdrawal Period :
-                      </Td>
-                      <Td px={"0px"} py={"2px"} borderBottom={"none"}>
-                        <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
-                          <Input
-                            border={"none"}
-                            background={"transparent"}
-                            color={"white"}
-                            placeholder={"input here..."}
-                            readOnly={type === "modify"}
-                          />
-                        </Flex>
-                      </Td>
-                    </Tr>
-                    <Tr>
-                      <Td px={"0px"} py={"2px"} borderBottom={"none"}>
-                        Public/Private Allocation :
-                      </Td>
-                      <Td px={"0px"} py={"2px"} borderBottom={"none"}>
-                        <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
-                          <Input
-                            border={"none"}
-                            background={"transparent"}
-                            color={"white"}
-                            placeholder={"input here..."}
-                            readOnly={type === "modify"}
-                          />
-                        </Flex>
-                      </Td>
-                    </Tr>
-                    <Tr>
-                      <Td px={"0px"} py={"2px"} borderBottom={"none"}>
-                        Referral Rewards :
-                      </Td>
-                      <Td px={"0px"} py={"2px"} borderBottom={"none"}>
-                        <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
-                          <Input
-                            border={"none"}
-                            background={"transparent"}
-                            color={"white"}
-                            placeholder={"input here..."}
-                            readOnly={type === "modify"}
-                          />
-                        </Flex>
-                      </Td>
-                    </Tr>
+                    <Tbody>
+                      <Tr>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          Name :
+                        </Td>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
+                            <Input
+                              border={"none"}
+                              background={"transparent"}
+                              color={"white"}
+                              placeholder={"input here..."}
+                              readOnly={type === "modify"}
+                              onChange = {(e)=>{
+                                setNameValue(e.target.value)
+                              }}
+                            />
+                          </Flex>
+                        </Td>
+                      </Tr>
+                      <Tr>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          Total amount :
+                        </Td>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
+                            <Input
+                                flex={"1"}
+                                type={"number"}
+                                border={"none"}
+                                background={"transparent"}
+                                color={"white"}
+                                placeholder={"input here..."}
+                                max={"100"}
+                                min={"0"}
+                                readOnly={type === "modify"}
+                                onChange = {(e)=>{
+                                  setTotalAmount(parseInt(e.target.value))
+                                }}
+                            />
+                          </Flex>
+                        </Td>
+                      </Tr>
+                      <Tr>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          Management fee :
+                        </Td>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
+                            <Input
+                              flex={"1"}
+                              type={"number"}
+                              border={"none"}
+                              background={"transparent"}
+                              color={"white"}
+                              placeholder={"input here..."}
+                              max={"100"}
+                              min={"0"}
+                              readOnly={type === "modify"}
+                              onChange = {(e)=>{
+                                setManagementFee(parseInt(e.target.value))
+                              }}
+                            />
+                            %
+                          </Flex>
+                        </Td>
+                      </Tr>
+                      <Tr>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          Rebalancing :
+                        </Td>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          <Flex
+                            alignCenter
+                            px={"4px"}
+                            py={"1px"}
+                            borderBottom={"1px solid #34383b"}
+                          >
+                            <CustomSelect flex={"1"} onChange={(e:number)=>{
+                              setRebalancingPeriod(e)
+                            }}>
+                              <SmOption value="0">1 Day</SmOption>
+                              <SmOption value="1">1 Week</SmOption>
+                              <SmOption value="2">2 Weeks</SmOption>
+                              <SmOption value="3">1 Month</SmOption>
+                              <SmOption value="4">2 Months</SmOption>
+                            </CustomSelect>
+                          </Flex>
+                        </Td>
+                      </Tr>
+                      <Tr>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          Minimum Contribution :
+                        </Td>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
+                            <Input
+                              flex={"1"}
+                              border={"none"}
+                              background={"transparent"}
+                              color={"white"}
+                              placeholder={"input here..."}
+                              readOnly={type === "modify"}
+                              onChange = {(e)=>{
+                                setMiniumContribution(parseInt(e.target.value));
+                              }}
+                            />
+                            %
+                          </Flex>
+                        </Td>
+                      </Tr>
+                      <Tr>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          Minimum Withdrawal Period :
+                        </Td>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          <Flex
+                            alignCenter
+                            px={"4px"}
+                            py={"1px"}
+                            borderBottom={"1px solid #34383b"}
+                          >
+                            <CustomSelect flex={"1"}
+                                  onChange = {(e:number)=>{
+                                    setMiniumWithdrawal(e);
+                                  }}
+                            >
+                              <SmOption value="0">1 Day</SmOption>
+                              <SmOption value="1">1 Week</SmOption>
+                              <SmOption value="2">2 Weeks</SmOption>
+                              <SmOption value="3">1 Month</SmOption>
+                              <SmOption value="4">2 Months</SmOption>
+                            </CustomSelect>
+                          </Flex>
+                        </Td>
+                      </Tr>
+                      <Tr>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          Public/Private Allocation :
+                        </Td>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          <Flex
+                            alignCenter
+                            p={"4px"}
+                            borderBottom={"1px solid #34383b"}
+                            gridGap={"20px"}
+                          >
+                            <RadioBtn
+                              name={"private_allocation"}
+                              value={"0"}
+                              title={"false"}
+                              selected
+                              onChange={(e:any)=>{
+                                setPrivateAlloation(false);
+                              }}
+                            />
+                            <RadioBtn
+                                name={"private_allocation"}
+                                value={"1"}
+                                title={"true"}
+                                onChange={(e:any)=>{
+                                  setPrivateAlloation(true);
+                                }}
+                            />
+                          </Flex>
+                        </Td>
+                      </Tr>
+                      <Tr>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          Referral Rewards :
+                        </Td>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
+                            <Input
+                              flex={"1"}
+                              border={"none"}
+                              background={"transparent"}
+                              color={"white"}
+                              placeholder={"input here..."}
+                              readOnly={type === "modify"}
+                              onChange={(e)=>{
+                                setReferralReward(parseInt(e.target.value))
+                              }}
+                            />
+                            %
+                          </Flex>
+                        </Td>
+                      </Tr>
+                    </Tbody>
                   </Table>
                 </Flex>
               </Flex>
@@ -410,6 +535,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                     border={"1px solid #34383b"}
                     borderRadius={"8px"}
                     cursor="pointer"
+                    onClick={()=>create_index()}
                   >
                     <CreateIcon size={"1.2em"} />
                     Publish
@@ -424,114 +550,6 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   );
 };
 
-export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({ ...props }) => {
-  const data = [
-    { name: "Group A", value: 400 },
-    { name: "Group B", value: 300 },
-    { name: "Group C", value: 300 },
-    { name: "Group D", value: 200 },
-  ];
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-
-  const RADIAN = Math.PI / 180;
-  const renderCustomizedLabel = ({
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    percent,
-    index,
-  }: any) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="white"
-        textAnchor={x > cx ? "start" : "end"}
-        dominantBaseline="central"
-      >
-        {`${(percent * 100).toFixed(0)}%`}
-      </text>
-    );
-  };
-  return (
-    <Flex col gridGap={"10px"}>
-      <Flex py={"8px"} fontSize={"18px"} fontWeight={"500"} borderBottom={"1px solid #34383b"}>
-        Portfolio X
-      </Flex>
-      <Flex justifyCenter gridGap={"16px"}>
-        <Flex
-          col
-          background={"#101012"}
-          p={"20px"}
-          border={"1px solid #34383b"}
-          borderRadius={"20px"}
-          gridGap={"12px"}
-          {...props}
-        >
-          <Flex justifyCenter alignCenter gridGap={"16px"}>
-            <Flex width={"150px"} aspectRatio={"1"}>
-              <ResponsiveContainer>
-                <PieChart width={300} height={300}>
-                  <Pie
-                    data={data}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={renderCustomizedLabel}
-                    outerRadius={"100%"}
-                    fill="#8884d8"
-                    stroke={"transparent"}
-                    dataKey="value"
-                  >
-                    {data.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
-            </Flex>
-            <Flex col gridGap={"4px"}>
-              <Flex mb={"8px"} fontSize={"16px"} fontWeight={"500"} mx={"auto"}>
-                Owner: Anonymous_user123
-              </Flex>
-              <Flex justifyContent={"space-around"} gridGap={"8px"}>
-                <Flex fontSize={"28px"} alignCenter gridGap={"4px"} color={"#49abc9"}>
-                  20
-                  <Box fontSize={"0.8em"} opacity={"0.8"} color={"#2a3e5b"}>
-                    %
-                  </Box>
-                </Flex>
-                <Flex fontSize={"28px"} alignCenter gridGap={"4px"} color={"#49abc9"}>
-                  104
-                  <Box fontSize={"0.8em"} opacity={"0.8"} color={"#2a3e5b"}>
-                    K
-                  </Box>
-                </Flex>
-              </Flex>
-              <Flex maxWidth={"200px"} maxHeight={"200px"} overflow={"auto"}>
-                Instead of sidebar, we can also downsize to About, Discord, and Twitter, adding all
-                icons to the left of Connect Wallet Instead of sidebar, we can also downsize to
-                About, Discord, and Twitter, adding all icons to the left of Connect Wallet Instead
-                of sidebar, we can also downsize to About, Discord, and Twitter, adding all icons to
-                the left of Connect Wallet Instead of sidebar, we can also downsize to About,
-                Discord, and Twitter, adding all icons to the left of Connect Wallet Instead of
-                sidebar, we can also downsize to About, Discord, and Twitter, adding all icons to
-                the left of Connect Wallet Instead of sidebar, we can also downsize to About,
-                Discord, and Twitter, adding all icons to the left of Connect Wallet
-              </Flex>
-            </Flex>
-          </Flex>
-        </Flex>
-      </Flex>
-    </Flex>
-  );
-};
 
 export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
   title = "???",
