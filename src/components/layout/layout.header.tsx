@@ -16,6 +16,7 @@ const LayoutHeader = () => {
       createMiraAccount();
     }
   },[walletConnected])
+
   const createMiraAccount = async () =>{
     const client = new AptosClient(NODE_URL);
     try {

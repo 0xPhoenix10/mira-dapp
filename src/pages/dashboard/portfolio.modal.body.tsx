@@ -1,0 +1,136 @@
+import React from "react";
+import {Flex} from "../../components/base/container";
+import {Cell, Pie, PieChart, ResponsiveContainer} from "recharts";
+import {Table, Tbody, Td, Tr} from "../../components/base";
+
+export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
+    miraIndexInfo = {},
+    ...props }) => {
+    const data = [
+        { name: "Group A", value: 400 },
+        { name: "Group B", value: 300 },
+        { name: "Group C", value: 300 },
+        { name: "Group D", value: 200 },
+    ];
+    const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+
+    const RADIAN = Math.PI / 180;
+    const renderCustomizedLabel = ({
+                                       cx,
+                                       cy,
+                                       midAngle,
+                                       innerRadius,
+                                       outerRadius,
+                                       percent,
+                                       index,
+                                   }: any) => {
+        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+        const x = cx + radius * Math.cos(-midAngle * RADIAN);
+        const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+        return (
+            <text
+                x={x}
+                y={y}
+                fill="white"
+                textAnchor={x > cx ? "start" : "end"}
+                dominantBaseline="central"
+            >
+                {`${(percent * 100).toFixed(0)}%`}
+            </text>
+        );
+    };
+    return (
+        <Flex col gridGap={"10px"}>
+            <Flex py={"8px"} fontSize={"18px"} fontWeight={"500"} borderBottom={"1px solid #34383b"}>
+                Portfolio
+            </Flex>
+            <Flex justifyCenter gridGap={"16px"}>
+                <Flex
+                    col
+                    background={"#101012"}
+                    p={"20px"}
+                    border={"1px solid #34383b"}
+                    borderRadius={"20px"}
+                    gridGap={"12px"}
+                    {...props}
+                >
+                    <Flex justifyCenter alignCenter gridGap={"16px"}>
+                        <Flex width={"150px"} aspectRatio={"1"}>
+                            <ResponsiveContainer>
+                                <PieChart width={300} height={300}>
+                                    <Pie
+                                        data={data}
+                                        cx="50%"
+                                        cy="50%"
+                                        labelLine={false}
+                                        label={renderCustomizedLabel}
+                                        outerRadius={"100%"}
+                                        fill="#8884d8"
+                                        stroke={"transparent"}
+                                        dataKey="value"
+                                    >
+                                        {data.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                        ))}
+                                    </Pie>
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </Flex>
+                        <Flex col gridGap={"4px"}>
+                            <Flex col gridGap={"10px"} >
+                                    <Flex col justifyCenter gridGap={"16px"}>
+                                        <Table cellSpacing={"2px"}>
+                                            <Tbody>
+                                                <Tr>
+                                                    <Td px={"4px"} py={"8px"} borderBottom={"none"}>
+                                                        Pool Name:
+                                                    </Td>
+                                                    <Td px={"4px"} py={"8px"} borderBottom={"none"} color={"#888"}>
+                                                        {miraIndexInfo.poolName}
+                                                    </Td>
+                                                </Tr>
+                                                <Tr>
+                                                    <Td px={"4px"} py={"8px"} borderBottom={"none"} >
+                                                        Pool owner:
+                                                    </Td>
+                                                    <Td px={"4px"} py={"8px"} borderBottom={"none"}  color={"#888"}>
+                                                        {miraIndexInfo.poolOwner}
+                                                    </Td>
+                                                </Tr>
+                                                <Tr>
+                                                    <Td px={"4px"} py={"8px"} borderBottom={"none"} >
+                                                        Pool address:
+                                                    </Td>
+                                                    <Td px={"4px"} py={"8px"} borderBottom={"none"}  color={"#888"}>
+                                                        {miraIndexInfo.poolAddress}
+                                                    </Td>
+                                                </Tr>
+                                                <Tr>
+                                                    <Td px={"4px"} py={"8px"} borderBottom={"none"} >
+                                                        Management Fee:
+                                                    </Td>
+                                                    <Td px={"4px"} py={"8px"} borderBottom={"none"}  color={"#888"}>
+                                                        {miraIndexInfo.managementFee} %
+                                                    </Td>
+                                                </Tr>
+                                                <Tr>
+                                                    <Td px={"4px"} py={"8px"} borderBottom={"none"} >
+                                                        Founded:
+                                                    </Td>
+                                                    <Td px={"4px"} py={"8px"} borderBottom={"none"}  color={"#888"}>
+                                                        {miraIndexInfo.founded}
+                                                    </Td>
+                                                </Tr>
+                                            </Tbody>
+                                        </Table>
+                                </Flex>
+                            </Flex>
+
+                        </Flex>
+                    </Flex>
+                </Flex>
+            </Flex>
+        </Flex>
+    );
+};
