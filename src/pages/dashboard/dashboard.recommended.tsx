@@ -4,7 +4,8 @@ import { Flex } from "components/base/container";
 import { CreateIcon, WarningIcon } from "components/icons";
 import { ModalParent } from "components/modal";
 import { useState } from "react";
-import { ChartBox, IndexListModalBody, IndexModalBody, PortfolioModalBody } from "../components";
+import { ChartBox, IndexListModalBody, IndexModalBody } from "../components";
+import {PortfolioModalBody} from "./portfolio.modal.body";
 
 const DashboardRecommended = () => {
   const { walletConnected } = useWalletHook();
@@ -26,7 +27,7 @@ const DashboardRecommended = () => {
       }
       {
         <ModalParent visible={createMmodalVisible} setVisible={setCreateModalVisible}>
-          <IndexModalBody flex={1} type={"create"} />
+          <IndexModalBody flex={1} type={"create"} setVisible={setCreateModalVisible} />
         </ModalParent>
       }
       {
@@ -77,7 +78,7 @@ const DashboardRecommended = () => {
                 gridGap={"4px"}
                 ml={"auto"}
                 padding={"8px 16px"}
-                background={"#27282c"}
+                background={"#0005"}
                 p={"8px 16px"}
                 border={"1px solid #34383b"}
                 borderRadius={"8px"}
