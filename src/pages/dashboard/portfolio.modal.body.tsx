@@ -6,40 +6,45 @@ import {Table, Tbody, Td, Tr} from "../../components/base";
 export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
     miraIndexInfo = {},
     ...props }) => {
-    const data = [
-        { name: "Group A", value: 400 },
-        { name: "Group B", value: 300 },
-        { name: "Group C", value: 300 },
-        { name: "Group D", value: 200 },
-    ];
-    const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-
-    const RADIAN = Math.PI / 180;
-    const renderCustomizedLabel = ({
-                                       cx,
-                                       cy,
-                                       midAngle,
-                                       innerRadius,
-                                       outerRadius,
-                                       percent,
-                                       index,
-                                   }: any) => {
-        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-        const x = cx + radius * Math.cos(-midAngle * RADIAN);
-        const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-        return (
-            <text
+        const data = [
+            { name: "APT", value: 400 },
+            { name: "ETH", value: 300 },
+            { name: "BTC", value: 300 },
+            { name: "DOT", value: 200 },
+          ];
+          const COLORS = ["#97acd0", "#5c87bf", "#4a7ab2", "#4470a5", "#3d6595", "#345882"]
+          
+          // ["#d3dae9", "#c9d3e4", "#bdc9df", "#b2c1db", "#97acd0", "#87a2cb", "#7696c6", "#5c87bf", "#4d7fba",
+          //   "#4a7ab2", "#4775ac", "#4470a5", "#406a9d", "#3d6595", "#395f8d", "#345882", "#2f5078"];
+        
+          const RADIAN = Math.PI / 180;
+          const renderCustomizedLabel = ({
+            cx,
+            cy,
+            midAngle,
+            innerRadius,
+            outerRadius,
+            percent,
+            index,
+          }: any) => {
+            const radius = innerRadius + (outerRadius - innerRadius) * 0.45;
+            const x = cx + radius * Math.cos(-midAngle * RADIAN);
+            const y = cy + radius * Math.sin(-midAngle * RADIAN);
+        
+            return (
+              <text
+                fontSize={"10px"}
                 x={x}
                 y={y}
                 fill="white"
                 textAnchor={x > cx ? "start" : "end"}
                 dominantBaseline="central"
-            >
-                {`${(percent * 100).toFixed(0)}%`}
-            </text>
-        );
-    };
+              >
+                {/* {`${(percent * 100).toFixed(0)}%`} */}
+                {`${data[index].name}`}      
+              </text>
+            );
+          };
     return (
         <Flex col gridGap={"10px"}>
             <Flex py={"8px"} fontSize={"18px"} fontWeight={"500"} borderBottom={"1px solid #34383b"}>
