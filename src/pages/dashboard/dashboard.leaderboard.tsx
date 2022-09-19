@@ -168,7 +168,7 @@ const DashboardLeaderBoard = () => {
         </Flex>
         <Flex
           gridGap={"16px"}
-          background={"#101012"}
+          background={"#27282c"}
           p={"20px"}
           border={"1px solid #34383b"}
           borderRadius={"20px"}
