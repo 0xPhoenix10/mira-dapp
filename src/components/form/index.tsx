@@ -31,6 +31,7 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
   const dropBox = useRef<any>();
   const dropPannel = useRef<any>();
   useEffect(() => {
+    console.log(`value:${value}`)
     if (!optionList) return;
     for (let i = 0; i < optionList.length; i++) {
       const each = optionList[i];
@@ -38,6 +39,7 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
         setCurrentOption(each);
       }
     }
+
   }, [value]);
   useEffect(() => {
     const handle = (event: any) => {
