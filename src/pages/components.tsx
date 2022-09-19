@@ -30,10 +30,10 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
   ...props
 }) => {
   const data = [
-    { name: "APT", value: 400 },
-    { name: "ETH", value: 300 },
-    { name: "BTC", value: 300 },
-    { name: "DOT", value: 200 },
+    { name: "APT", value: 100 },
+    { name: "ETH", value: 100 },
+    { name: "BTC", value: 100 },
+    { name: "DOT", value: 100 },
   ];
   const COLORS = ["#97acd0", "#5c87bf", "#4a7ab2", "#4470a5", "#3d6595", "#345882"]
   
@@ -162,11 +162,13 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   const [privateAllocation, setPrivateAlloation] = useState<boolean>(false);
   const [referralReward, setReferralReward ] =useState<number>(0);
 
+  const [btcAllocation, setBtcAllocation] = useState<number>(50);
+  const [usdtAllocation, setUSDTAllocation] = useState<number>(50);
   const data = [
-    { name: "APT", value: 400 },
-    { name: "ETH", value: 300 },
-    { name: "BTC", value: 300 },
-    { name: "DOT", value: 200 },
+    { name: "APT", value: 200 },
+    { name: "ETH", value: 100 },
+    { name: "BTC", value: 100 },
+    { name: "DOT", value: 100 },
   ];
   const COLORS = ["#97acd0", "#5c87bf", "#4a7ab2", "#4470a5", "#3d6595", "#345882"]
   
@@ -202,16 +204,23 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
 
   const create_index = async()=>{
     if (!walletConnected) return;
-    let pool_name = nameValue;
+
+    let pool_name = nameValue.trim();
     let total_amount = totalAmount;
     let management_fee = managementFee * FEE_DECIMAL;
     let rebalancing_period = rebalancingPeriod;
     let minimum_contribution = minimumContribution * FEE_DECIMAL;
     let minimum_withdrawal = miniumWithdrawal * FEE_DECIMAL;
     let referral_reward = referralReward * FEE_DECIMAL;
-    let index_allocation_key = ['BTC','ETC'];
-    let index_allocation_value = [50,50];
+    let index_allocation_key = ['BTC','USDT'];
+    let index_allocation_value = [btcAllocation,usdtAllocation];
     let private_allocation = privateAllocation;
+
+    if (btcAllocation + usdtAllocation != 100) return;
+    if(pool_name === "") return;
+    if (total_amount == 0) return;
+
+
 
     const transaction = {
       type: 'entry_function_payload',
@@ -230,6 +239,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
         private_allocation
       ]
     };
+    console.log(transaction);
     const result = await signAndSubmitTransaction(transaction);
     if (result){
       setUpdateIndex(!updateIndex);
@@ -272,35 +282,107 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
               gridGap={"12px"}
               {...props}
             >
-              <Flex justifyCenter alignCenter gridGap={"16px"}>
-                <Flex width={"150px"} aspectRatio={"1"}>
+              <Flex justifyCenter gridGap={"16px"}>
+                { type === "modify" &&
+                  <Flex width={"150px"} aspectRatio={"1"}>
                   <ResponsiveContainer>
-                    <PieChart
-                      width={300}
-                      height={300}
-                      style={{ cursor: type === "modify" ? "pointer" : "revert" }}
-                      onClick={() => {
-                        if (type === "modify") setVisibleAllocation(true);
-                      }}
-                    >
-                      <Pie
-                        data={data}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        label={renderCustomizedLabel}
-                        outerRadius={"100%"}
-                        fill="#8884d8"
-                        stroke={"transparent"}
-                        dataKey="value"
-                      >
-                        {data.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                    </PieChart>
+                  <PieChart
+                  width={300}
+                  height={300}
+                  style={{cursor: "pointer"}}
+                  onClick={() => {
+                  // if (type === "modify") setVisibleAllocation(true);
+                  setVisibleAllocation(true);
+                }}
+                  >
+                  <Pie
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={renderCustomizedLabel}
+                  outerRadius={"100%"}
+                  fill="#8884d8"
+                  stroke={"transparent"}
+                  dataKey="value"
+                  >
+                  {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                  ))}
+                  </Pie>
+                  </PieChart>
                   </ResponsiveContainer>
-                </Flex>
+                  </Flex>
+                }
+                {
+                  type === "create" &&
+                  <Flex alignItems={"flex-start"}>
+                    <Table>
+                      <Tbody>
+                        <Tr>
+                          <Td colSpan={2}>Index allocations</Td>
+                        </Tr>
+                        <Tr>
+                          <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                            BTC :
+                          </Td>
+                          <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                            <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
+                              <Input
+                                  type={"number"}
+                                  border={"none"}
+                                  background={"transparent"}
+                                  color={"white"}
+                                  placeholder={"input here..."}
+                                  value = {btcAllocation}
+                                  textAlign={"right"}
+                                  onChange = {(e)=>{
+                                    let intVal = 0;
+                                    if (e.target.value !== ""){
+                                      intVal = parseInt(e.target.value);
+                                    }
+                                    if( intVal <= 100 && intVal>= 0 ){
+                                      setBtcAllocation(intVal);
+                                    }
+                                  }}
+                              />
+                              %
+                            </Flex>
+                          </Td>
+                        </Tr>
+                        <Tr>
+                          <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                            USDT :
+                          </Td>
+                          <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                            <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
+                              <Input
+                                  type={"number"}
+                                  border={"none"}
+                                  background={"transparent"}
+                                  color={"white"}
+                                  placeholder={"input here..."}
+                                  textAlign={"right"}
+                                  value = {usdtAllocation}
+
+                                  onChange = {(e)=>{
+                                    let intVal = 0;
+                                    if (e.target.value !== ""){
+                                      intVal = parseInt(e.target.value);
+                                    }
+                                    if( intVal <= 100 && intVal>= 0 ){
+                                      setUSDTAllocation(intVal);
+                                    }
+                                  }}
+                              />
+                              %
+                            </Flex>
+                          </Td>
+                        </Tr>
+                      </Tbody>
+                    </Table>
+                  </Flex>
+                }
                 <Flex col gridGap={"4px"}>
                   <Table>
                     <Tbody>
@@ -383,7 +465,9 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                           >
                             <CustomSelect flex={"1"} onChange={(e:number)=>{
                               setRebalancingPeriod(e)
-                            }}>
+                            }}
+                                          value={0}
+                            >
                               <SmOption value="0">1 Day</SmOption>
                               <SmOption value="1">1 Week</SmOption>
                               <SmOption value="2">2 Weeks</SmOption>
@@ -426,6 +510,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                             borderBottom={"1px solid #34383b"}
                           >
                             <CustomSelect flex={"1"}
+                                          value={"0"}
                                   onChange = {(e:number)=>{
                                     setMiniumWithdrawal(e);
                                   }}

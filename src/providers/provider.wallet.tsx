@@ -1,13 +1,7 @@
 import React, {createContext, useEffect, useRef, useState} from "react";
-import {
-    MartianWalletAdapter,
-    PontemWalletAdapter,
-    useWallet,
-    WalletAdapter,
-    WalletProvider
-} from "@manahippo/aptos-wallet-adapter";
 import {Box, Image} from "../components/base";
 import {useWalletHook} from "../common/hooks/wallet";
+import {WalletName} from "@manahippo/aptos-wallet-adapter";
 
 
 
@@ -28,7 +22,7 @@ const LayoutProvider: React.FC<LayoutProviderProps> = ({ children }) => {
 };
 
 const WalletConnectModal: React.FC<{ setOpenConnectModal: any }> = ({setOpenConnectModal}) =>{
-    const {walletConnect} = useWalletHook();
+    const {walletSelect} = useWalletHook();
     const ModalBack = useRef(null);
 
     const handleModalClose = (e: any) => {
@@ -61,7 +55,7 @@ const WalletConnectModal: React.FC<{ setOpenConnectModal: any }> = ({setOpenConn
                         cursor={"pointer"}
                         onClick={async () => {
                             setOpenConnectModal(false);
-                            await walletConnect("Martian");
+                            await walletSelect("Martian" as WalletName);
                         }}
                     >
                         Martian Wallet
@@ -80,7 +74,7 @@ const WalletConnectModal: React.FC<{ setOpenConnectModal: any }> = ({setOpenConn
                         cursor={"pointer"}
                         onClick={async () => {
                             setOpenConnectModal(false);
-                            await walletConnect("Pontem");
+                            await walletSelect("Pontem" as WalletName);
                         }}
                     >
                         Pontem Wallet
