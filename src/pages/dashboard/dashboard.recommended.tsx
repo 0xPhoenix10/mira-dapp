@@ -51,10 +51,10 @@ const DashboardRecommended = () => {
         </ModalParent>
       }
       {
-        <ModalParent visible={walletConnectAlertVisible} setVisible={setWalletConnectAlertVisible}>
-          <Flex alignCenter gridGap={"8px"} p={"10px 20px"}>
+        <ModalParent visible={walletConnectAlertVisible} setVisible={setWalletConnectAlertVisible} >
+          <Flex alignCenter gridGap={"8px"} p={"10px 20px"} >
             <WarningIcon size={"25px"} color={"orange"} />
-            Connect your wallet to create a portfolio.
+            &nbsp; Connect your wallet to create a portfolio.
           </Flex>
         </ModalParent>
       }
@@ -78,7 +78,7 @@ const DashboardRecommended = () => {
                 gridGap={"4px"}
                 ml={"auto"}
                 padding={"8px 16px"}
-                background={"#0005"}
+                background={"#27282c"}
                 p={"8px 16px"}
                 border={"1px solid #34383b"}
                 borderRadius={"8px"}

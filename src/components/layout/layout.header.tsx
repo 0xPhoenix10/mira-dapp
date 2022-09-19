@@ -49,7 +49,8 @@ const LayoutHeader = () => {
       gridGap={"16px"}
     >
       <Box
-        background={"linear-gradient(-90deg, #0d3d3b, #74bd7b)"}
+        background={"linear-gradient(-90deg, #c7c7c7, #c7c7c7)"}
+        fontFamily={"inherit"}
         fontSize={"28px"}
         fontWeight={"bold"}
         color={"transparent"}
