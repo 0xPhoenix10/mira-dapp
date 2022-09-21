@@ -16,6 +16,8 @@ import {FEE_DECIMAL, MODULE_ADDR} from "../config";
 import {useWalletHook} from "../common/hooks/wallet";
 import {UpdateIndexProviderContext} from "./dashboard";
 import {PortfolioModalBody} from "./dashboard/portfolio.modal.body";
+import DepositModalBody from "./dashboard/deposit.modal.body";
+import WithdrawModalBody from "./dashboard/withdraw.modal.body";
 
 interface ChartBoxProps {
   title?: string;
@@ -71,15 +73,15 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
   return (
     <Flex
       col
-      background={"#27282c"}
-      p={"15px"}
+      background={"#101012"}
+      p={"20px"}
       border={"1px solid #34383b"}
       borderRadius={"20px"}
-      gridGap={"2px"}
+      gridGap={"12px"}
       {...props}
     >
-      <Flex gridGap={"50px"} cursor={cursorAll} onClick={onClickAll}>
-        <Flex width={"36%"} aspectRatio={"1"}>
+      <Flex justifyCenter alignCenter gridGap={"16px"} cursor={cursorAll} onClick={onClickAll}>
+        <Flex width={"40%"} aspectRatio={"1"}>
           <ResponsiveContainer>
             <PieChart width={300} height={300} onClick={onClick} style={{ cursor: cursor }}>
               <Pie
@@ -100,8 +102,8 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
             </PieChart>
           </ResponsiveContainer>
         </Flex>
-        <Flex col fontSize={"13px"} gridGap={"4px"} color={"#b8b9ba"}>
-          <Flex mb={"8px"} fontSize={"14px"} fontStyle={"italic"} fontWeight={"bold"} mx={"auto"} color={"#74BD7B"}>
+        <Flex col gridGap={"4px"}>
+          <Flex mb={"8px"} fontSize={"18px"} fontWeight={"bold"} mx={"auto"}>
             Mira
           </Flex>
           <Flex gridGap={"8px"}>
@@ -136,7 +138,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
           </Flex>
         </Flex>
       </Flex>
-      <Box fontSize={"15px"} fontWeight={"bold"} opacity={"0.7"} color={"white"}>
+      <Box fontSize={"16px"} fontWeight={"bold"} opacity={"0.3"}>
         {title}
       </Box>
     </Flex>
@@ -150,6 +152,8 @@ interface IndexModalBodyProps {
 export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   type = "modify",
   setVisible = () => {},
+  setAllocationVisible =()=>{},
+  allocationData,
   ...props
 }) => {
   const { walletConnected, signAndSubmitTransaction} = useWalletHook();
@@ -162,16 +166,8 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   const [privateAllocation, setPrivateAlloation] = useState<boolean>(false);
   const [referralReward, setReferralReward ] =useState<number>(0);
 
-  const [btcAllocation, setBtcAllocation] = useState<number>(50);
-  const [usdtAllocation, setUSDTAllocation] = useState<number>(50);
-  const data = [
-    { name: "APT", value: 200 },
-    { name: "ETH", value: 100 },
-    { name: "BTC", value: 100 },
-    { name: "DOT", value: 100 },
-  ];
-  const COLORS = ["#97acd0", "#5c87bf", "#4a7ab2", "#4470a5", "#3d6595", "#345882"]
-  
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+
   const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({
     cx,
@@ -198,7 +194,8 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
       </text>
     );
   };
-  const [visibleAllocation, setVisibleAllocation] = useState(false);
+  const [visibleDeposit, setVisibleDeposit] = useState(false);
+  const [visibleWithdraw, setVisibleWithdraw] = useState(false);
 
   const { updateIndex, setUpdateIndex} = useContext(UpdateIndexProviderContext);
 
@@ -212,13 +209,23 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
     let minimum_contribution = minimumContribution * FEE_DECIMAL;
     let minimum_withdrawal = miniumWithdrawal * FEE_DECIMAL;
     let referral_reward = referralReward * FEE_DECIMAL;
-    let index_allocation_key = ['BTC','USDT'];
-    let index_allocation_value = [btcAllocation,usdtAllocation];
+
+    let index_allocation_key:string[] = [];
+    let index_allocation_value: number[] = [];
+    let sum = 0;
+    allocationData.map((data:any, index:number)=>{
+      index_allocation_key.push(data.name);
+      index_allocation_value.push(data.value);
+      sum += data.value;
+    });
+    if (sum != 100) return;
+
     let private_allocation = privateAllocation;
 
-    if (btcAllocation + usdtAllocation != 100) return;
     if(pool_name === "") return;
-    if (total_amount == 0) return;
+    if (total_amount < 1) return;
+    if(management_fee < 0 || managementFee > 100) return;
+    if(minimum_contribution < 0 || minimum_contribution > 10000) return;
 
 
 
@@ -248,7 +255,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   }
   return (
     <>
-      {visibleAllocation ? (
+      {(visibleDeposit || visibleWithdraw) ? (
         <>
           <Flex
             background={"#0005"}
@@ -258,13 +265,15 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
             ml={"auto"}
             cursor="pointer"
             onClick={() => {
-              setVisibleAllocation(false);
+              setVisibleDeposit(false);
+              setVisibleWithdraw(false);
             }}
             zIndex={"0"}
           >
             <ArrowIcon dir={"left"} />
           </Flex>
-          <IndexAllocationModalBody />
+          { visibleDeposit && <DepositModalBody /> }
+          { visibleWithdraw && <WithdrawModalBody /> }
         </>
       ) : (
         <Flex col gridGap={"10px"}>
@@ -283,104 +292,72 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
               {...props}
             >
               <Flex justifyCenter gridGap={"16px"}>
-                { type === "modify" &&
-                  <Flex width={"150px"} aspectRatio={"1"}>
-                  <ResponsiveContainer>
-                  <PieChart
-                  width={300}
-                  height={300}
-                  style={{cursor: "pointer"}}
-                  onClick={() => {
-                  // if (type === "modify") setVisibleAllocation(true);
-                  setVisibleAllocation(true);
-                }}
-                  >
-                  <Pie
-                  data={data}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={renderCustomizedLabel}
-                  outerRadius={"100%"}
-                  fill="#8884d8"
-                  stroke={"transparent"}
-                  dataKey="value"
-                  >
-                  {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                  ))}
-                  </Pie>
-                  </PieChart>
-                  </ResponsiveContainer>
-                  </Flex>
-                }
-                {
-                  type === "create" &&
-                  <Flex alignItems={"flex-start"}>
-                    <Table>
-                      <Tbody>
-                        <Tr>
-                          <Td colSpan={2}>Index allocations</Td>
-                        </Tr>
-                        <Tr>
-                          <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                            BTC :
-                          </Td>
-                          <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                            <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
-                              <Input
-                                  type={"number"}
-                                  border={"none"}
-                                  background={"transparent"}
-                                  color={"white"}
-                                  placeholder={"input here..."}
-                                  value = {btcAllocation}
-                                  textAlign={"right"}
-                                  onChange = {(e)=>{
-                                    let intVal = 0;
-                                    if (e.target.value !== ""){
-                                      intVal = parseInt(e.target.value);
-                                    }
-                                    if( intVal <= 100 && intVal>= 0 ){
-                                      setBtcAllocation(intVal);
-                                    }
-                                  }}
-                              />
-                              %
-                            </Flex>
-                          </Td>
-                        </Tr>
-                        <Tr>
-                          <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                            USDT :
-                          </Td>
-                          <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                            <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
-                              <Input
-                                  type={"number"}
-                                  border={"none"}
-                                  background={"transparent"}
-                                  color={"white"}
-                                  placeholder={"input here..."}
-                                  textAlign={"right"}
-                                  value = {usdtAllocation}
-
-                                  onChange = {(e)=>{
-                                    let intVal = 0;
-                                    if (e.target.value !== ""){
-                                      intVal = parseInt(e.target.value);
-                                    }
-                                    if( intVal <= 100 && intVal>= 0 ){
-                                      setUSDTAllocation(intVal);
-                                    }
-                                  }}
-                              />
-                              %
-                            </Flex>
-                          </Td>
-                        </Tr>
-                      </Tbody>
-                    </Table>
+                { (type === "modify" || type == "create") &&
+                  <Flex col>
+                    <Flex width={"200px"} aspectRatio={"1"}>
+                      <ResponsiveContainer>
+                        <PieChart
+                          width={300}
+                          height={300}
+                          style={{cursor: "pointer"}}
+                          onClick={() => {
+                            // if (type === "modify") setVisibleAllocation(true);
+                            setAllocationVisible(true);
+                          }}
+                        >
+                          <Pie
+                            data={allocationData}
+                            cx="50%"
+                            cy="50%"
+                            labelLine={false}
+                            label={renderCustomizedLabel}
+                            outerRadius={"100%"}
+                            fill="#8884d8"
+                            stroke={"transparent"}
+                            dataKey="value"
+                          >
+                            {allocationData.map((entry:any, index: number) => (
+                              <Cell key={`cell-${index}`} fill={COLORS[index % 4]} />
+                            ))}
+                          </Pie>
+                        </PieChart>
+                      </ResponsiveContainer>
+                      
+                    </Flex>
+                    {(type === "modify") && (
+                    <Flex justifyCenter gridGap={"8px"}>
+                      <Flex
+                        alignCenter
+                        gridGap={"4px"}
+                        padding={"8px 16px"}
+                        background={"#0005"}
+                        p={"8px 16px"}
+                        border={"1px solid #34383b"}
+                        borderRadius={"8px"}
+                        cursor="pointer"
+                        onClick={() => {
+                          setVisibleDeposit(true);
+                        }}
+                      >
+                        Invest
+                      </Flex>
+                      <Flex
+                        alignCenter
+                        gridGap={"4px"}
+                        padding={"8px 16px"}
+                        background={"#0005"}
+                        p={"8px 16px"}
+                        border={"1px solid #34383b"}
+                        borderRadius={"8px"}
+                        cursor="pointer"
+                        onClick={() => {
+                          setVisibleWithdraw(true);
+                        }}
+                      >
+                        Withdraw
+                      </Flex>
+                    </Flex>
+                    )}
                   </Flex>
                 }
                 <Flex col gridGap={"4px"}>
@@ -390,7 +367,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                         <Td px={"4px"} py={"2px"} borderBottom={"none"}>
                           Name :
                         </Td>
-                        <Td px={"0px"} py={"2px"} borderBottom={"none"}>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
                           <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
                             <Input
                               border={"none"}
@@ -407,7 +384,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                       </Tr>
                       <Tr>
                         <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          Total amount :
+                          Deposit amount :
                         </Td>
                         <Td px={"4px"} py={"2px"} borderBottom={"none"}>
                           <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
@@ -772,99 +749,4 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
   );
 };
 
-export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = ({ ...props }) => {
-  return (
-    <Flex col gridGap={"10px"}>
-      <Flex
-        alignCenter
-        gridGap={"16px"}
-        py={"8px"}
-        fontSize={"18px"}
-        fontWeight={"500"}
-        borderBottom={"1px solid #34383b"}
-      >
-        Index Allocation
-        <Flex
-          alignCenter
-          gridGap={"4px"}
-          ml={"auto"}
-          background={"#0005"}
-          p={"8px 16px"}
-          border={"1px solid #34383b"}
-          borderRadius={"8px"}
-        >
-          <Input
-            border={"none"}
-            background={"transparent"}
-            color={"white"}
-            placeholder={"Search"}
-          />
-          <SearchIcon />
-        </Flex>
-      </Flex>
-      <Flex
-        gridGap={"16px"}
-        background={"#101012"}
-        p={"20px"}
-        border={"1px solid #34383b"}
-        borderRadius={"10px"}
-        height={"300px"}
-        overflow={"auto"}
-      >
-        <Table width={"100%"} textAlign={"left"}>
-          <Thead>
-            <Tr>
-              <Th></Th>
-              <Th></Th>
-              <Th>YTD %</Th>
-              <Th></Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {Array(10)
-              .fill(0)
-              .map((_, index) => {
-                return (
-                  <Tr key={index}>
-                    <Td>
-                      <Flex cursor={"pointer"}>
-                        <MinusIcon />
-                      </Flex>
-                    </Td>
-                    <Td>
-                      <Flex alignCenter gridGap={"10px"}>
-                        <Box
-                          background={"linear-gradient(90deg,#fceabb,#f8b500)"}
-                          borderRadius={"100%"}
-                          width={"25px"}
-                          height={"25px"}
-                        ></Box>
-                        Index 1
-                      </Flex>
-                    </Td>
-                    <Td>20.2%</Td>
-                    <Td>a a a a a a a a </Td>
-                  </Tr>
-                );
-              })}
-          </Tbody>
-        </Table>
-      </Flex>
-      <Flex
-        justifyCenter
-        alignCenter
-        gridGap={"8px"}
-        background={"#0005"}
-        p={"8px 16px"}
-        border={"1px solid #34383b"}
-        borderRadius={"8px"}
-        cursor="pointer"
-        onClick={() => {}}
-        zIndex={"0"}
-      >
-        <PlusIcon size={"18px"} />
-        Add new Allocation
-      </Flex>
-    </Flex>
-  );
-};
+
