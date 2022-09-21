@@ -6,6 +6,9 @@ import { ModalParent } from "components/modal";
 import { useState } from "react";
 import { ChartBox, IndexListModalBody, IndexModalBody } from "../components";
 import {PortfolioModalBody} from "./portfolio.modal.body";
+import {IndexAllocationModalBody} from "../index.allocation.modal";
+import {IndexAllocation} from "../../utils/types";
+
 
 const DashboardRecommended = () => {
   const { walletConnected } = useWalletHook();
@@ -18,6 +21,17 @@ const DashboardRecommended = () => {
   const [portfolioModalVisible, setPortfolioModalVisible] = useState(false);
 
   const [currentTab, setCurrentTab] = useState(0);
+
+  const [ indexAllocationModalVisible, setIndexAllocationModalVisible] = useState(false);
+  const [ allocationData, setAllocationData] = useState<IndexAllocation[]>([
+      {
+        name:'BTC', value:50
+      },
+    {
+      name: 'USDT', value:50
+    }
+  ]);
+
   return (
     <>
       {
@@ -25,11 +39,18 @@ const DashboardRecommended = () => {
           <PortfolioModalBody flex={1} />
         </ModalParent>
       }
+
       {
         <ModalParent visible={createMmodalVisible} setVisible={setCreateModalVisible}>
-          <IndexModalBody flex={1} type={"create"} setVisible={setCreateModalVisible} />
+          <IndexModalBody flex={1} type={"create"} setVisible={setCreateModalVisible} setAllocationVisible = {setIndexAllocationModalVisible} allocationData = {allocationData}/>
         </ModalParent>
       }
+      {
+        <ModalParent visible={indexAllocationModalVisible} setVisible={setIndexAllocationModalVisible}>
+          <IndexAllocationModalBody flex={1} type={"create"} allocationData={allocationData} setAllocationData={setAllocationData} setVisible={setIndexAllocationModalVisible}/>
+        </ModalParent>
+      }
+
       {
         <ModalParent visible={modifyMmodalVisible} setVisible={setModifyModalVisible}>
           <IndexModalBody flex={1} type={"modify"} setVisible={setModifyModalVisible} />
@@ -54,7 +75,7 @@ const DashboardRecommended = () => {
         <ModalParent visible={walletConnectAlertVisible} setVisible={setWalletConnectAlertVisible} >
           <Flex alignCenter gridGap={"8px"} p={"10px 20px"} >
             <WarningIcon size={"25px"} color={"orange"} />
-            &nbsp; Connect your wallet to create a portfolio.
+            Connect your wallet to create a portfolio.
           </Flex>
         </ModalParent>
       }
