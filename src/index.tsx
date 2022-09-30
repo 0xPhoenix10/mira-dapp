@@ -1,17 +1,34 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import AllProvider from "./providers";
+import {
+    MartianWalletAdapter,
+    PontemWalletAdapter,
+    WalletAdapter,
+    WalletProvider
+} from "@manahippo/aptos-wallet-adapter";
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(
+    document.getElementById('root') as HTMLElement
+);
+const wallets: WalletAdapter[] = [
+    new MartianWalletAdapter(),
+    new PontemWalletAdapter()
+];
+
+root.render(
   <React.StrictMode>
-    <AllProvider>
-      <App />
-    </AllProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
+      <WalletProvider wallets={wallets} autoConnect={true} onError={(error: Error) => {
+          console.log('wallet error:', error)
+      }}>
+        <AllProvider>
+          <App />
+        </AllProvider>
+      </WalletProvider>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

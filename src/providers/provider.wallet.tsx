@@ -1,12 +1,9 @@
 import React, {createContext, useEffect, useRef, useState} from "react";
-import {
-    MartianWalletAdapter,
-    PontemWalletAdapter,
-    useWallet,
-    WalletAdapter,
-    WalletProvider
-} from "@manahippo/aptos-wallet-adapter";
 import {Box, Image} from "../components/base";
+import {useWalletHook} from "../common/hooks/wallet";
+import {WalletName} from "@manahippo/aptos-wallet-adapter";
+
+
 
 export const WalletProviderContext = createContext<any>(null);
 type LayoutProviderProps = {
@@ -16,25 +13,16 @@ type LayoutProviderProps = {
 const LayoutProvider: React.FC<LayoutProviderProps> = ({ children }) => {
    const [openedConnectModal, setOpenConnectModal] = useState(false);
 
-   const wallets: WalletAdapter[] = [
-        new MartianWalletAdapter(),
-        new PontemWalletAdapter()
-   ];
-
   return (
-      <WalletProvider wallets={wallets} onError={(error: Error) => {
-          console.log('wallet error:', error)
-      }}>
-        <WalletProviderContext.Provider value = {{setOpenConnectModal: setOpenConnectModal }}>
-            {openedConnectModal && <WalletConnectModal setOpenConnectModal = {setOpenConnectModal} /> }
-            {children}
-        </WalletProviderContext.Provider>
-      </WalletProvider>
+      <WalletProviderContext.Provider value = {{setOpenConnectModal: setOpenConnectModal }}>
+          {openedConnectModal && <WalletConnectModal setOpenConnectModal = {setOpenConnectModal}  /> }
+        {children}
+      </WalletProviderContext.Provider>
   );
 };
 
-const WalletConnectModal: React.FC<{ setOpenConnectModal: any}> = ({setOpenConnectModal}) =>{
-    const { connect } = useWallet();
+const WalletConnectModal: React.FC<{ setOpenConnectModal: any }> = ({setOpenConnectModal}) =>{
+    const {walletSelect} = useWalletHook();
     const ModalBack = useRef(null);
 
     const handleModalClose = (e: any) => {
@@ -65,9 +53,9 @@ const WalletConnectModal: React.FC<{ setOpenConnectModal: any}> = ({setOpenConne
                         alignItems={"center"}
                         gridGap={"32px"}
                         cursor={"pointer"}
-                        onClick={() => {
+                        onClick={async () => {
                             setOpenConnectModal(false);
-                            connect("Martian");
+                            await walletSelect("Martian" as WalletName);
                         }}
                     >
                         Martian Wallet
@@ -84,9 +72,9 @@ const WalletConnectModal: React.FC<{ setOpenConnectModal: any}> = ({setOpenConne
                         alignItems={"center"}
                         gridGap={"32px"}
                         cursor={"pointer"}
-                        onClick={() => {
+                        onClick={async () => {
                             setOpenConnectModal(false);
-                            connect("Pontem");
+                            await walletSelect("Pontem" as WalletName);
                         }}
                     >
                         Pontem Wallet
