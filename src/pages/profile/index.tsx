@@ -1,33 +1,65 @@
-import { useWalletHook } from "common/hooks/wallet";
-import { Box, Input } from "components/base";
-import { Flex } from "components/base/container";
-import { ArrowIcon, PencilIcon } from "components/icons";
-import { ModalParent } from "components/modal";
-import { ChartBox, IndexListModalBody } from "pages/components";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {useWalletHook} from "common/hooks/wallet";
+import {Box, Input, Table, Tbody, Td, Th, Thead, Tr} from "components/base";
+import {Flex} from "components/base/container";
+import {ArrowIcon, PencilIcon} from "components/icons";
+import {ModalParent} from "components/modal";
+import {ChartBox, IndexListModalBody} from "pages/components";
+import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 import {AptosClient} from "aptos";
 import {MODULE_ADDR, NODE_URL} from "../../config";
 // import {Simulate} from "react-dom/test-utils";
 // import input = Simulate.input;
-import {stringToHex} from "../../utils";
+import {getFormatedDate, stringToHex} from "../../utils";
+import {FriendStatus, getFriendData} from "../../utils/graphql";
+import FriendListModalBody from "../../components/modal/friend.list.modal.body";
 
 interface MiraAccountProps {
-  name: string
+  name: string,
+  created: string
 }
 
+interface FriendData{
+  pool_owner: string
+  account_name: string,
+  created: string,
+  total_funds_invested: number,
+}
 const ProfilePage = () => {
   const { walletConnected, walletAddress,signAndSubmitTransaction, wallet } = useWalletHook();
 
   const [miraAccountProps, setMiraAccountProps] = useState<MiraAccountProps | null>(null);
   const [inputNameValue, setInputNameValue] = useState<string>("");
-
+  const [friendDataList, setFriendDataList] = useState<FriendData[]>([]);
+  const [showFriendModal,setShowFriendModal] = useState<boolean>(false);
   const navigate = useNavigate();
   useEffect(() => {
     !walletConnected && navigate("/");
     initMiraAccountProps();
+    getFriendList();
   }, [walletConnected]);
+  const aptos_client = new AptosClient(NODE_URL);
+  const getFriendInfo = async (owner_addr: string) =>{
+    let resource = await aptos_client.getAccountResource(owner_addr, `${MODULE_ADDR}::mira::MiraAccount`);
+    if (!resource){
+      return null;
+    }
+    const data = resource?.data as FriendData;
+    data.pool_owner = owner_addr;
+    return data;
+  }
+  const getFriendList = async ()=>{
+    if (!walletConnected) return;
+    let friends = await getFriendData(walletAddress);
+    friends.map(async (friend, index)=>{
+      if (friend.status != FriendStatus.Friend) return;
+      let f = await getFriendInfo(friend.receiveUser);
+      if (f){
+        setFriendDataList([...friendDataList, f] )
+      }
 
+    })
+  }
   const initMiraAccountProps = async () =>{
       const client = new AptosClient(NODE_URL);
       try {
@@ -36,11 +68,14 @@ const ProfilePage = () => {
           navigate("/");
           return;
         }
-        const data = resource?.data as {account_name: string};
+
+        const data = resource?.data as {account_name: string, created: number};
         setInputNameValue(data?.account_name);
         setMiraAccountProps({
-          name: data?.account_name
-        })
+          name: data?.account_name,
+          created: getFormatedDate(data?.created)
+        });
+
       }catch(error){
         navigate("/");
         return;
@@ -71,6 +106,12 @@ const ProfilePage = () => {
   }
   return (
     <>
+      {walletConnected &&
+      <ModalParent visible={showFriendModal} setVisible={setShowFriendModal}>
+        <FriendListModalBody flex={1} setVisible={setShowFriendModal} />
+      </ModalParent>
+      }
+
       {
         <ModalParent visible={myIndexesModalVisible} setVisible={setMyIndexesModalVisible}>
           <IndexListModalBody flex={1} type={"create"} title={"My Indexes"} />
@@ -127,9 +168,27 @@ const ProfilePage = () => {
                 <PencilIcon />
               </Flex>
             </Flex>
+            {walletConnected &&
+            <Flex
+                center
+
+                background={"linear-gradient(90deg, #131313, #2b2b2b)"}
+                borderRadius={"100%"}
+                width={"40px"}
+                height={"40px"}
+                border={"3px solid #272c2e"}
+                boxShadow={"-5px -3px 10px 0px #fff2, 5px 3px 10px 0px #0006"}
+                cursor={"pointer"}
+                onClick={() => {
+                  setShowFriendModal(true)
+                }}
+            >
+              Friend List
+            </Flex>
+            }
           </Flex>
           <Flex gridGap={"16px"}>
-            date created : <Flex fontWeight={"bold"}>Dec 1, 2000</Flex>
+            date created : <Flex fontWeight={"bold"}>{miraAccountProps?.created}</Flex>
           </Flex>
         </Flex>
         <Flex flex={1} col gridGap={"20px"}>
@@ -310,6 +369,58 @@ const ProfilePage = () => {
             </Flex>
           </Flex>
         </Flex>
+        <Flex
+            height={"42px"}
+            fontSize={"20px"}
+            fontWeight={"bold"}
+            borderBottom={"1px solid #34383b"}
+        >
+          <Box> My Friends</Box>
+        </Flex>
+
+          <Flex
+              gridGap={"16px"}
+              background={"#27282c"}
+              p={"20px"}
+              border={"1px solid #34383b"}
+              borderRadius={"20px"}
+          >
+          <Table width={"100%"} textAlign={"left"}>
+            <Thead>
+              <Tr>
+                <Th>Profile Name</Th>
+                <Th>Pool's owner</Th>
+                <Th>Created date</Th>
+                <Th>Total Invested</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              { friendDataList && friendDataList.map((friend,index) =>{
+                return (<Tr key={index}>
+                  <Td>
+                    <Flex
+                        alignCenter
+                        gridGap={"10px"}
+                        cursor={"pointer"}
+                    >
+                      <Box
+                          background={"linear-gradient(90deg,#fceabb,#f8b500)"}
+                          borderRadius={"100%"}
+                          width={"25px"}
+                          height={"25px"}
+                      ></Box>
+                      {friend.account_name}
+                    </Flex>
+                  </Td>
+                  <Td>{friend.pool_owner}</Td>
+                  <Td>{getFormatedDate(parseInt(friend.created))}</Td>
+                  <Td>{friend.total_funds_invested} Aptos</Td>
+                </Tr>);
+              })
+              }
+            </Tbody>
+          </Table>
+          </Flex>
       </Flex>
     </>
   );
