@@ -5,8 +5,8 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import AllProvider from "./providers";
 import {
-    MartianWalletAdapter,
     PontemWalletAdapter,
+    MartianWalletAdapter,
     WalletAdapter,
     WalletProvider
 } from "@manahippo/aptos-wallet-adapter";
@@ -15,8 +15,8 @@ const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 const wallets: WalletAdapter[] = [
-    new MartianWalletAdapter(),
-    new PontemWalletAdapter()
+    new PontemWalletAdapter(),
+    new MartianWalletAdapter()
 ];
 
 root.render(

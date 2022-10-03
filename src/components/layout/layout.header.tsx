@@ -1,5 +1,5 @@
 import { useWalletHook } from "common/hooks/wallet";
-import { Box } from "components/base";
+import { Box, Image } from "components/base";
 import { Flex } from "components/base/container";
 import { ArtButton } from "components/elements/buttons";
 import { UserIcon } from "components/icons";
@@ -48,21 +48,21 @@ const LayoutHeader = () => {
       borderBottom={"1px solid #1e2022"}
       gridGap={"16px"}
     >
+      
       <Box
-        background={"linear-gradient(-90deg, #c7c7c7, #c7c7c7)"}
-        fontFamily={"inherit"}
-        fontSize={"28px"}
-        fontWeight={"bold"}
-        color={"transparent"}
-        style={{ WebkitBackgroundClip: "text" }}
-        cursor={"pointer"}
-        onClick={() => {
-          navigate("/");
-        }}
-      >
-        Mira Finance
-      </Box>
-      {walletConnected && createdMiraAccount ? (
+      onClick={() => {
+        navigate("/");
+      }}>
+    <Image
+      src={`https://i.ibb.co/vBg4ryx/mira-logo-text-white-1.png" alt="mira-logo-text-white-1`}
+      width={200}
+      margin={0}
+      padding={0}
+      
+    />
+    </Box>
+    {/* && createdMiraAccount */}
+      {walletConnected ? (
         <Flex
           center
           ml={"auto"}

@@ -18,7 +18,7 @@ const LayoutSidebar = () => {
     <Flex
       col
       spaceBetween
-      p={"7px"}
+      p={"5px"}
       minWidth={visibleSidebar ? "220px" : "0px"}
       borderRight={"1px solid #1e2022"}
       transition={"200ms"}
