@@ -7,7 +7,8 @@ export const stringToHex = (text: string) =>{
 }
 
 //@time: seconds
-export const getFormatedDate = (time: number): string =>{
+export const getFormatedDate = (time: number|undefined): string =>{
+    if (!time) return '';
    let date = new Date(time *1000);
    let month = date.toLocaleString('default', { month: 'short' });
    let day = date.getDate();
@@ -17,4 +18,15 @@ export const getFormatedDate = (time: number): string =>{
 
 export const getStringFee = (fee: number): string => {
     return (fee / FEE_DECIMAL).toString();
+}
+
+export const getRandomizeString = (length):string =>{
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() *
+            charactersLength));
+    }
+    return result;
 }
