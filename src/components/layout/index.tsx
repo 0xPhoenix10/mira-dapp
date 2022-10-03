@@ -16,7 +16,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <Flex
           flex={1}
           height={"100%"}
-          background={"#222129"} ß
+          background={"#222129"}
           px={"32px"}
           overflow={"auto"}
         >
