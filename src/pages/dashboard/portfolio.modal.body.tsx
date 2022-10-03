@@ -1,21 +1,27 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Flex} from "../../components/base/container";
 import {Cell, Pie, PieChart, ResponsiveContainer} from "recharts";
 import {Table, Tbody, Td, Tr} from "../../components/base";
-import {
-    ArrowIcon,
-  } from "components/icons";
+import {ArrowIcon,} from "components/icons";
 import DepositModalBody from "./deposit.modal.body";
 import WithdrawModalBody from "./withdraw.modal.body";
+import {useWalletHook} from "../../common/hooks/wallet";
+import {FriendStatus, getFriendData, requestFriend} from "../../utils/graphql";
 
 export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
-
     miraIndexInfo = {},
     ...props }) => {
-        
+    const { walletConnected, walletAddress } = useWalletHook();
     const [visibleDeposit, setVisibleDeposit] = useState(false);
     const [visibleWithdraw, setVisibleWithdraw] = useState(false);
 
+    const [isFriend, setIsFriend] = useState(false);
+    useEffect(()=>{
+        if (walletConnected){
+            getFetchFriend();
+        }
+
+    }, [walletConnected]);
     const data = [
             { name: "APT", value: 400 },
             { name: "ETH", value: 300 },
@@ -27,6 +33,23 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
     // ["#d3dae9", "#c9d3e4", "#bdc9df", "#b2c1db", "#97acd0", "#87a2cb", "#7696c6", "#5c87bf", "#4d7fba",
     //   "#4a7ab2", "#4775ac", "#4470a5", "#406a9d", "#3d6595", "#395f8d", "#345882", "#2f5078"];
 
+    const getFetchFriend = async ()=>{
+        let friendDataList = await getFriendData(walletAddress);
+        for (let i = 0; i<friendDataList.length; i++){
+            if ( friendDataList[i].receiveUser == miraIndexInfo.poolOwner && friendDataList[i].status != FriendStatus.None){
+                setIsFriend(true);
+                return;
+            }
+        }
+    }
+    const request_friend = async ()=>{
+        if (!walletConnected) return;
+        let res = await requestFriend(walletAddress,miraIndexInfo.poolOwner);
+        if (res){
+            setIsFriend(true);
+        }
+
+    }
     const RADIAN = Math.PI / 180;
     const renderCustomizedLabel = ({
       cx,
@@ -166,7 +189,23 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
                                                                 Pool owner:
                                                             </Td>
                                                             <Td px={"4px"} py={"8px"} borderBottom={"none"}  color={"#888"}>
+                                                                <Flex justifyCenter alignCenter gridGap={"8px"}>
                                                                 {miraIndexInfo.poolOwner}
+                                                                { walletConnected && miraIndexInfo.poolOwner != walletAddress && !isFriend && (
+                                                                    <Flex
+                                                                        alignCenter
+                                                                        gridGap={"4px"}
+                                                                        padding={"8px 16px"}
+                                                                        background={"#0005"}
+                                                                        p={"8px 16px"}
+                                                                        border={"1px solid #34383b"}
+                                                                        borderRadius={"8px"}
+                                                                        cursor="pointer"
+                                                                        onClick={() => request_friend()}
+                                                                    >
+                                                                        Request friend
+                                                                    </Flex>) }
+                                                                </Flex>
                                                             </Td>
                                                         </Tr>
                                                         <Tr>

@@ -17,6 +17,8 @@ const LayoutFooter = () => {
       <Flex gridGap={"20px"}>
         <FooterBtn active title={"Invest & Manage"} icon={<ManageIcon />} />
         <Box bg={"#1e2022"} width={"1px"} height={"calc(100% - 10px)"} />
+        <FooterBtn title={"Token"} icon={<StakeIcon />} />
+        <Box bg={"#1e2022"} width={"1px"} height={"calc(100% - 10px)"} />
         <FooterBtn title={"Stake"} icon={<StakeIcon />} />
         <Box bg={"#1e2022"} width={"1px"} height={"calc(100% - 10px)"} />
         <FooterBtn title={"Swap"} icon={<SwapIcon />} />
