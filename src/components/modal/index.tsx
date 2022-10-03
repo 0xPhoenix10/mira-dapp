@@ -30,7 +30,7 @@ export const ModalParent: React.FC<ModalParentProps> = ({ visible, setVisible, c
           <Flex
             col
             margin={"auto"}
-            background={"#101012"}
+            background={"#222129"}
             padding={"20px"}
             border={"1px solid #34383b"}
             borderRadius={"20px"}

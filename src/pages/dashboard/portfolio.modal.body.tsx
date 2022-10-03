@@ -85,7 +85,7 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
                     <Flex justifyCenter gridGap={"16px"}>
                         <Flex
                             col
-                            background={"#101012"}
+                            background={"#302D38"}
                             p={"20px"}
                             border={"1px solid #34383b"}
                             borderRadius={"20px"}
@@ -120,7 +120,7 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
                                             alignCenter
                                             gridGap={"4px"}
                                             padding={"8px 16px"}
-                                            background={"#0005"}
+                                            background={"#0002"}
                                             p={"8px 16px"}
                                             border={"1px solid #34383b"}
                                             borderRadius={"8px"}
@@ -135,7 +135,7 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
                                             alignCenter
                                             gridGap={"4px"}
                                             padding={"8px 16px"}
-                                            background={"#0005"}
+                                            background={"#0002"}
                                             p={"8px 16px"}
                                             border={"1px solid #34383b"}
                                             borderRadius={"8px"}
