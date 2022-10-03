@@ -54,7 +54,8 @@ const LayoutHeader = () => {
       borderBottom={"1px solid #1e2022"}
       gridGap={"16px"}
     >
-
+<<<<<<< HEAD
+      
       <Box
       onClick={() => {
         navigate("/");
@@ -69,6 +70,26 @@ const LayoutHeader = () => {
     </Box>
     {/* && createdMiraAccount */}
       {walletConnected ? (
+=======
+
+      <Box
+        background={"linear-gradient(-90deg, #c7c7c7, #c7c7c7)"}
+        fontFamily={"inherit"}
+        fontSize={"28px"}
+        fontWeight={"bold"}
+        color={"transparent"}
+        style={{ WebkitBackgroundClip: "text" }}
+        cursor={"pointer"}
+        onClick={() => {
+          navigate("/");
+        }}
+      >
+        Mira Finance
+      </Box>
+      <Flex>
+
+      {walletConnected && createdMiraAccount ? (
+>>>>>>> 7cadc45bdd63dc9d2278ebf6359bd02aa36c3721
         <Flex
           center
           ml={"auto"}
@@ -99,6 +120,7 @@ const LayoutHeader = () => {
           ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
           : "Connect Wallet"}
       </ArtButton>
+    </Flex>
     </Flex>
   );
 };
