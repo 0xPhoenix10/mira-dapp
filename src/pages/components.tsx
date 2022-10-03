@@ -205,9 +205,9 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
     let pool_name = nameValue.trim();
     let total_amount = totalAmount;
     let management_fee = managementFee * FEE_DECIMAL;
-    let rebalancing_period = rebalancingPeriod;
+    let rebalancing_period = rebalancingPeriod * 1;
     let minimum_contribution = minimumContribution * FEE_DECIMAL;
-    let minimum_withdrawal = miniumWithdrawal * FEE_DECIMAL;
+    let minimum_withdrawal = miniumWithdrawal * 1;
     let referral_reward = referralReward * FEE_DECIMAL;
 
     let index_allocation_key:string[] = [];

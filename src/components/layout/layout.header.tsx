@@ -7,10 +7,16 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { MODULE_ADDR, NODE_URL } from "config";
 import { AptosClient } from "aptos";
+import {getRandomizeString} from "../../utils";
+
+import DepositModalBody from "../../pages/dashboard/deposit.modal.body";
+import {ModalParent} from "../modal";
+import FriendListModalBody from "../modal/friend.list.modal.body";
 const LayoutHeader = () => {
   const navigate = useNavigate();
   const { walletConnected, openConnectModal, walletAddress,  walletDisconnect, signAndSubmitTransaction} = useWalletHook();
   const [ createdMiraAccount, setCreatedMiraAccount ] = useState<boolean>(false);
+
   useEffect(()=>{
     if (walletConnected){
       createMiraAccount();
@@ -31,7 +37,7 @@ const LayoutHeader = () => {
     const transaction = {
       type: 'entry_function_payload',
       function: `${MODULE_ADDR}::mira::connect_account`,
-      arguments:[],
+      arguments:[getRandomizeString(14)],
       type_arguments:[]
     };
     const result = await signAndSubmitTransaction(transaction);
@@ -48,6 +54,7 @@ const LayoutHeader = () => {
       borderBottom={"1px solid #1e2022"}
       gridGap={"16px"}
     >
+
       <Box
         background={"linear-gradient(-90deg, #c7c7c7, #c7c7c7)"}
         fontFamily={"inherit"}
@@ -62,6 +69,8 @@ const LayoutHeader = () => {
       >
         Mira Finance
       </Box>
+      <Flex>
+
       {walletConnected && createdMiraAccount ? (
         <Flex
           center
@@ -93,6 +102,7 @@ const LayoutHeader = () => {
           ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
           : "Connect Wallet"}
       </ArtButton>
+    </Flex>
     </Flex>
   );
 };
