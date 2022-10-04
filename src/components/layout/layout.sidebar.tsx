@@ -7,6 +7,7 @@ import {
   GuideIcon,
   MenuIcon,
   TelegramIcon,
+  TwitterIcon,
   WhitePaperIcon,
 } from "components/icons";
 import { useState } from "react";
@@ -33,13 +34,13 @@ const LayoutSidebar = () => {
           overflow={"hidden"}
           transition={"200ms"}
         >
-          <SideBarBtn active icon={<AboutIcon />} title={"About"} />
+          <SideBarBtn active icon={<AboutIcon />} title={"About"} url={"https://about.mirafinance.io"} />
           <Box background={"#1e2022"} width={"80%"} height={"1px"} />
-          <SideBarBtn icon={<GuideIcon />} title={"Guide"} />
+          <SideBarBtn icon={<GuideIcon />} title={"Guide"} url={"https://docs.mirafinance.io"} />
           <Box background={"#1e2022"} width={"80%"} height={"1px"} />
-          <SideBarBtn icon={<DocsIcon />} title={"Docs"} />
+          <SideBarBtn icon={<DocsIcon />} title={"Docs"} url={"https://docs.mirafinance.io"} />
           <Box background={"#1e2022"} width={"80%"} height={"1px"} />
-          <SideBarBtn icon={<WhitePaperIcon />} title={"WhitePaper"} />
+          <SideBarBtn icon={<WhitePaperIcon />} title={"WhitePaper"} url={"https://paper.mirafinance.io"} />
         </Flex>
         <Flex>
           <Flex
@@ -67,14 +68,11 @@ const LayoutSidebar = () => {
         overflow={"hidden"}
         transition={"200ms"}
       >
-        <Flex
-          cursor={"pointer"}
-          onClick={() => "location.href='https://discord.gg/yR3UzjZuxB';"}
-        >
-          <DiscordIcon />
+        <Flex cursor={"pointer"} >
+          <LinkIcon href={"https://discord.gg/yR3UzjZuxB"} target={"_blank"}><DiscordIcon /></LinkIcon>
         </Flex>
-        <Flex cursor={"pointer"}>
-          <TelegramIcon />
+        <Flex cursor={"pointer"} >
+          <LinkIcon href={"https://twitter.com/Mira_Finance"} target={"_blank"}><TwitterIcon /></LinkIcon>
         </Flex>
       </Flex>
     </Flex>
@@ -96,24 +94,35 @@ interface SideBarBtnProps {
   title?: any;
   onClick?: any;
   active?: boolean;
+  url?: string;
 }
+const LinkIcon = styled.a`
+  text-decoration: none;
+  color: #fafafa;
+`;
+const Link = styled.a`
+  text-decoration: none;
+`;
 const SideBarBtn: React.FC<SideBarBtnProps> = ({
   icon = "",
   title = "",
-  onClick = () => {},
+  onClick = () => { },
   active,
+  url,
 }) => {
   return (
     <SideBarBtnBase onClick={onClick}>
-      <Flex
-        alignCenter
-        gridGap={"8px"}
-        color={active ? "#74bd7b" : "#fff"}
-        opacity={active ? "1" : "0.5"}
-      >
-        <Flex fontSize={"20px"}>{icon}</Flex>
-        <Flex fontSize={"16px"}>{title}</Flex>
-      </Flex>
+      <Link href={url} target={"_blank"}>
+        <Flex
+          alignCenter
+          gridGap={"8px"}
+          color={active ? "#74bd7b" : "#fff"}
+          opacity={active ? "1" : "0.5"}
+        >
+          <Flex fontSize={"20px"}>{icon}</Flex>
+          <Flex fontSize={"16px"}>{title}</Flex>
+        </Flex>
+      </Link>
     </SideBarBtnBase>
   );
 };
