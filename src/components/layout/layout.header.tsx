@@ -11,7 +11,13 @@ import { getRandomizeString } from "../../utils";
 
 const LayoutHeader = () => {
   const navigate = useNavigate();
-  const { walletConnected, openConnectModal, walletAddress, walletDisconnect, signAndSubmitTransaction } = useWalletHook();
+  const {
+    walletConnected,
+    openConnectModal,
+    walletAddress,
+    walletDisconnect,
+    signAndSubmitTransaction,
+  } = useWalletHook();
   // const [createdMiraAccount, setCreatedMiraAccount] = useState<boolean>(false);
 
   useEffect(() => {
@@ -19,30 +25,31 @@ const LayoutHeader = () => {
       const createMiraAccount = async () => {
         const client = new AptosClient(NODE_URL);
         try {
-          let resource = await client.getAccountResource(walletAddress, `${MODULE_ADDR}::mira::MiraAccount`);
+          let resource = await client.getAccountResource(
+            walletAddress,
+            `${MODULE_ADDR}::mira::MiraAccount`
+          );
           if (resource) {
             // setCreatedMiraAccount(true);
             return;
           }
-        } catch (error) {
-        }
+        } catch (error) {}
 
         const transaction = {
-          type: 'entry_function_payload',
+          type: "entry_function_payload",
           function: `${MODULE_ADDR}::mira::connect_account`,
           arguments: [getRandomizeString(14)],
-          type_arguments: []
+          type_arguments: [],
         };
         const result = await signAndSubmitTransaction(transaction);
         if (result) {
           // setCreatedMiraAccount(true);
         }
-      }
+      };
 
       createMiraAccount();
     }
-  }, [walletConnected, walletAddress, signAndSubmitTransaction])
-
+  }, [walletConnected, walletAddress, signAndSubmitTransaction]);
 
   return (
     <Flex
@@ -53,17 +60,16 @@ const LayoutHeader = () => {
       borderBottom={"1px solid #1e2022"}
       gridGap={"16px"}
     >
-
       <Box
         onClick={() => {
           navigate("/");
-        }}>
+        }}
+      >
         <Image
           src={`https://i.ibb.co/vBg4ryx/mira-logo-text-white-1.png" alt="mira-logo-text-white-1`}
           width={200}
           margin={0}
           padding={0}
-
         />
       </Box>
       {/* && createdMiraAccount */}

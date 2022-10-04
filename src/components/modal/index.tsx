@@ -3,12 +3,16 @@ import { TimesIcon } from "components/icons";
 import { useRef } from "react";
 
 type ModalParentProps = {
-  visible: boolean,
-  setVisible: (arg: boolean) => void,
-  children?: React.ReactNode
+  visible: boolean;
+  setVisible: (arg: boolean) => void;
+  children?: React.ReactNode;
 };
 
-export const ModalParent: React.FC<ModalParentProps> = ({ visible, setVisible, children }) => {
+export const ModalParent: React.FC<ModalParentProps> = ({
+  visible,
+  setVisible,
+  children,
+}) => {
   const modalContainer = useRef<any>();
   return (
     <>
@@ -23,7 +27,8 @@ export const ModalParent: React.FC<ModalParentProps> = ({ visible, setVisible, c
           height={"100%"}
           zIndex={"1000"}
           onClick={(e) => {
-            if (modalContainer?.current && modalContainer?.current === e.target) setVisible(false);
+            if (modalContainer?.current && modalContainer?.current === e.target)
+              setVisible(false);
           }}
           ref={modalContainer}
         >

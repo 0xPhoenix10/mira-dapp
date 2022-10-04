@@ -4,7 +4,7 @@ import LayoutHeader from "./layout.header";
 import LayoutSidebar from "./layout.sidebar";
 
 type LayoutProps = {
-    children?: React.ReactNode
+  children?: React.ReactNode;
 };
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {

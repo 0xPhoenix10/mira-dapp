@@ -7,15 +7,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 
 function App() {
-
   return (
     <BrowserRouter>
-     <Layout>
-       <Routes>
-         <Route path={""} element={<DashboardPage />} />
-         <Route path={"profile"} element={<ProfilePage />} />
-       </Routes>
-     </Layout>
+      <Layout>
+        <Routes>
+          <Route path={""} element={<DashboardPage />} />
+          <Route path={"profile"} element={<ProfilePage />} />
+        </Routes>
+      </Layout>
     </BrowserRouter>
   );
 }

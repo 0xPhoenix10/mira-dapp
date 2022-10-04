@@ -24,9 +24,9 @@ interface ChartBoxProps {
 export const ChartBox: React.FC<ChartBoxProps> = ({
   title = "Chart Box",
   cursor = "revert",
-  onClick = () => { },
+  onClick = () => {},
   cursorAll,
-  onClickAll = () => { },
+  onClickAll = () => {},
   ...props
 }) => {
   const data = [
@@ -35,7 +35,14 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
     { name: "BTC", value: 100 },
     { name: "DOT", value: 100 },
   ];
-  const COLORS = ["#97acd0", "#5c87bf", "#4a7ab2", "#4470a5", "#3d6595", "#345882"]
+  const COLORS = [
+    "#97acd0",
+    "#5c87bf",
+    "#4a7ab2",
+    "#4470a5",
+    "#3d6595",
+    "#345882",
+  ];
 
   // ["#d3dae9", "#c9d3e4", "#bdc9df", "#b2c1db", "#97acd0", "#87a2cb", "#7696c6", "#5c87bf", "#4d7fba",
   //   "#4a7ab2", "#4775ac", "#4470a5", "#406a9d", "#3d6595", "#395f8d", "#345882", "#2f5078"];
@@ -78,10 +85,21 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
       gridGap={"12px"}
       {...props}
     >
-      <Flex justifyCenter alignCenter gridGap={"16px"} cursor={cursorAll} onClick={onClickAll}>
+      <Flex
+        justifyCenter
+        alignCenter
+        gridGap={"16px"}
+        cursor={cursorAll}
+        onClick={onClickAll}
+      >
         <Flex width={"40%"} aspectRatio={"1"}>
           <ResponsiveContainer>
-            <PieChart width={300} height={300} onClick={onClick} style={{ cursor: cursor }}>
+            <PieChart
+              width={300}
+              height={300}
+              onClick={onClick}
+              style={{ cursor: cursor }}
+            >
               <Pie
                 data={data}
                 cx="50%"
@@ -94,7 +112,10 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
                 dataKey="value"
               >
                 {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
                 ))}
               </Pie>
             </PieChart>
@@ -149,13 +170,13 @@ interface IndexModalBodyProps {
 }
 export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   type = "modify",
-  setVisible = () => { },
-  setAllocationVisible = () => { },
+  setVisible = () => {},
+  setAllocationVisible = () => {},
   allocationData,
   ...props
 }) => {
   const { walletConnected, signAndSubmitTransaction } = useWalletHook();
-  const [nameValue, setNameValue] = useState<string>('');
+  const [nameValue, setNameValue] = useState<string>("");
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [managementFee, setManagementFee] = useState<number>(0);
   const [rebalancingPeriod, setRebalancingPeriod] = useState<number>(0);
@@ -195,7 +216,9 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   const [visibleDeposit, setVisibleDeposit] = useState(false);
   const [visibleWithdraw, setVisibleWithdraw] = useState(false);
 
-  const { updateIndex, setUpdateIndex } = useContext(UpdateIndexProviderContext);
+  const { updateIndex, setUpdateIndex } = useContext(
+    UpdateIndexProviderContext
+  );
 
   const create_index = async () => {
     if (!walletConnected) return;
@@ -225,10 +248,8 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
     if (management_fee < 0 || managementFee > 100) return;
     if (minimum_contribution < 0 || minimum_contribution > 10000) return;
 
-
-
     const transaction = {
-      type: 'entry_function_payload',
+      type: "entry_function_payload",
       function: `${MODULE_ADDR}::mira::create_pool`,
       type_arguments: [],
       arguments: [
@@ -241,8 +262,8 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
         referral_reward,
         index_allocation_key,
         index_allocation_value,
-        private_allocation
-      ]
+        private_allocation,
+      ],
     };
     console.log(transaction);
     const result = await signAndSubmitTransaction(transaction);
@@ -250,10 +271,10 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
       setUpdateIndex(!updateIndex);
       setVisible(false);
     }
-  }
+  };
   return (
     <>
-      {(visibleDeposit || visibleWithdraw) ? (
+      {visibleDeposit || visibleWithdraw ? (
         <>
           <Flex
             background={"#0005"}
@@ -275,7 +296,12 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
         </>
       ) : (
         <Flex col gridGap={"10px"}>
-          <Flex py={"8px"} fontSize={"18px"} fontWeight={"500"} borderBottom={"1px solid #34383b"}>
+          <Flex
+            py={"8px"}
+            fontSize={"18px"}
+            fontWeight={"500"}
+            borderBottom={"1px solid #34383b"}
+          >
             {type === "modify" && "Modify My Index"}
             {type === "create" && "Create My Index"}
           </Flex>
@@ -290,7 +316,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
               {...props}
             >
               <Flex justifyCenter gridGap={"16px"}>
-                {(type === "modify" || type === "create") &&
+                {(type === "modify" || type === "create") && (
                   <Flex col>
                     <Flex width={"200px"} aspectRatio={"1"}>
                       <ResponsiveContainer>
@@ -315,14 +341,16 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                             dataKey="value"
                           >
                             {allocationData.map((entry: any, index: number) => (
-                              <Cell key={`cell-${index}`} fill={COLORS[index % 4]} />
+                              <Cell
+                                key={`cell-${index}`}
+                                fill={COLORS[index % 4]}
+                              />
                             ))}
                           </Pie>
                         </PieChart>
                       </ResponsiveContainer>
-
                     </Flex>
-                    {(type === "modify") && (
+                    {type === "modify" && (
                       <Flex justifyCenter gridGap={"8px"}>
                         <Flex
                           alignCenter
@@ -357,7 +385,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                       </Flex>
                     )}
                   </Flex>
-                }
+                )}
                 <Flex col gridGap={"4px"}>
                   <Table>
                     <Tbody>
@@ -366,7 +394,11 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                           Name :
                         </Td>
                         <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
+                          <Flex
+                            alignCenter
+                            p={"4px"}
+                            borderBottom={"1px solid #34383b"}
+                          >
                             <Input
                               border={"none"}
                               background={"transparent"}
@@ -374,7 +406,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                               placeholder={"input here..."}
                               readOnly={type === "modify"}
                               onChange={(e) => {
-                                setNameValue(e.target.value)
+                                setNameValue(e.target.value);
                               }}
                             />
                           </Flex>
@@ -385,7 +417,11 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                           Deposit amount :
                         </Td>
                         <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
+                          <Flex
+                            alignCenter
+                            p={"4px"}
+                            borderBottom={"1px solid #34383b"}
+                          >
                             <Input
                               flex={"1"}
                               type={"number"}
@@ -397,7 +433,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                               min={"0"}
                               readOnly={type === "modify"}
                               onChange={(e) => {
-                                setTotalAmount(parseInt(e.target.value))
+                                setTotalAmount(parseInt(e.target.value));
                               }}
                             />
                           </Flex>
@@ -408,7 +444,11 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                           Management fee :
                         </Td>
                         <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
+                          <Flex
+                            alignCenter
+                            p={"4px"}
+                            borderBottom={"1px solid #34383b"}
+                          >
                             <Input
                               flex={"1"}
                               type={"number"}
@@ -420,7 +460,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                               min={"0"}
                               readOnly={type === "modify"}
                               onChange={(e) => {
-                                setManagementFee(parseInt(e.target.value))
+                                setManagementFee(parseInt(e.target.value));
                               }}
                             />
                             %
@@ -438,9 +478,11 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                             py={"1px"}
                             borderBottom={"1px solid #34383b"}
                           >
-                            <CustomSelect flex={"1"} onChange={(e: number) => {
-                              setRebalancingPeriod(e)
-                            }}
+                            <CustomSelect
+                              flex={"1"}
+                              onChange={(e: number) => {
+                                setRebalancingPeriod(e);
+                              }}
                               value={0}
                             >
                               <SmOption value="0">1 Day</SmOption>
@@ -457,7 +499,11 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                           Minimum Contribution :
                         </Td>
                         <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
+                          <Flex
+                            alignCenter
+                            p={"4px"}
+                            borderBottom={"1px solid #34383b"}
+                          >
                             <Input
                               flex={"1"}
                               border={"none"}
@@ -484,7 +530,8 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                             py={"1px"}
                             borderBottom={"1px solid #34383b"}
                           >
-                            <CustomSelect flex={"1"}
+                            <CustomSelect
+                              flex={"1"}
                               value={"0"}
                               onChange={(e: number) => {
                                 setMiniumWithdrawal(e);
@@ -535,7 +582,11 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                           Referral Rewards :
                         </Td>
                         <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
+                          <Flex
+                            alignCenter
+                            p={"4px"}
+                            borderBottom={"1px solid #34383b"}
+                          >
                             <Input
                               flex={"1"}
                               border={"none"}
@@ -544,7 +595,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                               placeholder={"input here..."}
                               readOnly={type === "modify"}
                               onChange={(e) => {
-                                setReferralReward(parseInt(e.target.value))
+                                setReferralReward(parseInt(e.target.value));
                               }}
                             />
                             %
@@ -614,7 +665,6 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
     </>
   );
 };
-
 
 export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
   title = "???",
@@ -710,7 +760,9 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
                             }}
                           >
                             <Box
-                              background={"linear-gradient(90deg,#fceabb,#f8b500)"}
+                              background={
+                                "linear-gradient(90deg,#fceabb,#f8b500)"
+                              }
                               borderRadius={"100%"}
                               width={"25px"}
                               height={"25px"}
@@ -746,5 +798,3 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
     </>
   );
 };
-
-
