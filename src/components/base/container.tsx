@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { Box } from ".";
-import {Image} from ".";
 
 export const ContainerFluid = styled(Box)``;
 ContainerFluid.defaultProps = {
@@ -31,19 +30,19 @@ interface FlexProps {
   spaceBetween?: boolean;
   spaceAround?: boolean;
 }
-export const Flex = styled(Box)<FlexProps>`
+export const Flex = styled(Box) <FlexProps>`
   flex-direction: ${(p) => (p.row ? "row" : p.col ? "column" : "")};
   flex-grow: ${(p) => (p.flexFull ? "1" : "")};
   justify-content: ${(p) =>
     p.center
       ? "center"
       : p.justifyCenter
-      ? "center"
-      : p.spaceBetween
-      ? "space-between"
-      : p.spaceAround
-      ? "space-around"
-      : ""};
+        ? "center"
+        : p.spaceBetween
+          ? "space-between"
+          : p.spaceAround
+            ? "space-around"
+            : ""};
   align-items: ${(p) => (p.center ? "center" : p.alignCenter ? "center" : "")};
 `;
 Flex.defaultProps = {
