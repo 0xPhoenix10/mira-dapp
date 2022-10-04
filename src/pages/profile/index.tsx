@@ -1,17 +1,17 @@
-import {useWalletHook} from "common/hooks/wallet";
-import {Box, Input, Table, Tbody, Td, Th, Thead, Tr} from "components/base";
-import {Flex} from "components/base/container";
-import {ArrowIcon, PencilIcon} from "components/icons";
-import {ModalParent} from "components/modal";
-import {ChartBox, IndexListModalBody} from "pages/components";
-import {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {AptosClient} from "aptos";
-import {MODULE_ADDR, NODE_URL} from "../../config";
+import { useWalletHook } from "common/hooks/wallet";
+import { Box, Input, Table, Tbody, Td, Th, Thead, Tr } from "components/base";
+import { Flex } from "components/base/container";
+import { ArrowIcon, PencilIcon } from "components/icons";
+import { ModalParent } from "components/modal";
+import { ChartBox, IndexListModalBody } from "pages/components";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AptosClient } from "aptos";
+import { MODULE_ADDR, NODE_URL } from "../../config";
 // import {Simulate} from "react-dom/test-utils";
 // import input = Simulate.input;
-import {getFormatedDate, stringToHex} from "../../utils";
-import {FriendStatus, getFriendData} from "../../utils/graphql";
+import { getFormatedDate, stringToHex } from "../../utils";
+import { FriendStatus, getFriendData } from "../../utils/graphql";
 import FriendListModalBody from "../../components/modal/friend.list.modal.body";
 
 interface MiraAccountProps {
@@ -19,48 +19,24 @@ interface MiraAccountProps {
   created: string
 }
 
-interface FriendData{
+interface FriendData {
   pool_owner: string
   account_name: string,
   created: string,
   total_funds_invested: number,
 }
 const ProfilePage = () => {
-  const { walletConnected, walletAddress,signAndSubmitTransaction, wallet } = useWalletHook();
+  const { walletConnected, walletAddress, signAndSubmitTransaction, wallet } = useWalletHook();
 
   const [miraAccountProps, setMiraAccountProps] = useState<MiraAccountProps | null>(null);
   const [inputNameValue, setInputNameValue] = useState<string>("");
   const [friendDataList, setFriendDataList] = useState<FriendData[]>([]);
-  const [showFriendModal,setShowFriendModal] = useState<boolean>(false);
+  const [showFriendModal, setShowFriendModal] = useState<boolean>(false);
   const navigate = useNavigate();
+
   useEffect(() => {
     !walletConnected && navigate("/");
-    initMiraAccountProps();
-    getFriendList();
-  }, [walletConnected]);
-  const aptos_client = new AptosClient(NODE_URL);
-  const getFriendInfo = async (owner_addr: string) =>{
-    let resource = await aptos_client.getAccountResource(owner_addr, `${MODULE_ADDR}::mira::MiraAccount`);
-    if (!resource){
-      return null;
-    }
-    const data = resource?.data as FriendData;
-    data.pool_owner = owner_addr;
-    return data;
-  }
-  const getFriendList = async ()=>{
-    if (!walletConnected) return;
-    let friends = await getFriendData(walletAddress);
-    friends.map(async (friend, index)=>{
-      if (friend.status != FriendStatus.Friend) return;
-      let f = await getFriendInfo(friend.receiveUser);
-      if (f){
-        setFriendDataList([...friendDataList, f] )
-      }
-
-    })
-  }
-  const initMiraAccountProps = async () =>{
+    const initMiraAccountProps = async () => {
       const client = new AptosClient(NODE_URL);
       try {
         let resource = await client.getAccountResource(walletAddress, `${MODULE_ADDR}::mira::MiraAccount`);
@@ -69,47 +45,75 @@ const ProfilePage = () => {
           return;
         }
 
-        const data = resource?.data as {account_name: string, created: number};
+        const data = resource?.data as { account_name: string, created: number };
         setInputNameValue(data?.account_name);
         setMiraAccountProps({
           name: data?.account_name,
           created: getFormatedDate(data?.created)
         });
 
-      }catch(error){
+      } catch (error) {
         navigate("/");
         return;
       }
-  }
+    }
+
+    const getFriendInfo = async (owner_addr: string) => {
+      const aptos_client = new AptosClient(NODE_URL);
+      let resource = await aptos_client.getAccountResource(owner_addr, `${MODULE_ADDR}::mira::MiraAccount`);
+      if (!resource) {
+        return null;
+      }
+      const data = resource?.data as FriendData;
+      data.pool_owner = owner_addr;
+      return data;
+    }
+
+    const getFriendList = async () => {
+      if (!walletConnected) return;
+      let friends = await getFriendData(walletAddress);
+      friends.map(async (friend, index) => {
+        if (friend.status !== FriendStatus.Friend) return;
+        let f = await getFriendInfo(friend.receiveUser);
+        if (f) {
+          setFriendDataList([...friendDataList, f])
+        }
+
+      })
+    }
+
+    initMiraAccountProps();
+    getFriendList();
+  }, [walletConnected, friendDataList, navigate, walletAddress]);
 
   const [myIndexesModalVisible, setMyIndexesModalVisible] = useState(false);
   const [myInvestmentsModalVisible, setMyInvestmentsModalVisible] = useState(false);
 
-  const changeMiraAccountName = async () =>{
+  const changeMiraAccountName = async () => {
 
-      if (inputNameValue === miraAccountProps?.name || inputNameValue.trim() == ""){
-          return;
-      }
-      let name = inputNameValue.trim();
+    if (inputNameValue === miraAccountProps?.name || inputNameValue.trim() === "") {
+      return;
+    }
+    let name = inputNameValue.trim();
 
-      if(wallet && wallet.adapter.name == "Pontem"){
-          name = '0x'+ stringToHex(name);
-      }
+    if (wallet && wallet.adapter.name === "Pontem") {
+      name = '0x' + stringToHex(name);
+    }
 
-      const transaction = {
-        type: 'entry_function_payload',
-        function: `${MODULE_ADDR}::mira::change_account_name`,
-        arguments:[name as string],
-        type_arguments:[]
-      };
-      const result = await signAndSubmitTransaction(transaction);
+    const transaction = {
+      type: 'entry_function_payload',
+      function: `${MODULE_ADDR}::mira::change_account_name`,
+      arguments: [name as string],
+      type_arguments: []
+    };
+    await signAndSubmitTransaction(transaction);
   }
   return (
     <>
       {walletConnected &&
-      <ModalParent visible={showFriendModal} setVisible={setShowFriendModal}>
-        <FriendListModalBody flex={1} setVisible={setShowFriendModal} />
-      </ModalParent>
+        <ModalParent visible={showFriendModal} setVisible={setShowFriendModal}>
+          <FriendListModalBody flex={1} setVisible={setShowFriendModal} />
+        </ModalParent>
       }
 
       {
@@ -160,16 +164,16 @@ const ProfilePage = () => {
                 color={"white"}
                 placeholder={"user_name"}
                 value={inputNameValue}
-                onChange={(e)=>{
+                onChange={(e) => {
                   setInputNameValue(e.target.value)
                 }}
               />
-              <Flex cursor={"pointer"} onClick={()=>changeMiraAccountName()}>
+              <Flex cursor={"pointer"} onClick={() => changeMiraAccountName()}>
                 <PencilIcon />
               </Flex>
             </Flex>
             {walletConnected &&
-            <Flex
+              <Flex
                 center
 
                 background={"linear-gradient(90deg, #131313, #2b2b2b)"}
@@ -182,9 +186,9 @@ const ProfilePage = () => {
                 onClick={() => {
                   setShowFriendModal(true)
                 }}
-            >
-              Friend List
-            </Flex>
+              >
+                Friend List
+              </Flex>
             }
           </Flex>
           <Flex gridGap={"16px"}>
@@ -370,21 +374,21 @@ const ProfilePage = () => {
           </Flex>
         </Flex>
         <Flex
-            height={"42px"}
-            fontSize={"20px"}
-            fontWeight={"bold"}
-            borderBottom={"1px solid #34383b"}
+          height={"42px"}
+          fontSize={"20px"}
+          fontWeight={"bold"}
+          borderBottom={"1px solid #34383b"}
         >
           <Box> My Friends</Box>
         </Flex>
 
-          <Flex
-              gridGap={"16px"}
-              background={"#27282c"}
-              p={"20px"}
-              border={"1px solid #34383b"}
-              borderRadius={"20px"}
-          >
+        <Flex
+          gridGap={"16px"}
+          background={"#27282c"}
+          p={"20px"}
+          border={"1px solid #34383b"}
+          borderRadius={"20px"}
+        >
           <Table width={"100%"} textAlign={"left"}>
             <Thead>
               <Tr>
@@ -395,19 +399,19 @@ const ProfilePage = () => {
               </Tr>
             </Thead>
             <Tbody>
-              { friendDataList && friendDataList.map((friend,index) =>{
+              {friendDataList && friendDataList.map((friend, index) => {
                 return (<Tr key={index}>
                   <Td>
                     <Flex
-                        alignCenter
-                        gridGap={"10px"}
-                        cursor={"pointer"}
+                      alignCenter
+                      gridGap={"10px"}
+                      cursor={"pointer"}
                     >
                       <Box
-                          background={"linear-gradient(90deg,#fceabb,#f8b500)"}
-                          borderRadius={"100%"}
-                          width={"25px"}
-                          height={"25px"}
+                        background={"linear-gradient(90deg,#fceabb,#f8b500)"}
+                        borderRadius={"100%"}
+                        width={"25px"}
+                        height={"25px"}
                       ></Box>
                       {friend.account_name}
                     </Flex>
@@ -420,7 +424,7 @@ const ProfilePage = () => {
               }
             </Tbody>
           </Table>
-          </Flex>
+        </Flex>
       </Flex>
     </>
   );

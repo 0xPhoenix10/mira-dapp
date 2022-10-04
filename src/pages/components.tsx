@@ -5,17 +5,15 @@ import {
   ArrowIcon,
   CheckIcon,
   CreateIcon,
-  MinusIcon,
-  PlusIcon,
   SearchIcon,
   TimesIcon,
 } from "components/icons";
-import React, {useContext, useState} from "react";
+import React, { useContext, useState } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-import {FEE_DECIMAL, MODULE_ADDR} from "../config";
-import {useWalletHook} from "../common/hooks/wallet";
-import {UpdateIndexProviderContext} from "./dashboard";
-import {PortfolioModalBody} from "./dashboard/portfolio.modal.body";
+import { FEE_DECIMAL, MODULE_ADDR } from "../config";
+import { useWalletHook } from "../common/hooks/wallet";
+import { UpdateIndexProviderContext } from "./dashboard";
+import { PortfolioModalBody } from "./dashboard/portfolio.modal.body";
 import DepositModalBody from "./dashboard/deposit.modal.body";
 import WithdrawModalBody from "./dashboard/withdraw.modal.body";
 
@@ -26,9 +24,9 @@ interface ChartBoxProps {
 export const ChartBox: React.FC<ChartBoxProps> = ({
   title = "Chart Box",
   cursor = "revert",
-  onClick = () => {},
+  onClick = () => { },
   cursorAll,
-  onClickAll = () => {},
+  onClickAll = () => { },
   ...props
 }) => {
   const data = [
@@ -38,7 +36,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
     { name: "DOT", value: 100 },
   ];
   const COLORS = ["#97acd0", "#5c87bf", "#4a7ab2", "#4470a5", "#3d6595", "#345882"]
-  
+
   // ["#d3dae9", "#c9d3e4", "#bdc9df", "#b2c1db", "#97acd0", "#87a2cb", "#7696c6", "#5c87bf", "#4d7fba",
   //   "#4a7ab2", "#4775ac", "#4470a5", "#406a9d", "#3d6595", "#395f8d", "#345882", "#2f5078"];
 
@@ -66,7 +64,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
         dominantBaseline="central"
       >
         {/* {`${(percent * 100).toFixed(0)}%`} */}
-        {`${data[index].name}`}      
+        {`${data[index].name}`}
       </text>
     );
   };
@@ -151,12 +149,12 @@ interface IndexModalBodyProps {
 }
 export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   type = "modify",
-  setVisible = () => {},
-  setAllocationVisible =()=>{},
+  setVisible = () => { },
+  setAllocationVisible = () => { },
   allocationData,
   ...props
 }) => {
-  const { walletConnected, signAndSubmitTransaction} = useWalletHook();
+  const { walletConnected, signAndSubmitTransaction } = useWalletHook();
   const [nameValue, setNameValue] = useState<string>('');
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [managementFee, setManagementFee] = useState<number>(0);
@@ -164,7 +162,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   const [minimumContribution, setMiniumContribution] = useState<number>(0);
   const [miniumWithdrawal, setMiniumWithdrawal] = useState<number>(0);
   const [privateAllocation, setPrivateAlloation] = useState<boolean>(false);
-  const [referralReward, setReferralReward ] =useState<number>(0);
+  const [referralReward, setReferralReward] = useState<number>(0);
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
@@ -197,9 +195,9 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   const [visibleDeposit, setVisibleDeposit] = useState(false);
   const [visibleWithdraw, setVisibleWithdraw] = useState(false);
 
-  const { updateIndex, setUpdateIndex} = useContext(UpdateIndexProviderContext);
+  const { updateIndex, setUpdateIndex } = useContext(UpdateIndexProviderContext);
 
-  const create_index = async()=>{
+  const create_index = async () => {
     if (!walletConnected) return;
 
     let pool_name = nameValue.trim();
@@ -210,30 +208,30 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
     let minimum_withdrawal = miniumWithdrawal * 1;
     let referral_reward = referralReward * FEE_DECIMAL;
 
-    let index_allocation_key:string[] = [];
+    let index_allocation_key: string[] = [];
     let index_allocation_value: number[] = [];
     let sum = 0;
-    allocationData.map((data:any, index:number)=>{
+    allocationData.forEach((data: any) => {
       index_allocation_key.push(data.name);
       index_allocation_value.push(data.value);
       sum += data.value;
     });
-    if (sum != 100) return;
+    if (sum !== 100) return;
 
     let private_allocation = privateAllocation;
 
-    if(pool_name === "") return;
+    if (pool_name === "") return;
     if (total_amount < 1) return;
-    if(management_fee < 0 || managementFee > 100) return;
-    if(minimum_contribution < 0 || minimum_contribution > 10000) return;
+    if (management_fee < 0 || managementFee > 100) return;
+    if (minimum_contribution < 0 || minimum_contribution > 10000) return;
 
 
 
     const transaction = {
       type: 'entry_function_payload',
       function: `${MODULE_ADDR}::mira::create_pool`,
-      type_arguments:[],
-      arguments:[
+      type_arguments: [],
+      arguments: [
         pool_name,
         total_amount,
         management_fee,
@@ -248,7 +246,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
     };
     console.log(transaction);
     const result = await signAndSubmitTransaction(transaction);
-    if (result){
+    if (result) {
       setUpdateIndex(!updateIndex);
       setVisible(false);
     }
@@ -272,8 +270,8 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
           >
             <ArrowIcon dir={"left"} />
           </Flex>
-          { visibleDeposit && <DepositModalBody /> }
-          { visibleWithdraw && <WithdrawModalBody /> }
+          {visibleDeposit && <DepositModalBody />}
+          {visibleWithdraw && <WithdrawModalBody />}
         </>
       ) : (
         <Flex col gridGap={"10px"}>
@@ -292,14 +290,14 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
               {...props}
             >
               <Flex justifyCenter gridGap={"16px"}>
-                { (type === "modify" || type == "create") &&
+                {(type === "modify" || type === "create") &&
                   <Flex col>
                     <Flex width={"200px"} aspectRatio={"1"}>
                       <ResponsiveContainer>
                         <PieChart
                           width={300}
                           height={300}
-                          style={{cursor: "pointer"}}
+                          style={{ cursor: "pointer" }}
                           onClick={() => {
                             // if (type === "modify") setVisibleAllocation(true);
                             setAllocationVisible(true);
@@ -316,47 +314,47 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                             stroke={"transparent"}
                             dataKey="value"
                           >
-                            {allocationData.map((entry:any, index: number) => (
+                            {allocationData.map((entry: any, index: number) => (
                               <Cell key={`cell-${index}`} fill={COLORS[index % 4]} />
                             ))}
                           </Pie>
                         </PieChart>
                       </ResponsiveContainer>
-                      
+
                     </Flex>
                     {(type === "modify") && (
-                    <Flex justifyCenter gridGap={"8px"}>
-                      <Flex
-                        alignCenter
-                        gridGap={"4px"}
-                        padding={"8px 16px"}
-                        background={"#0005"}
-                        p={"8px 16px"}
-                        border={"1px solid #34383b"}
-                        borderRadius={"8px"}
-                        cursor="pointer"
-                        onClick={() => {
-                          setVisibleDeposit(true);
-                        }}
-                      >
-                        Invest
+                      <Flex justifyCenter gridGap={"8px"}>
+                        <Flex
+                          alignCenter
+                          gridGap={"4px"}
+                          padding={"8px 16px"}
+                          background={"#0005"}
+                          p={"8px 16px"}
+                          border={"1px solid #34383b"}
+                          borderRadius={"8px"}
+                          cursor="pointer"
+                          onClick={() => {
+                            setVisibleDeposit(true);
+                          }}
+                        >
+                          Invest
+                        </Flex>
+                        <Flex
+                          alignCenter
+                          gridGap={"4px"}
+                          padding={"8px 16px"}
+                          background={"#0005"}
+                          p={"8px 16px"}
+                          border={"1px solid #34383b"}
+                          borderRadius={"8px"}
+                          cursor="pointer"
+                          onClick={() => {
+                            setVisibleWithdraw(true);
+                          }}
+                        >
+                          Withdraw
+                        </Flex>
                       </Flex>
-                      <Flex
-                        alignCenter
-                        gridGap={"4px"}
-                        padding={"8px 16px"}
-                        background={"#0005"}
-                        p={"8px 16px"}
-                        border={"1px solid #34383b"}
-                        borderRadius={"8px"}
-                        cursor="pointer"
-                        onClick={() => {
-                          setVisibleWithdraw(true);
-                        }}
-                      >
-                        Withdraw
-                      </Flex>
-                    </Flex>
                     )}
                   </Flex>
                 }
@@ -375,7 +373,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                               color={"white"}
                               placeholder={"input here..."}
                               readOnly={type === "modify"}
-                              onChange = {(e)=>{
+                              onChange={(e) => {
                                 setNameValue(e.target.value)
                               }}
                             />
@@ -389,18 +387,18 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                         <Td px={"4px"} py={"2px"} borderBottom={"none"}>
                           <Flex alignCenter p={"4px"} borderBottom={"1px solid #34383b"}>
                             <Input
-                                flex={"1"}
-                                type={"number"}
-                                border={"none"}
-                                background={"transparent"}
-                                color={"white"}
-                                placeholder={"input here..."}
-                                max={"100"}
-                                min={"0"}
-                                readOnly={type === "modify"}
-                                onChange = {(e)=>{
-                                  setTotalAmount(parseInt(e.target.value))
-                                }}
+                              flex={"1"}
+                              type={"number"}
+                              border={"none"}
+                              background={"transparent"}
+                              color={"white"}
+                              placeholder={"input here..."}
+                              max={"100"}
+                              min={"0"}
+                              readOnly={type === "modify"}
+                              onChange={(e) => {
+                                setTotalAmount(parseInt(e.target.value))
+                              }}
                             />
                           </Flex>
                         </Td>
@@ -421,7 +419,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                               max={"100"}
                               min={"0"}
                               readOnly={type === "modify"}
-                              onChange = {(e)=>{
+                              onChange={(e) => {
                                 setManagementFee(parseInt(e.target.value))
                               }}
                             />
@@ -440,10 +438,10 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                             py={"1px"}
                             borderBottom={"1px solid #34383b"}
                           >
-                            <CustomSelect flex={"1"} onChange={(e:number)=>{
+                            <CustomSelect flex={"1"} onChange={(e: number) => {
                               setRebalancingPeriod(e)
                             }}
-                                          value={0}
+                              value={0}
                             >
                               <SmOption value="0">1 Day</SmOption>
                               <SmOption value="1">1 Week</SmOption>
@@ -467,7 +465,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                               color={"white"}
                               placeholder={"input here..."}
                               readOnly={type === "modify"}
-                              onChange = {(e)=>{
+                              onChange={(e) => {
                                 setMiniumContribution(parseInt(e.target.value));
                               }}
                             />
@@ -487,10 +485,10 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                             borderBottom={"1px solid #34383b"}
                           >
                             <CustomSelect flex={"1"}
-                                          value={"0"}
-                                  onChange = {(e:number)=>{
-                                    setMiniumWithdrawal(e);
-                                  }}
+                              value={"0"}
+                              onChange={(e: number) => {
+                                setMiniumWithdrawal(e);
+                              }}
                             >
                               <SmOption value="0">1 Day</SmOption>
                               <SmOption value="1">1 Week</SmOption>
@@ -517,17 +515,17 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                               value={"0"}
                               title={"false"}
                               selected
-                              onChange={(e:any)=>{
+                              onChange={(e: any) => {
                                 setPrivateAlloation(false);
                               }}
                             />
                             <RadioBtn
-                                name={"private_allocation"}
-                                value={"1"}
-                                title={"true"}
-                                onChange={(e:any)=>{
-                                  setPrivateAlloation(true);
-                                }}
+                              name={"private_allocation"}
+                              value={"1"}
+                              title={"true"}
+                              onChange={(e: any) => {
+                                setPrivateAlloation(true);
+                              }}
                             />
                           </Flex>
                         </Td>
@@ -545,7 +543,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                               color={"white"}
                               placeholder={"input here..."}
                               readOnly={type === "modify"}
-                              onChange={(e)=>{
+                              onChange={(e) => {
                                 setReferralReward(parseInt(e.target.value))
                               }}
                             />
@@ -602,7 +600,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                     border={"1px solid #34383b"}
                     borderRadius={"8px"}
                     cursor="pointer"
-                    onClick={()=>create_index()}
+                    onClick={() => create_index()}
                   >
                     <CreateIcon size={"1.2em"} />
                     Publish

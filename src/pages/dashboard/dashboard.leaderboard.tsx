@@ -4,14 +4,14 @@ import { Flex } from "components/base/container";
 import { FilterIcon, SearchIcon, SortIcon } from "components/icons";
 import { ModalParent } from "components/modal";
 import { IndexListModalBody } from "pages/components";
-import {useEffect, useState, useRef, useContext} from "react";
-import {MODULE_ADDR, NODE_URL} from "config";
-import {AptosClient} from "aptos";
-import {getFormatedDate, getStringFee} from "../../utils";
+import { useEffect, useState, useContext } from "react";
+import { MODULE_ADDR, NODE_URL } from "config";
+import { AptosClient } from "aptos";
+import { getFormatedDate, getStringFee } from "../../utils";
 import DepositModalBody from "./deposit.modal.body";
 import WithdrawModalBody from "./withdraw.modal.body";
-import {UpdateIndexProviderContext} from "./index";
-import {PortfolioModalBody} from "./portfolio.modal.body";
+import { UpdateIndexProviderContext } from "./index";
+import { PortfolioModalBody } from "./portfolio.modal.body";
 
 
 interface MiraIndex {
@@ -22,7 +22,7 @@ interface MiraIndex {
   founded: string
 }
 
-interface CreatePoolEvent{
+interface CreatePoolEvent {
   pool_name: string,
   pool_address: string,
   pool_owner: string,
@@ -38,16 +38,16 @@ const DashboardLeaderBoard = () => {
   const [leaderboardMmodalVisible, setLeaderboardModalVisible] = useState(false);
 
   const [currentTab, setCurrentTab] = useState(0);
-  const [showDepositModal,setShowDepositModal] = useState<boolean>(false);
-  const [showWithdrawModal,setShowWithdrawModal] = useState<boolean>(false);
+  const [showDepositModal, setShowDepositModal] = useState<boolean>(false);
+  const [showWithdrawModal, setShowWithdrawModal] = useState<boolean>(false);
 
   const [selectIndexInfo, setSelectIndexInfo] = useState<MiraIndex | null>(null);
 
   const [miraIndexes, setMiraIndexes] = useState<MiraIndex[]>([]);
 
-  const { updateIndex} = useContext(UpdateIndexProviderContext);
+  const { updateIndex } = useContext(UpdateIndexProviderContext);
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchIndexes()
   }, [updateIndex]);
 
@@ -55,44 +55,44 @@ const DashboardLeaderBoard = () => {
     !walletConnected && setCurrentTab(0);
   }, [walletConnected]);
 
-  const fetchIndexes = async()=>{
-     const client = new AptosClient(NODE_URL);
-     let events = await client.getEventsByEventHandle(
-         MODULE_ADDR,
-         `${MODULE_ADDR}::mira::MiraStatus`,
-         "create_pool_events",
-         {limit: 1000}
-     );
-     let create_pool_events:MiraIndex[] = [];
-     for (let ev of events){
-        let e:CreatePoolEvent = ev.data;
-        if (e.private_allocation) continue;
-        create_pool_events.push({
-          poolName: e.pool_name,
-          poolAddress: e.pool_address,
-          poolOwner: e.pool_owner,
-          managementFee: getStringFee(e.management_fee),
-          founded: getFormatedDate(e.founded),
-        });
-     }
-     setMiraIndexes(create_pool_events);
+  const fetchIndexes = async () => {
+    const client = new AptosClient(NODE_URL);
+    let events = await client.getEventsByEventHandle(
+      MODULE_ADDR,
+      `${MODULE_ADDR}::mira::MiraStatus`,
+      "create_pool_events",
+      { limit: 1000 }
+    );
+    let create_pool_events: MiraIndex[] = [];
+    for (let ev of events) {
+      let e: CreatePoolEvent = ev.data;
+      if (e.private_allocation) continue;
+      create_pool_events.push({
+        poolName: e.pool_name,
+        poolAddress: e.pool_address,
+        poolOwner: e.pool_owner,
+        managementFee: getStringFee(e.management_fee),
+        founded: getFormatedDate(e.founded),
+      });
+    }
+    setMiraIndexes(create_pool_events);
   }
 
   return (
     <>
       {
         <ModalParent visible={showDepositModal} setVisible={setShowDepositModal}>
-          <DepositModalBody flex={1} setVisible={setShowDepositModal}  miraIndexInfo = {selectIndexInfo} />
+          <DepositModalBody flex={1} setVisible={setShowDepositModal} miraIndexInfo={selectIndexInfo} />
         </ModalParent>
       }
       {
         <ModalParent visible={showWithdrawModal} setVisible={setShowWithdrawModal}>
-          <WithdrawModalBody flex={1} setVisible={setShowWithdrawModal} miraIndexInfo = {selectIndexInfo} />
+          <WithdrawModalBody flex={1} setVisible={setShowWithdrawModal} miraIndexInfo={selectIndexInfo} />
         </ModalParent>
       }
       {
         <ModalParent visible={portfolioModalVisible} setVisible={setPortfolioModalVisible}>
-          <PortfolioModalBody flex={1} miraIndexInfo = {selectIndexInfo} />
+          <PortfolioModalBody flex={1} miraIndexInfo={selectIndexInfo} />
         </ModalParent>
       }
 
@@ -187,85 +187,85 @@ const DashboardLeaderBoard = () => {
             </Thead>
             <Tbody>
               {miraIndexes.map((miraIndex, index) => {
-                  return (
-                    <Tr key={index}>
+                return (
+                  <Tr key={index}>
+                    <Td>
+                      <Flex
+                        alignCenter
+                        gridGap={"10px"}
+                        cursor={"pointer"}
+                        onClick={() => {
+                          setSelectIndexInfo(miraIndex);
+                          setPortfolioModalVisible(true);
+                        }}
+                      >
+                        <Box
+                          background={"linear-gradient(90deg,#fceabb,#f8b500)"}
+                          borderRadius={"100%"}
+                          width={"25px"}
+                          height={"25px"}
+                        ></Box>
+                        {miraIndex.poolName}
+                      </Flex>
+                    </Td>
+                    <Td>-</Td>
+                    <Td>-%</Td>
+                    <Td>{miraIndex.founded}</Td>{/*<Td>Dec 1, 2000</Td>*/}
+                    <Td>{miraIndex.managementFee}%</Td>
+                    <Td>No</Td>
+                    {walletConnected && (
                       <Td>
                         <Flex
-                          alignCenter
-                          gridGap={"10px"}
+                          justifyCenter
+                          padding={"4px 8px"}
+                          background={"#0005"}
+                          border={"1px solid #34383b"}
+                          borderRadius={"4px"}
+                          cursor={"pointer"}
+                        >
+                          Share with this
+                        </Flex>
+                      </Td>
+                    )}
+                    {walletConnected && (
+                      <Td>
+                        <Flex
+                          justifyCenter
+                          padding={"4px 8px"}
+                          background={"#0005"}
+                          border={"1px solid #34383b"}
+                          borderRadius={"4px"}
                           cursor={"pointer"}
                           onClick={() => {
                             setSelectIndexInfo(miraIndex);
-                            setPortfolioModalVisible(true);
+                            setShowDepositModal(true)
                           }}
                         >
-                          <Box
-                            background={"linear-gradient(90deg,#fceabb,#f8b500)"}
-                            borderRadius={"100%"}
-                            width={"25px"}
-                            height={"25px"}
-                          ></Box>
-                          {miraIndex.poolName}
+                          Deposit
                         </Flex>
                       </Td>
-                      <Td>-</Td>
-                      <Td>-%</Td>
-                      <Td>{miraIndex.founded}</Td>{/*<Td>Dec 1, 2000</Td>*/}
-                      <Td>{miraIndex.managementFee}%</Td>
-                      <Td>No</Td>
-                      {walletConnected && (
-                        <Td>
-                          <Flex
-                            justifyCenter
-                            padding={"4px 8px"}
-                            background={"#0005"}
-                            border={"1px solid #34383b"}
-                            borderRadius={"4px"}
-                            cursor={"pointer"}
-                          >
-                            Share with this
-                          </Flex>
-                        </Td>
-                      )}
-                      {walletConnected && (
-                          <Td>
-                            <Flex
-                                justifyCenter
-                                padding={"4px 8px"}
-                                background={"#0005"}
-                                border={"1px solid #34383b"}
-                                borderRadius={"4px"}
-                                cursor={"pointer"}
-                                onClick={()=>{
-                                  setSelectIndexInfo(miraIndex);
-                                  setShowDepositModal(true)
-                                }}
-                            >
-                              Deposit
-                            </Flex>
-                          </Td>
-                      )}
-                      {walletConnected && (
-                          <Td>
-                            <Flex
-                                justifyCenter
-                                padding={"4px 8px"}
-                                background={"#0005"}
-                                border={"1px solid #34383b"}
-                                borderRadius={"4px"}
-                                cursor={"pointer"}
-                                onClick={()=>{
-                                  setSelectIndexInfo(miraIndex);
-                                  setShowWithdrawModal(true)
-                                }}
-                            >
-                              Withdraw
-                            </Flex>
-                          </Td>
-                      )}
-                    </Tr>
-                  );
-                })}
+                    )}
+                    {walletConnected && (
+                      <Td>
+                        <Flex
+                          justifyCenter
+                          padding={"4px 8px"}
+                          background={"#0005"}
+                          border={"1px solid #34383b"}
+                          borderRadius={"4px"}
+                          cursor={"pointer"}
+                          onClick={() => {
+                            setSelectIndexInfo(miraIndex);
+                            setShowWithdrawModal(true)
+                          }}
+                        >
+                          Withdraw
+                        </Flex>
+                      </Td>
+                    )}
+                  </Tr>
+                );
+              })}
             </Tbody>
           </Table>
         </Flex>

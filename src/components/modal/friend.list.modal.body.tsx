@@ -1,34 +1,33 @@
-import {Input, Table, Tr, Th, Td,Thead, Tbody} from "components/base";
-import {Flex} from "components/base/container";
-import {useWalletHook} from "../../common/hooks/wallet";
-import {MODULE_ADDR} from "../../config";
-import {useEffect, useState} from "react";
-import {acceptFriend, FriendStatus, getFriendData, getRequestedFriendData, requestFriend} from "../../utils/graphql";
+import { Table, Tr, Th, Td, Thead, Tbody } from "components/base";
+import { Flex } from "components/base/container";
+import { useWalletHook } from "../../common/hooks/wallet";
+import { useEffect, useState } from "react";
+import { acceptFriend, FriendStatus, getRequestedFriendData } from "../../utils/graphql";
 
 
-const FriendListModalBody:React.FC<{ [index: string]: any }> = ({
-                                                                 setVisible = () => {},
-                                                                 ...props
-                                                             })=>{
-    const { walletConnected, walletAddress} = useWalletHook();
+const FriendListModalBody: React.FC<{ [index: string]: any }> = ({
+    setVisible = () => { },
+    ...props
+}) => {
+    const { walletConnected, walletAddress } = useWalletHook();
     const [requestedFriendDataList, setRequestedFriendDataList] = useState<string[]>([]);
 
-    const getFetchRequestedFriend = async ()=>{
-        if (!walletConnected || !walletAddress) return;
-        let friendDataList = await getRequestedFriendData(walletAddress);
-        friendDataList.map((friendData,index)=>{
-            if (friendData.status != FriendStatus.Request) return;
-            setRequestedFriendDataList([...requestedFriendDataList, friendData.requestUser]);
-        })
-    }
     useEffect(() => {
         if (!walletConnected) return;
+        const getFetchRequestedFriend = async () => {
+            if (!walletConnected || !walletAddress) return;
+            let friendDataList = await getRequestedFriendData(walletAddress);
+            friendDataList.forEach((friendData) => {
+                if (friendData.status !== FriendStatus.Request) return;
+                setRequestedFriendDataList([...requestedFriendDataList, friendData.requestUser]);
+            })
+        }
         getFetchRequestedFriend();
-    },[walletConnected]);
-    const accept_friend = async (requestedAddr: string, index: number) =>{
+    }, [walletConnected, requestedFriendDataList, walletAddress]);
+    const accept_friend = async (requestedAddr: string, index: number) => {
         if (!walletConnected) return;
-        let res = await acceptFriend(walletAddress,requestedAddr);
-        if (res){
+        let res = await acceptFriend(walletAddress, requestedAddr);
+        if (res) {
             requestedFriendDataList.splice(index);
             setRequestedFriendDataList([...requestedFriendDataList]);
         }
@@ -60,7 +59,7 @@ const FriendListModalBody:React.FC<{ [index: string]: any }> = ({
                         </Thead>
                         <Tbody>
                             {
-                                walletConnected && requestedFriendDataList.map((requestedAddr, index)=>{
+                                walletConnected && requestedFriendDataList.map((requestedAddr, index) => {
                                     return (<Tr key={index}>
                                         <Td px={"4px"} py={"8px"} color={"#888"}>
                                             {requestedAddr}
@@ -74,7 +73,7 @@ const FriendListModalBody:React.FC<{ [index: string]: any }> = ({
                                                 border={"1px solid #34383b"}
                                                 borderRadius={"8px"}
                                                 p={"8px 16px"}
-                                                onClick={()=>{
+                                                onClick={() => {
                                                     accept_friend(requestedAddr, index)
                                                 }}
                                             >

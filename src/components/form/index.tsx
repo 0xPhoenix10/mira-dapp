@@ -40,7 +40,7 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
       }
     }
 
-  }, [value]);
+  }, [value, optionList]);
   useEffect(() => {
     const handle = (event: any) => {
       if (dropBox?.current && !dropBox.current.contains(event.target)) {
@@ -76,7 +76,7 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
           selected: selected,
         };
       });
-      list.map((each: any, index: any) => {
+      list.forEach((each: any) => {
         if (each.selected) {
           setCurrentOption(each);
         }
@@ -127,20 +127,20 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
       >
         {optionList
           ? optionList.map((each: any, index: any) => {
-              return (
-                <SmOption
-                  key={index}
-                  onClick={() => {
-                    setIsOpened(false);
-                    if (currentOption?.value === each.value) return;
-                    setCurrentOption(each);
-                    onChange && onChange(each.value);
-                  }}
-                >
-                  {each.text}
-                </SmOption>
-              );
-            })
+            return (
+              <SmOption
+                key={index}
+                onClick={() => {
+                  setIsOpened(false);
+                  if (currentOption?.value === each.value) return;
+                  setCurrentOption(each);
+                  onChange && onChange(each.value);
+                }}
+              >
+                {each.text}
+              </SmOption>
+            );
+          })
           : "Here is not any options."}
       </Box>
     </Box>
@@ -181,7 +181,6 @@ export const RadioBtn: React.FC<RadioBtnProps> = ({
   selected,
 }) => {
   const id = (Math.random() + Math.random()).toString();
-  const [checked, setChecked] = useState(false);
   return (
     <RadioBtnBase>
       <Input
@@ -191,9 +190,9 @@ export const RadioBtn: React.FC<RadioBtnProps> = ({
         value={value}
         name={name}
         defaultChecked={selected}
-        onClick ={(e)=>{
+        onClick={(e) => {
           onChange && onChange(value)
-          }
+        }
         }
       />
       <label htmlFor={id}>

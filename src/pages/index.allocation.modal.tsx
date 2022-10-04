@@ -1,14 +1,13 @@
-import React, {useState, useEffect} from "react";
-import {Flex} from "../components/base/container";
-import {Box, Input, Table, Tbody, Td, Th, Thead, Tr} from "../components/base";
-import {MinusIcon, PlusIcon, SearchIcon} from "../components/icons";
-import {IndexAllocation} from "../utils/types";
+import React from "react";
+import { Flex } from "../components/base/container";
+import { Box, Input, Table, Tbody, Td, Th, Thead, Tr } from "../components/base";
+import { MinusIcon, PlusIcon, SearchIcon } from "../components/icons";
 
 export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = (
-    { setVisible = () => {},
-      allocationData,
-      setAllocationData = ()=>{},
-    ...props }) => {
+    { setVisible = () => { },
+        allocationData,
+        setAllocationData = () => { },
+        ...props }) => {
 
     return (
         <Flex col gridGap={"10px"}>
@@ -59,41 +58,24 @@ export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = (
                     </Thead>
                     <Tbody>
                         {allocationData.map((allocData: any, index: number) => {
-                                return (
-                                    <Tr key={index}>
-                                        <Td>
-                                            <Flex cursor={"pointer"} onClick={()=>{
-                                                allocationData.splice(index, 1);
-                                                setAllocationData([...allocationData]);
-                                            }}>
-                                                <MinusIcon />
-                                            </Flex>
-                                        </Td>
-                                        <Td>
-                                            <Flex alignCenter gridGap={"10px"}>
-                                                <Box
-                                                    background={"linear-gradient(90deg,#fceabb,#f8b500)"}
-                                                    borderRadius={"100%"}
-                                                    width={"25px"}
-                                                    height={"25px"}
-                                                ></Box>
-                                                <Input
-                                                    border={"1px solid #34383b"}
-                                                    padding={"5px"}
-                                                    background={"transparent"}
-                                                    color={"white"}
-                                                    placeholder={"input here..."}
-                                                    textAlign={"right"}
-                                                    value ={allocData.name}
-                                                    onChange = {(e)=>{
-                                                        allocationData[index].name = e.target.value;
-                                                        setAllocationData([...allocationData])
-                                                    }}
-                                                />
-                                            </Flex>
-                                        </Td>
-                                        <Td>20.2%</Td>
-                                        <Td>
+                            return (
+                                <Tr key={index}>
+                                    <Td>
+                                        <Flex cursor={"pointer"} onClick={() => {
+                                            allocationData.splice(index, 1);
+                                            setAllocationData([...allocationData]);
+                                        }}>
+                                            <MinusIcon />
+                                        </Flex>
+                                    </Td>
+                                    <Td>
+                                        <Flex alignCenter gridGap={"10px"}>
+                                            <Box
+                                                background={"linear-gradient(90deg,#fceabb,#f8b500)"}
+                                                borderRadius={"100%"}
+                                                width={"25px"}
+                                                height={"25px"}
+                                            ></Box>
                                             <Input
                                                 border={"1px solid #34383b"}
                                                 padding={"5px"}
@@ -101,18 +83,35 @@ export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = (
                                                 color={"white"}
                                                 placeholder={"input here..."}
                                                 textAlign={"right"}
-                                                value ={allocData.value}
-                                                type={"number"}
-                                                onChange = {(e)=>{
-                                                    allocationData[index].value = e.target.value == "" ? 0: parseInt(e.target.value);
+                                                value={allocData.name}
+                                                onChange={(e) => {
+                                                    allocationData[index].name = e.target.value;
                                                     setAllocationData([...allocationData])
                                                 }}
                                             />
-                                            %
-                                        </Td>
-                                    </Tr>
-                                );
-                            })}
+                                        </Flex>
+                                    </Td>
+                                    <Td>20.2%</Td>
+                                    <Td>
+                                        <Input
+                                            border={"1px solid #34383b"}
+                                            padding={"5px"}
+                                            background={"transparent"}
+                                            color={"white"}
+                                            placeholder={"input here..."}
+                                            textAlign={"right"}
+                                            value={allocData.value}
+                                            type={"number"}
+                                            onChange={(e) => {
+                                                allocationData[index].value = e.target.value === "" ? 0 : parseInt(e.target.value);
+                                                setAllocationData([...allocationData])
+                                            }}
+                                        />
+                                        %
+                                    </Td>
+                                </Tr>
+                            );
+                        })}
                     </Tbody>
                 </Table>
             </Flex>
@@ -126,7 +125,7 @@ export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = (
                 borderRadius={"8px"}
                 cursor="pointer"
                 onClick={() => {
-                    allocationData.push({name:'',value:0 })
+                    allocationData.push({ name: '', value: 0 })
                     setAllocationData([...allocationData]);
                 }}
                 zIndex={"0"}
