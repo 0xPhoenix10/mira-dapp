@@ -31,7 +31,7 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
   const dropBox = useRef<any>();
   const dropPannel = useRef<any>();
   useEffect(() => {
-    console.log(`value:${value}`)
+    console.log(`value:${value}`);
     if (!optionList) return;
     for (let i = 0; i < optionList.length; i++) {
       const each = optionList[i];
@@ -39,7 +39,6 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
         setCurrentOption(each);
       }
     }
-
   }, [value, optionList]);
   useEffect(() => {
     const handle = (event: any) => {
@@ -102,7 +101,12 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
       >
         {before}
         {currentOption ? currentOption.text : placeHolder || "select ..."}
-        <Box ml={"auto"} fontSize={"20px"} display={"flex"} alignItems={"center"}>
+        <Box
+          ml={"auto"}
+          fontSize={"20px"}
+          display={"flex"}
+          alignItems={"center"}
+        >
           <IconNarrow dir={isOpened ? "up" : "down"} />
         </Box>
         {after}
@@ -127,20 +131,20 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
       >
         {optionList
           ? optionList.map((each: any, index: any) => {
-            return (
-              <SmOption
-                key={index}
-                onClick={() => {
-                  setIsOpened(false);
-                  if (currentOption?.value === each.value) return;
-                  setCurrentOption(each);
-                  onChange && onChange(each.value);
-                }}
-              >
-                {each.text}
-              </SmOption>
-            );
-          })
+              return (
+                <SmOption
+                  key={index}
+                  onClick={() => {
+                    setIsOpened(false);
+                    if (currentOption?.value === each.value) return;
+                    setCurrentOption(each);
+                    onChange && onChange(each.value);
+                  }}
+                >
+                  {each.text}
+                </SmOption>
+              );
+            })
           : "Here is not any options."}
       </Box>
     </Box>
@@ -191,9 +195,8 @@ export const RadioBtn: React.FC<RadioBtnProps> = ({
         name={name}
         defaultChecked={selected}
         onClick={(e) => {
-          onChange && onChange(value)
-        }
-        }
+          onChange && onChange(value);
+        }}
       />
       <label htmlFor={id}>
         <div></div>

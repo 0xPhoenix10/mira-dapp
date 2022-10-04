@@ -40,7 +40,13 @@ export interface AllProps
   transition?: any;
   transform?: any;
   cursor?: "pointer" | "reverse";
-  whiteSpace?: "nowrap" | "pre" | "pre-line" | "pre-wrap" | "reverse" | "normal";
+  whiteSpace?:
+    | "nowrap"
+    | "pre"
+    | "pre-line"
+    | "pre-wrap"
+    | "reverse"
+    | "normal";
   visible?: "visible" | "hidden";
   backClip?: string | "reverse";
   textOverflow?: any;
@@ -56,7 +62,14 @@ export interface AllProps
   aspectRatio?: any;
   clipPath?: any;
   outline?: string;
-  objectFit?: "contain" | "cover" | "fill" | "revert" | "scale-down" | "unset" | "initial";
+  objectFit?:
+    | "contain"
+    | "cover"
+    | "fill"
+    | "revert"
+    | "scale-down"
+    | "unset"
+    | "initial";
 }
 
 const transform = system({

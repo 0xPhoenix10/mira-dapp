@@ -13,42 +13,44 @@ import WithdrawModalBody from "./withdraw.modal.body";
 import { UpdateIndexProviderContext } from "./index";
 import { PortfolioModalBody } from "./portfolio.modal.body";
 
-
 interface MiraIndex {
-  poolName: string,
-  poolAddress: string,
-  poolOwner: string,
-  managementFee: string,
-  founded: string
+  poolName: string;
+  poolAddress: string;
+  poolOwner: string;
+  managementFee: string;
+  founded: string;
 }
 
 interface CreatePoolEvent {
-  pool_name: string,
-  pool_address: string,
-  pool_owner: string,
-  private_allocation: boolean,
-  management_fee: number,
-  founded: number
-};
+  pool_name: string;
+  pool_address: string;
+  pool_owner: string;
+  private_allocation: boolean;
+  management_fee: number;
+  founded: number;
+}
 
 const DashboardLeaderBoard = () => {
   const { walletConnected } = useWalletHook();
 
   const [portfolioModalVisible, setPortfolioModalVisible] = useState(false);
-  const [leaderboardMmodalVisible, setLeaderboardModalVisible] = useState(false);
+  const [leaderboardMmodalVisible, setLeaderboardModalVisible] =
+    useState(false);
 
   const [currentTab, setCurrentTab] = useState(0);
   const [showDepositModal, setShowDepositModal] = useState<boolean>(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState<boolean>(false);
 
-  const [selectIndexInfo, setSelectIndexInfo] = useState<MiraIndex | null>(null);
+  const [selectIndexInfo, setSelectIndexInfo] = useState<MiraIndex | null>(
+    null
+  );
 
   const [miraIndexes, setMiraIndexes] = useState<MiraIndex[]>([]);
 
   const { updateIndex } = useContext(UpdateIndexProviderContext);
 
   useEffect(() => {
-    fetchIndexes()
+    fetchIndexes();
   }, [updateIndex]);
 
   useEffect(() => {
@@ -76,28 +78,48 @@ const DashboardLeaderBoard = () => {
       });
     }
     setMiraIndexes(create_pool_events);
-  }
+  };
 
   return (
     <>
       {
-        <ModalParent visible={showDepositModal} setVisible={setShowDepositModal}>
-          <DepositModalBody flex={1} setVisible={setShowDepositModal} miraIndexInfo={selectIndexInfo} />
+        <ModalParent
+          visible={showDepositModal}
+          setVisible={setShowDepositModal}
+        >
+          <DepositModalBody
+            flex={1}
+            setVisible={setShowDepositModal}
+            miraIndexInfo={selectIndexInfo}
+          />
         </ModalParent>
       }
       {
-        <ModalParent visible={showWithdrawModal} setVisible={setShowWithdrawModal}>
-          <WithdrawModalBody flex={1} setVisible={setShowWithdrawModal} miraIndexInfo={selectIndexInfo} />
+        <ModalParent
+          visible={showWithdrawModal}
+          setVisible={setShowWithdrawModal}
+        >
+          <WithdrawModalBody
+            flex={1}
+            setVisible={setShowWithdrawModal}
+            miraIndexInfo={selectIndexInfo}
+          />
         </ModalParent>
       }
       {
-        <ModalParent visible={portfolioModalVisible} setVisible={setPortfolioModalVisible}>
+        <ModalParent
+          visible={portfolioModalVisible}
+          setVisible={setPortfolioModalVisible}
+        >
           <PortfolioModalBody flex={1} miraIndexInfo={selectIndexInfo} />
         </ModalParent>
       }
 
       {
-        <ModalParent visible={leaderboardMmodalVisible} setVisible={setLeaderboardModalVisible}>
+        <ModalParent
+          visible={leaderboardMmodalVisible}
+          setVisible={setLeaderboardModalVisible}
+        >
           <IndexListModalBody flex={1} type={"create"} title={"Leaderboard"} />
         </ModalParent>
       }
@@ -182,7 +204,13 @@ const DashboardLeaderBoard = () => {
                 <Th>Founded</Th>
                 <Th>Management Fee</Th>
                 <Th>Locked</Th>
-                {walletConnected && (<><Th></Th><Th></Th><Th></Th></>)}
+                {walletConnected && (
+                  <>
+                    <Th></Th>
+                    <Th></Th>
+                    <Th></Th>
+                  </>
+                )}
               </Tr>
             </Thead>
             <Tbody>
@@ -210,7 +238,8 @@ const DashboardLeaderBoard = () => {
                     </Td>
                     <Td>-</Td>
                     <Td>-%</Td>
-                    <Td>{miraIndex.founded}</Td>{/*<Td>Dec 1, 2000</Td>*/}
+                    <Td>{miraIndex.founded}</Td>
+                    {/*<Td>Dec 1, 2000</Td>*/}
                     <Td>{miraIndex.managementFee}%</Td>
                     <Td>No</Td>
                     {walletConnected && (
@@ -238,7 +267,7 @@ const DashboardLeaderBoard = () => {
                           cursor={"pointer"}
                           onClick={() => {
                             setSelectIndexInfo(miraIndex);
-                            setShowDepositModal(true)
+                            setShowDepositModal(true);
                           }}
                         >
                           Deposit
@@ -256,7 +285,7 @@ const DashboardLeaderBoard = () => {
                           cursor={"pointer"}
                           onClick={() => {
                             setSelectIndexInfo(miraIndex);
-                            setShowWithdrawModal(true)
+                            setShowWithdrawModal(true);
                           }}
                         >
                           Withdraw

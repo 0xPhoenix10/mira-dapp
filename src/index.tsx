@@ -5,29 +5,33 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import AllProvider from "./providers";
 import {
-    PontemWalletAdapter,
-    MartianWalletAdapter,
-    WalletAdapter,
-    WalletProvider
+  PontemWalletAdapter,
+  MartianWalletAdapter,
+  WalletAdapter,
+  WalletProvider,
 } from "@manahippo/aptos-wallet-adapter";
 
 const root = ReactDOM.createRoot(
-    document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 const wallets: WalletAdapter[] = [
-    new PontemWalletAdapter(),
-    new MartianWalletAdapter()
+  new PontemWalletAdapter(),
+  new MartianWalletAdapter(),
 ];
 
 root.render(
   <React.StrictMode>
-      <WalletProvider wallets={wallets} autoConnect={true} onError={(error: Error) => {
-          console.log('wallet error:', error)
-      }}>
-        <AllProvider>
-          <App />
-        </AllProvider>
-      </WalletProvider>
+    <WalletProvider
+      wallets={wallets}
+      autoConnect={true}
+      onError={(error: Error) => {
+        console.log("wallet error:", error);
+      }}
+    >
+      <AllProvider>
+        <App />
+      </AllProvider>
+    </WalletProvider>
   </React.StrictMode>
 );
 

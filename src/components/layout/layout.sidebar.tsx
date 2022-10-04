@@ -67,7 +67,10 @@ const LayoutSidebar = () => {
         overflow={"hidden"}
         transition={"200ms"}
       >
-        <Flex cursor={"pointer"} onClick={() => "location.href='https://discord.gg/yR3UzjZuxB';"}>
+        <Flex
+          cursor={"pointer"}
+          onClick={() => "location.href='https://discord.gg/yR3UzjZuxB';"}
+        >
           <DiscordIcon />
         </Flex>
         <Flex cursor={"pointer"}>

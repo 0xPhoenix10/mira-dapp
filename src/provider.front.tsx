@@ -3,7 +3,7 @@ import React, { createContext, useState } from "react";
 export const FrontContext = createContext<any>(null);
 
 type FrontProviderProps = {
-    children?: React.ReactNode
+  children?: React.ReactNode;
 };
 
 const FrontProvider: React.FC<FrontProviderProps> = ({ children }) => {

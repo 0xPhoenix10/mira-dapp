@@ -5,10 +5,9 @@ import { CreateIcon, WarningIcon } from "components/icons";
 import { ModalParent } from "components/modal";
 import { useState } from "react";
 import { ChartBox, IndexListModalBody, IndexModalBody } from "../components";
-import {PortfolioModalBody} from "./portfolio.modal.body";
-import {IndexAllocationModalBody} from "../index.allocation.modal";
-import {IndexAllocation} from "../../utils/types";
-
+import { PortfolioModalBody } from "./portfolio.modal.body";
+import { IndexAllocationModalBody } from "../index.allocation.modal";
+import { IndexAllocation } from "../../utils/types";
 
 const DashboardRecommended = () => {
   const { walletConnected } = useWalletHook();
@@ -16,64 +15,108 @@ const DashboardRecommended = () => {
   const [modifyMmodalVisible, setModifyModalVisible] = useState(false);
   const [recommendedModalVisible, setRecommendedModalVisible] = useState(false);
   const [myIndexesModalVisible, setMyIndexesModalVisible] = useState(false);
-  const [walletConnectAlertVisible, setWalletConnectAlertVisible] = useState(false);
+  const [walletConnectAlertVisible, setWalletConnectAlertVisible] =
+    useState(false);
 
   const [portfolioModalVisible, setPortfolioModalVisible] = useState(false);
 
   const [currentTab, setCurrentTab] = useState(0);
 
-  const [ indexAllocationModalVisible, setIndexAllocationModalVisible] = useState(false);
-  const [ allocationData, setAllocationData] = useState<IndexAllocation[]>([
-      {
-        name:'BTC', value:50
-      },
+  const [indexAllocationModalVisible, setIndexAllocationModalVisible] =
+    useState(false);
+  const [allocationData, setAllocationData] = useState<IndexAllocation[]>([
     {
-      name: 'USDT', value:50
-    }
+      name: "BTC",
+      value: 50,
+    },
+    {
+      name: "USDT",
+      value: 50,
+    },
   ]);
 
   return (
     <>
       {
-        <ModalParent visible={portfolioModalVisible} setVisible={setPortfolioModalVisible}>
+        <ModalParent
+          visible={portfolioModalVisible}
+          setVisible={setPortfolioModalVisible}
+        >
           <PortfolioModalBody flex={1} />
         </ModalParent>
       }
 
       {
-        <ModalParent visible={createMmodalVisible} setVisible={setCreateModalVisible}>
-          <IndexModalBody flex={1} type={"create"} setVisible={setCreateModalVisible} setAllocationVisible = {setIndexAllocationModalVisible} allocationData = {allocationData}/>
+        <ModalParent
+          visible={createMmodalVisible}
+          setVisible={setCreateModalVisible}
+        >
+          <IndexModalBody
+            flex={1}
+            type={"create"}
+            setVisible={setCreateModalVisible}
+            setAllocationVisible={setIndexAllocationModalVisible}
+            allocationData={allocationData}
+          />
         </ModalParent>
       }
       {
-        <ModalParent visible={indexAllocationModalVisible} setVisible={setIndexAllocationModalVisible}>
-          <IndexAllocationModalBody flex={1} type={"create"} allocationData={allocationData} setAllocationData={setAllocationData} setVisible={setIndexAllocationModalVisible}/>
+        <ModalParent
+          visible={indexAllocationModalVisible}
+          setVisible={setIndexAllocationModalVisible}
+        >
+          <IndexAllocationModalBody
+            flex={1}
+            type={"create"}
+            allocationData={allocationData}
+            setAllocationData={setAllocationData}
+            setVisible={setIndexAllocationModalVisible}
+          />
         </ModalParent>
       }
 
       {
-        <ModalParent visible={modifyMmodalVisible} setVisible={setModifyModalVisible}>
-          <IndexModalBody flex={1} type={"modify"} setVisible={setModifyModalVisible} />
+        <ModalParent
+          visible={modifyMmodalVisible}
+          setVisible={setModifyModalVisible}
+        >
+          <IndexModalBody
+            flex={1}
+            type={"modify"}
+            setVisible={setModifyModalVisible}
+          />
         </ModalParent>
       }
       {
-        <ModalParent visible={recommendedModalVisible} setVisible={setRecommendedModalVisible}>
+        <ModalParent
+          visible={recommendedModalVisible}
+          setVisible={setRecommendedModalVisible}
+        >
           <IndexListModalBody flex={1} title={"Recommended"} />
         </ModalParent>
       }
       {
-        <ModalParent visible={myIndexesModalVisible} setVisible={setMyIndexesModalVisible}>
+        <ModalParent
+          visible={myIndexesModalVisible}
+          setVisible={setMyIndexesModalVisible}
+        >
           <IndexListModalBody flex={1} title={"My Indexes"} />
         </ModalParent>
       }
       {
-        <ModalParent visible={myIndexesModalVisible} setVisible={setMyIndexesModalVisible}>
+        <ModalParent
+          visible={myIndexesModalVisible}
+          setVisible={setMyIndexesModalVisible}
+        >
           <IndexListModalBody flex={1} title={"My Indexes"} />
         </ModalParent>
       }
       {
-        <ModalParent visible={walletConnectAlertVisible} setVisible={setWalletConnectAlertVisible} >
-          <Flex alignCenter gridGap={"8px"} p={"10px 20px"} >
+        <ModalParent
+          visible={walletConnectAlertVisible}
+          setVisible={setWalletConnectAlertVisible}
+        >
+          <Flex alignCenter gridGap={"8px"} p={"10px 20px"}>
             <WarningIcon size={"25px"} color={"orange"} />
             Connect your wallet to create a portfolio.
           </Flex>
@@ -150,7 +193,11 @@ const DashboardRecommended = () => {
         </Flex>
         {walletConnected && (
           <Flex flex={1} col gridGap={"20px"}>
-            <Flex alignCenter height={"50px"} borderBottom={"1px solid #34383b"}>
+            <Flex
+              alignCenter
+              height={"50px"}
+              borderBottom={"1px solid #34383b"}
+            >
               <Flex alignItems={"flex-end"} gridGap={"8px"}>
                 <Box
                   fontSize={currentTab === 0 ? "20px" : "16px"}

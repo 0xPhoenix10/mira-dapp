@@ -2,7 +2,7 @@ import React from "react";
 import { ThemeProvider } from "styled-components";
 
 type ThemesProviderProps = {
-  children?: React.ReactNode
+  children?: React.ReactNode;
 };
 
 const ThemesProvider: React.FC<ThemesProviderProps> = ({ children }) => {
