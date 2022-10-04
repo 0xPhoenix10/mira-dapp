@@ -6,7 +6,7 @@ import {
   DocsIcon,
   GuideIcon,
   MenuIcon,
-  TelegramIcon,
+  // TelegramIcon,
   TwitterIcon,
   WhitePaperIcon,
 } from "components/icons";
@@ -34,13 +34,30 @@ const LayoutSidebar = () => {
           overflow={"hidden"}
           transition={"200ms"}
         >
-          <SideBarBtn active icon={<AboutIcon />} title={"About"} url={"https://about.mirafinance.io"} />
+          <SideBarBtn
+            active
+            icon={<AboutIcon />}
+            title={"About"}
+            url={"https://about.mirafinance.io"}
+          />
           <Box background={"#1e2022"} width={"80%"} height={"1px"} />
-          <SideBarBtn icon={<GuideIcon />} title={"Guide"} url={"https://docs.mirafinance.io"} />
+          <SideBarBtn
+            icon={<GuideIcon />}
+            title={"Guide"}
+            url={"https://docs.mirafinance.io"}
+          />
           <Box background={"#1e2022"} width={"80%"} height={"1px"} />
-          <SideBarBtn icon={<DocsIcon />} title={"Docs"} url={"https://docs.mirafinance.io"} />
+          <SideBarBtn
+            icon={<DocsIcon />}
+            title={"Docs"}
+            url={"https://docs.mirafinance.io"}
+          />
           <Box background={"#1e2022"} width={"80%"} height={"1px"} />
-          <SideBarBtn icon={<WhitePaperIcon />} title={"WhitePaper"} url={"https://paper.mirafinance.io"} />
+          <SideBarBtn
+            icon={<WhitePaperIcon />}
+            title={"WhitePaper"}
+            url={"https://paper.mirafinance.io"}
+          />
         </Flex>
         <Flex>
           <Flex
@@ -68,11 +85,15 @@ const LayoutSidebar = () => {
         overflow={"hidden"}
         transition={"200ms"}
       >
-        <Flex cursor={"pointer"} >
-          <LinkIcon href={"https://discord.gg/yR3UzjZuxB"} target={"_blank"}><DiscordIcon /></LinkIcon>
+        <Flex cursor={"pointer"}>
+          <LinkIcon href={"https://discord.gg/yR3UzjZuxB"} target={"_blank"}>
+            <DiscordIcon />
+          </LinkIcon>
         </Flex>
-        <Flex cursor={"pointer"} >
-          <LinkIcon href={"https://twitter.com/Mira_Finance"} target={"_blank"}><TwitterIcon /></LinkIcon>
+        <Flex cursor={"pointer"}>
+          <LinkIcon href={"https://twitter.com/Mira_Finance"} target={"_blank"}>
+            <TwitterIcon />
+          </LinkIcon>
         </Flex>
       </Flex>
     </Flex>
@@ -106,7 +127,7 @@ const Link = styled.a`
 const SideBarBtn: React.FC<SideBarBtnProps> = ({
   icon = "",
   title = "",
-  onClick = () => { },
+  onClick = () => {},
   active,
   url,
 }) => {
