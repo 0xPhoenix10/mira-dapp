@@ -10,7 +10,7 @@ import {
 } from "components/icons";
 import { CustomTooltip } from "components/elements/tooptip";
 import React, { useContext, useState } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { FEE_DECIMAL, MODULE_ADDR } from "../config";
 import { useWalletHook } from "../common/hooks/wallet";
 import { UpdateIndexProviderContext } from "./dashboard";
@@ -23,12 +23,17 @@ interface ChartBoxProps {
   [index: string]: any;
 }
 
+interface IData {
+  name: string;
+  value: string | number;
+}
+
 export const ChartBox: React.FC<ChartBoxProps> = ({
   title = "Chart Box",
   cursor = "revert",
-  onClick = () => {},
+  onClick = () => { },
   cursorAll,
-  onClickAll = () => {},
+  onClickAll = () => { },
   ...props
 }) => {
   const data = [
@@ -77,6 +82,28 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
       </text>
     );
   };
+
+  const style = {
+    backgroundColor: "#000",
+    color: "lightgrey",
+    padding: "2px 15px",
+    fontSize: "12px"
+  };
+
+  const CustomizedTooltip = React.memo((props: any) => {
+    if (props.payload.length > 0) {
+      const sum = data.reduce((a, v) => a = a + v.value, 0)
+
+      const item: IData = props.payload[0];
+      return (
+        <div style={style}>
+          <p>{item.name} - {(Number(item.value) / sum * 100).toFixed(0)}%</p>
+        </div>
+      );
+    }
+    return null;
+  });
+
   return (
     <Flex
       col
@@ -102,6 +129,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
               onClick={onClick}
               style={{ cursor: cursor }}
             >
+              <Tooltip content={<CustomizedTooltip />} />
               <Pie
                 data={data}
                 cx="50%"
@@ -214,8 +242,8 @@ interface IndexModalBodyProps {
 }
 export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   type = "modify",
-  setVisible = () => {},
-  setAllocationVisible = () => {},
+  setVisible = () => { },
+  setAllocationVisible = () => { },
   allocationData,
   ...props
 }) => {
@@ -316,6 +344,28 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
       setVisible(false);
     }
   };
+
+  const style = {
+    backgroundColor: "#000",
+    color: "lightgrey",
+    padding: "2px 15px",
+    fontSize: "12px"
+  };
+
+  const CustomizedTooltip = React.memo((props: any) => {
+    if (props.payload.length > 0) {
+      const sum = allocationData.reduce((a, v) => a = a + v.value, 0)
+
+      const item: IData = props.payload[0];
+      return (
+        <div style={style}>
+          <p>{item.name} - {(Number(item.value) / sum * 100).toFixed(0)}%</p>
+        </div>
+      );
+    }
+    return null;
+  });
+
   return (
     <>
       {visibleDeposit || visibleWithdraw ? (
@@ -373,6 +423,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                             setAllocationVisible(true);
                           }}
                         >
+                          <Tooltip content={<CustomizedTooltip />} />
                           <Pie
                             data={allocationData}
                             cx="50%"
