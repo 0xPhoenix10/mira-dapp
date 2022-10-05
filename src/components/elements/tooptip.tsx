@@ -12,6 +12,6 @@ export const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
         color: 'lightgrey',
         fontSize: '13px',
         textAlign: 'center',
-        padding: '10px'
+        padding: '7px'
     },
 }));
