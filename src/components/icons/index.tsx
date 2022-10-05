@@ -694,14 +694,15 @@ export const ArrowIcon: React.FC<ArrowIconProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       style={{
-        transform: `rotate(${dir === "down"
-          ? "180"
-          : dir === "right"
+        transform: `rotate(${
+          dir === "down"
+            ? "180"
+            : dir === "right"
             ? "90"
             : dir === "left"
-              ? "-90"
-              : "0"
-          }deg)`,
+            ? "-90"
+            : "0"
+        }deg)`,
       }}
     >
       <path
@@ -728,10 +729,10 @@ export const IconNarrow: React.FC<ArrowIconProps> = ({
           dir === "up"
             ? "scaleY(-1)"
             : dir === "right"
-              ? "rotate(-90deg)"
-              : dir === "left"
-                ? "rotate(90deg)"
-                : "",
+            ? "rotate(-90deg)"
+            : dir === "left"
+            ? "rotate(90deg)"
+            : "",
       }}
     >
       <path
