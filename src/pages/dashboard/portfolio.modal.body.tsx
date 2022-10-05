@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Flex } from "../../components/base/container";
-import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { Table, Tbody, Td, Tr } from "../../components/base";
 import { ArrowIcon } from "components/icons";
 import DepositModalBody from "./deposit.modal.body";
@@ -11,6 +11,11 @@ import {
   getFriendData,
   requestFriend,
 } from "../../utils/graphql";
+
+interface IData {
+  name: string;
+  value: string | number;
+}
 
 export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   miraIndexInfo = {},
@@ -92,6 +97,28 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
       </text>
     );
   };
+
+  const style = {
+    backgroundColor: "#000",
+    color: "lightgrey",
+    padding: "2px 15px",
+    fontSize: "12px"
+  };
+
+  const CustomizedTooltip = React.memo((props: any) => {
+    if (props.payload.length > 0) {
+      const sum = data.reduce((a, v) => a = a + v.value, 0)
+
+      const item: IData = props.payload[0];
+      return (
+        <div style={style}>
+          <p>{item.name} - {(Number(item.value) / sum * 100).toFixed(0)}%</p>
+        </div>
+      );
+    }
+    return null;
+  });
+
   return (
     <>
       {visibleDeposit || visibleWithdraw ? (
@@ -139,6 +166,7 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
                   <Flex width={"150px"} aspectRatio={"1"}>
                     <ResponsiveContainer>
                       <PieChart width={300} height={300}>
+                        <Tooltip content={<CustomizedTooltip />} />
                         <Pie
                           data={data}
                           cx="50%"
