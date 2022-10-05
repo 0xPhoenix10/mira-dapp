@@ -130,6 +130,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
           <CustomTooltip
             title="today's market performance"
             arrow
+            disableInteractive
             placement="top"
           >
             <Flex gridGap={"8px"}>
@@ -141,6 +142,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
           <CustomTooltip
             title="this week's performance"
             arrow
+            disableInteractive
             placement="top"
           >
             <Flex gridGap={"8px"}>
@@ -152,6 +154,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
           <CustomTooltip
             title="this year's performance"
             arrow
+            disableInteractive
             placement="top"
           >
             <Flex gridGap={"8px"}>
@@ -163,6 +166,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
           <CustomTooltip
             title="the Sharpe Ratio measures risk to reward on a scale from 0-1."
             arrow
+            disableInteractive
             placement="top"
           >
             <Flex gridGap={"8px"}>
@@ -174,6 +178,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
           <CustomTooltip
             title="Total Value Locked measures the total amount of funds deposited"
             arrow
+            disableInteractive
             placement="top"
           >
             <Flex gridGap={"8px"}>
@@ -185,6 +190,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
           <CustomTooltip
             title="Mira approves of this fund strategy as expert-crafted"
             arrow
+            disableInteractive
             placement="top"
           >
             <Flex gridGap={"8px"}>

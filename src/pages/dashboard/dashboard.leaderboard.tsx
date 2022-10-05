@@ -204,6 +204,7 @@ const DashboardLeaderBoard = () => {
                   <CustomTooltip
                     title="Total Value Locked measures the total amount of funds deposited"
                     arrow
+                    disableInteractive
                     placement="top"
                   >
                     <span>TVL</span>
@@ -214,6 +215,7 @@ const DashboardLeaderBoard = () => {
                   <CustomTooltip
                     title="market performance from the beginning of the year -> today"
                     arrow
+                    disableInteractive
                     placement="top"
                   >
                     <span>Founded</span>
@@ -223,6 +225,7 @@ const DashboardLeaderBoard = () => {
                   <CustomTooltip
                     title="percentage of each deposit that the manager collects as a fee for managing the investments"
                     arrow
+                    disableInteractive
                     placement="top"
                   >
                     <span>Management Fee</span>
@@ -232,6 +235,7 @@ const DashboardLeaderBoard = () => {
                   <CustomTooltip
                     title="The lockup period before a user can withdraw funds they have deposited"
                     arrow
+                    disableInteractive
                     placement="top"
                   >
                     <span>Locked</span>
