@@ -8,6 +8,7 @@ import {
   SearchIcon,
   TimesIcon,
 } from "components/icons";
+import { CustomTooltip } from "components/elements/tooptip";
 import React, { useContext, useState } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { FEE_DECIMAL, MODULE_ADDR } from "../config";
@@ -21,12 +22,13 @@ interface ChartBoxProps {
   title?: string;
   [index: string]: any;
 }
+
 export const ChartBox: React.FC<ChartBoxProps> = ({
   title = "Chart Box",
   cursor = "revert",
-  onClick = () => {},
+  onClick = () => { },
   cursorAll,
-  onClickAll = () => {},
+  onClickAll = () => { },
   ...props
 }) => {
   const data = [
@@ -121,40 +123,76 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
             </PieChart>
           </ResponsiveContainer>
         </Flex>
-        <Flex col gridGap={"4px"}>
+        <Flex col gridGap={"4px"} cursor={"pointer"}>
           <Flex mb={"8px"} fontSize={"18px"} fontWeight={"bold"} mx={"auto"}>
             Mira
           </Flex>
-          <Flex gridGap={"8px"}>
-            <Box>1d</Box>
-            <Box>:</Box>
-            <Box>0.2%</Box>
-          </Flex>
-          <Flex gridGap={"8px"}>
-            <Box>1w</Box>
-            <Box>:</Box>
-            <Box>4.1%</Box>
-          </Flex>
-          <Flex gridGap={"8px"}>
-            <Box>1y</Box>
-            <Box>:</Box>
-            <Box>18.5%</Box>
-          </Flex>
-          <Flex gridGap={"8px"}>
-            <Box>Ratio</Box>
-            <Box>:</Box>
-            <Box>0.23</Box>
-          </Flex>
-          <Flex gridGap={"8px"}>
-            <Box>TVL</Box>
-            <Box>:</Box>
-            <Box>3.2M</Box>
-          </Flex>
-          <Flex gridGap={"8px"}>
-            <Box>Expert</Box>
-            <Box>:</Box>
-            <Box>✓</Box>
-          </Flex>
+          <CustomTooltip
+            title="today's market performance"
+            arrow
+            placement="top"
+          >
+            <Flex gridGap={"8px"}>
+              <Box>1d</Box>
+              <Box>:</Box>
+              <Box>0.2%</Box>
+            </Flex>
+          </CustomTooltip>
+          <CustomTooltip
+            title="this week's performance"
+            arrow
+            placement="top"
+          >
+            <Flex gridGap={"8px"}>
+              <Box>1w</Box>
+              <Box>:</Box>
+              <Box>4.1%</Box>
+            </Flex>
+          </CustomTooltip>
+          <CustomTooltip
+            title="this year's performance"
+            arrow
+            placement="top"
+          >
+            <Flex gridGap={"8px"}>
+              <Box>1y</Box>
+              <Box>:</Box>
+              <Box>18.5%</Box>
+            </Flex>
+          </CustomTooltip>
+          <CustomTooltip
+            title="the Sharpe Ratio measures risk to reward on a scale from 0-1."
+            arrow
+            placement="top"
+          >
+            <Flex gridGap={"8px"}>
+              <Box>Ratio</Box>
+              <Box>:</Box>
+              <Box>0.23</Box>
+            </Flex>
+          </CustomTooltip>
+          <CustomTooltip
+            title="Total Value Locked measures the total amount of funds deposited"
+            arrow
+            placement="top"
+          >
+            <Flex gridGap={"8px"}>
+              <Box>TVL</Box>
+              <Box>:</Box>
+              <Box>3.2M</Box>
+            </Flex>
+          </CustomTooltip>
+          <CustomTooltip
+            title="Mira approves of this fund strategy as expert-crafted"
+            arrow
+            placement="top"
+          >
+            <Flex gridGap={"8px"}>
+              <Box>Expert</Box>
+              <Box>:</Box>
+              <Box>✓</Box>
+            </Flex>
+          </CustomTooltip>
         </Flex>
       </Flex>
       <Box fontSize={"16px"} fontWeight={"bold"} opacity={"0.3"}>
@@ -170,8 +208,8 @@ interface IndexModalBodyProps {
 }
 export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   type = "modify",
-  setVisible = () => {},
-  setAllocationVisible = () => {},
+  setVisible = () => { },
+  setAllocationVisible = () => { },
   allocationData,
   ...props
 }) => {

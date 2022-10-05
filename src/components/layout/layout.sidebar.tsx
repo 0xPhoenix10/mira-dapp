@@ -6,7 +6,6 @@ import {
   DocsIcon,
   GuideIcon,
   MenuIcon,
-  TelegramIcon,
   TwitterIcon,
   WhitePaperIcon,
 } from "components/icons";
