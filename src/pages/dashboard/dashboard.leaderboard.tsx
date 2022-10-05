@@ -1,5 +1,6 @@
 import { useWalletHook } from "common/hooks/wallet";
 import { Box, Input, Table, Tbody, Td, Th, Thead, Tr } from "components/base";
+import { CustomTooltip } from "components/elements/tooptip";
 import { Flex } from "components/base/container";
 import { FilterIcon, SearchIcon, SortIcon } from "components/icons";
 import { ModalParent } from "components/modal";
@@ -199,11 +200,43 @@ const DashboardLeaderBoard = () => {
             <Thead>
               <Tr>
                 <Th>Index Name</Th>
-                <Th>TVL</Th>
+                <Th>
+                  <CustomTooltip
+                    title="Total Value Locked measures the total amount of funds deposited"
+                    arrow
+                    placement="top"
+                  >
+                    <span>TVL</span>
+                  </CustomTooltip>
+                </Th>
                 <Th>YTD %</Th>
-                <Th>Founded</Th>
-                <Th>Management Fee</Th>
-                <Th>Locked</Th>
+                <Th>
+                  <CustomTooltip
+                    title="market performance from the beginning of the year -> today"
+                    arrow
+                    placement="top"
+                  >
+                    <span>Founded</span>
+                  </CustomTooltip>
+                </Th>
+                <Th>
+                  <CustomTooltip
+                    title="percentage of each deposit that the manager collects as a fee for managing the investments"
+                    arrow
+                    placement="top"
+                  >
+                    <span>Management Fee</span>
+                  </CustomTooltip>
+                </Th>
+                <Th>
+                  <CustomTooltip
+                    title="The lockup period before a user can withdraw funds they have deposited"
+                    arrow
+                    placement="top"
+                  >
+                    <span>Locked</span>
+                  </CustomTooltip>
+                </Th>
                 {walletConnected && (
                   <>
                     <Th></Th>

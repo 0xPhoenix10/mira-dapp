@@ -27,26 +27,26 @@ import {
 
 export interface AllProps
   extends BackgroundProps,
-    BorderProps,
-    ColorProps,
-    FlexboxProps,
-    GridProps,
-    LayoutProps,
-    PositionProps,
-    ShadowProps,
-    SpaceProps,
-    TypographyProps {
+  BorderProps,
+  ColorProps,
+  FlexboxProps,
+  GridProps,
+  LayoutProps,
+  PositionProps,
+  ShadowProps,
+  SpaceProps,
+  TypographyProps {
   backDrop?: any;
   transition?: any;
   transform?: any;
   cursor?: "pointer" | "reverse";
   whiteSpace?:
-    | "nowrap"
-    | "pre"
-    | "pre-line"
-    | "pre-wrap"
-    | "reverse"
-    | "normal";
+  | "nowrap"
+  | "pre"
+  | "pre-line"
+  | "pre-wrap"
+  | "reverse"
+  | "normal";
   visible?: "visible" | "hidden";
   backClip?: string | "reverse";
   textOverflow?: any;
@@ -63,13 +63,13 @@ export interface AllProps
   clipPath?: any;
   outline?: string;
   objectFit?:
-    | "contain"
-    | "cover"
-    | "fill"
-    | "revert"
-    | "scale-down"
-    | "unset"
-    | "initial";
+  | "contain"
+  | "cover"
+  | "fill"
+  | "revert"
+  | "scale-down"
+  | "unset"
+  | "initial";
 }
 
 const transform = system({
@@ -216,6 +216,7 @@ Td.defaultProps = {
 };
 export const Th = styled.th<AllProps>`
   ${allCompose}
+  cursor: pointer;
 `;
 Th.defaultProps = {
   px: "8px",
@@ -230,7 +231,7 @@ export const Table = styled.table<AllProps>`
   ${allCompose}
 `;
 
-export const ScrollHideContainer = styled(Box)<AllProps>`
+export const ScrollHideContainer = styled(Box) <AllProps>`
   overflow: auto;
   &::-webkit-scrollbar {
     display: none !important;
