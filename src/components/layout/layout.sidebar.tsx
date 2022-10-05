@@ -37,7 +37,7 @@ const LayoutSidebar = () => {
             active
             icon={<AboutIcon />}
             title={"About"}
-            url={"https://about.mirafinance.io"}
+            url={"https://mirafinance.io/about-us"}
           />
           <Box background={"#1e2022"} width={"80%"} height={"1px"} />
           <SideBarBtn
