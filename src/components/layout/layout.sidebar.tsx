@@ -126,7 +126,7 @@ const Link = styled.a`
 const SideBarBtn: React.FC<SideBarBtnProps> = ({
   icon = "",
   title = "",
-  onClick = () => { },
+  onClick = () => {},
   active,
   url,
 }) => {

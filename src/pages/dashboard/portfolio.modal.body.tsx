@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Flex } from "../../components/base/container";
-import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { Table, Tbody, Td, Tr } from "../../components/base";
 import { ArrowIcon } from "components/icons";
 import DepositModalBody from "./deposit.modal.body";
@@ -11,6 +11,12 @@ import {
   getFriendData,
   requestFriend,
 } from "../../utils/graphql";
+import { renderActiveShape } from "../../common/recharts/piechart";
+
+interface IData {
+  name: string;
+  value: string | number;
+}
 
 export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   miraIndexInfo = {},
@@ -19,8 +25,10 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   const { walletConnected, walletAddress } = useWalletHook();
   const [visibleDeposit, setVisibleDeposit] = useState(false);
   const [visibleWithdraw, setVisibleWithdraw] = useState(false);
-
   const [isFriend, setIsFriend] = useState(false);
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [isHovered, setHovered] = React.useState(false);
+
   useEffect(() => {
     if (walletConnected) {
       const getFetchFriend = async () => {
@@ -39,12 +47,14 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
       getFetchFriend();
     }
   }, [walletConnected, miraIndexInfo.poolOwner, walletAddress]);
+
   const data = [
     { name: "APT", value: 400 },
     { name: "ETH", value: 300 },
     { name: "BTC", value: 300 },
     { name: "DOT", value: 200 },
   ];
+
   const COLORS = [
     "#97acd0",
     "#5c87bf",
@@ -64,6 +74,7 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
       setIsFriend(true);
     }
   };
+
   const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({
     cx,
@@ -92,6 +103,35 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
       </text>
     );
   };
+
+  const style = {
+    backgroundColor: "#000",
+    color: "lightgrey",
+    padding: "2px 15px",
+    fontSize: "12px"
+  };
+
+  const CustomizedTooltip = React.memo((props: any) => {
+    if (props.payload.length > 0) {
+      const sum = data.reduce((a, v) => a = a + v.value, 0)
+
+      const item: IData = props.payload[0];
+      return (
+        <div style={style}>
+          <p>{item.name} - {(Number(item.value) / sum * 100).toFixed(0)}%</p>
+        </div>
+      );
+    }
+    return null;
+  });
+
+  const onPieEnter = (data, index) => {
+    setActiveIndex(index);
+    setHovered(true);
+  };
+
+  const onPieLeave = () => setHovered(false);
+
   return (
     <>
       {visibleDeposit || visibleWithdraw ? (
@@ -139,16 +179,21 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
                   <Flex width={"150px"} aspectRatio={"1"}>
                     <ResponsiveContainer>
                       <PieChart width={300} height={300}>
+                        <Tooltip content={<CustomizedTooltip />} />
                         <Pie
+                          activeIndex={isHovered ? activeIndex : null}
+                          activeShape={renderActiveShape}
                           data={data}
                           cx="50%"
                           cy="50%"
                           labelLine={false}
                           label={renderCustomizedLabel}
-                          outerRadius={"100%"}
+                          outerRadius={"90%"}
                           fill="#8884d8"
                           stroke={"transparent"}
                           dataKey="value"
+                          onMouseEnter={onPieEnter}
+                          onMouseLeave={onPieLeave}
                         >
                           {data.map((entry, index) => (
                             <Cell
