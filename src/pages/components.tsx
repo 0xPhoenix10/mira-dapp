@@ -430,35 +430,38 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                   <Flex col>
                     <Flex width={"200px"} aspectRatio={"1"}>
                       <ResponsiveContainer>
-                        <PieChart
-                          width={300}
-                          height={300}
-                          style={{ cursor: "pointer" }}
-                          onClick={() => {
-                            // if (type === "modify") setVisibleAllocation(true);
-                            setAllocationVisible(true);
-                          }}
-                        >
-                          <Tooltip content={<CustomizedTooltip />} />
-                          <Pie
-                            data={allocationData}
-                            cx="50%"
-                            cy="50%"
-                            labelLine={false}
-                            label={renderCustomizedLabel}
-                            outerRadius={"100%"}
-                            fill="#8884d8"
-                            stroke={"transparent"}
-                            dataKey="value"
+                        {
+                          allocationData && Array.isArray(allocationData) &&
+                          <PieChart
+                            width={300}
+                            height={300}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              // if (type === "modify") setVisibleAllocation(true);
+                              setAllocationVisible(true);
+                            }}
                           >
-                            {allocationData.map((entry: any, index: number) => (
-                              <Cell
-                                key={`cell-${index}`}
-                                fill={COLORS[index % 4]}
-                              />
-                            ))}
-                          </Pie>
-                        </PieChart>
+                            <Tooltip content={<CustomizedTooltip />} />
+                            <Pie
+                              data={allocationData}
+                              cx="50%"
+                              cy="50%"
+                              labelLine={false}
+                              label={renderCustomizedLabel}
+                              outerRadius={"100%"}
+                              fill="#8884d8"
+                              stroke={"transparent"}
+                              dataKey="value"
+                            >
+                              {allocationData.map((entry: any, index: number) => (
+                                <Cell
+                                  key={`cell-${index}`}
+                                  fill={COLORS[index % 4]}
+                                />
+                              ))}
+                            </Pie>
+                          </PieChart>
+                        }
                       </ResponsiveContainer>
                     </Flex>
                     {type === "modify" && (
