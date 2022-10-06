@@ -17,6 +17,7 @@ import { UpdateIndexProviderContext } from "./dashboard";
 import { PortfolioModalBody } from "./dashboard/portfolio.modal.body";
 import DepositModalBody from "./dashboard/deposit.modal.body";
 import WithdrawModalBody from "./dashboard/withdraw.modal.body";
+import { renderActiveShape } from "../common/recharts/piechart";
 
 interface ChartBoxProps {
   title?: string;
@@ -36,6 +37,9 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
   onClickAll = () => { },
   ...props
 }) => {
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [isHovered, setHovered] = React.useState(false);
+
   const data = [
     { name: "APT", value: 100 },
     { name: "ETH", value: 100 },
@@ -104,6 +108,13 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
     return null;
   });
 
+  const onPieEnter = (data, index) => {
+    setActiveIndex(index);
+    setHovered(true);
+  };
+
+  const onPieLeave = () => setHovered(false);
+
   return (
     <Flex
       col
@@ -131,15 +142,19 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
             >
               <Tooltip content={<CustomizedTooltip />} />
               <Pie
+                activeIndex={isHovered ? activeIndex : null}
+                activeShape={renderActiveShape}
                 data={data}
                 cx="50%"
                 cy="50%"
                 labelLine={false}
                 label={renderCustomizedLabel}
-                outerRadius={"100%"}
+                outerRadius={"90%"}
                 fill="#8884d8"
                 stroke={"transparent"}
                 dataKey="value"
+                onMouseEnter={onPieEnter}
+                onMouseLeave={onPieLeave}
               >
                 {data.map((entry, index) => (
                   <Cell
