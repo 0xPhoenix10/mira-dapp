@@ -11,6 +11,7 @@ import {
   getFriendData,
   requestFriend,
 } from "../../utils/graphql";
+import { renderActiveShape } from "../../common/recharts/piechart";
 
 interface IData {
   name: string;
@@ -24,8 +25,10 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   const { walletConnected, walletAddress } = useWalletHook();
   const [visibleDeposit, setVisibleDeposit] = useState(false);
   const [visibleWithdraw, setVisibleWithdraw] = useState(false);
-
   const [isFriend, setIsFriend] = useState(false);
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [isHovered, setHovered] = React.useState(false);
+
   useEffect(() => {
     if (walletConnected) {
       const getFetchFriend = async () => {
@@ -44,12 +47,14 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
       getFetchFriend();
     }
   }, [walletConnected, miraIndexInfo.poolOwner, walletAddress]);
+
   const data = [
     { name: "APT", value: 400 },
     { name: "ETH", value: 300 },
     { name: "BTC", value: 300 },
     { name: "DOT", value: 200 },
   ];
+
   const COLORS = [
     "#97acd0",
     "#5c87bf",
@@ -69,6 +74,7 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
       setIsFriend(true);
     }
   };
+
   const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({
     cx,
@@ -119,6 +125,13 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
     return null;
   });
 
+  const onPieEnter = (data, index) => {
+    setActiveIndex(index);
+    setHovered(true);
+  };
+
+  const onPieLeave = () => setHovered(false);
+
   return (
     <>
       {visibleDeposit || visibleWithdraw ? (
@@ -168,15 +181,19 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
                       <PieChart width={300} height={300}>
                         <Tooltip content={<CustomizedTooltip />} />
                         <Pie
+                          activeIndex={isHovered ? activeIndex : null}
+                          activeShape={renderActiveShape}
                           data={data}
                           cx="50%"
                           cy="50%"
                           labelLine={false}
                           label={renderCustomizedLabel}
-                          outerRadius={"100%"}
+                          outerRadius={"90%"}
                           fill="#8884d8"
                           stroke={"transparent"}
                           dataKey="value"
+                          onMouseEnter={onPieEnter}
+                          onMouseLeave={onPieLeave}
                         >
                           {data.map((entry, index) => (
                             <Cell
