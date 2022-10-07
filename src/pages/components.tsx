@@ -271,8 +271,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   const [miniumWithdrawal, setMiniumWithdrawal] = useState<number>(0);
   const [privateAllocation, setPrivateAlloation] = useState<boolean>(false);
   const [referralReward, setReferralReward] = useState<number>(0);
-  const [isHovered, setHovered] = React.useState(false);
-  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [openMoreSetting, setOpenMoreSetting] = useState(false);
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
@@ -383,13 +382,6 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
     return null;
   });
 
-  const onPieEnter = (data, index) => {
-    setActiveIndex(index);
-    setHovered(true);
-  };
-
-  const onPieLeave = () => setHovered(false);
-
   return (
     <>
       {visibleDeposit || visibleWithdraw ? (
@@ -438,39 +430,38 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                   <Flex col>
                     <Flex width={"200px"} aspectRatio={"1"}>
                       <ResponsiveContainer>
-                        <PieChart
-                          width={300}
-                          height={300}
-                          style={{ cursor: "pointer" }}
-                          onClick={() => {
-                            // if (type === "modify") setVisibleAllocation(true);
-                            setAllocationVisible(true);
-                          }}
-                        >
-                          <Tooltip content={<CustomizedTooltip />} />
-                          <Pie
-                            activeIndex={isHovered ? activeIndex : null}
-                            activeShape={renderActiveShape}
-                            data={allocationData}
-                            cx="50%"
-                            cy="50%"
-                            labelLine={false}
-                            label={renderCustomizedLabel}
-                            outerRadius={"90%"}
-                            fill="#8884d8"
-                            stroke={"transparent"}
-                            dataKey="value"
-                            onMouseEnter={onPieEnter}
-                            onMouseLeave={onPieLeave}
+                        {
+                          allocationData && Array.isArray(allocationData) &&
+                          <PieChart
+                            width={300}
+                            height={300}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              // if (type === "modify") setVisibleAllocation(true);
+                              setAllocationVisible(true);
+                            }}
                           >
-                            {allocationData.map((entry: any, index: number) => (
-                              <Cell
-                                key={`cell-${index}`}
-                                fill={COLORS[index % 4]}
-                              />
-                            ))}
-                          </Pie>
-                        </PieChart>
+                            <Tooltip content={<CustomizedTooltip />} />
+                            <Pie
+                              data={allocationData}
+                              cx="50%"
+                              cy="50%"
+                              labelLine={false}
+                              label={renderCustomizedLabel}
+                              outerRadius={"100%"}
+                              fill="#8884d8"
+                              stroke={"transparent"}
+                              dataKey="value"
+                            >
+                              {allocationData.map((entry: any, index: number) => (
+                                <Cell
+                                  key={`cell-${index}`}
+                                  fill={COLORS[index % 4]}
+                                />
+                              ))}
+                            </Pie>
+                          </PieChart>
+                        }
                       </ResponsiveContainer>
                     </Flex>
                     {type === "modify" && (
@@ -617,169 +608,180 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                           </Flex>
                         </Td>
                       </Tr>
+                      {
+                        openMoreSetting &&
+                        <>
+                          <Tr>
+                            <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                              Minimum Contribution :
+                            </Td>
+                            <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                              <Flex
+                                alignCenter
+                                p={"4px"}
+                                borderBottom={"1px solid #34383b"}
+                              >
+                                <Input
+                                  flex={"1"}
+                                  border={"none"}
+                                  background={"transparent"}
+                                  color={"white"}
+                                  placeholder={"input here..."}
+                                  readOnly={type === "modify"}
+                                  onChange={(e) => {
+                                    setMiniumContribution(parseInt(e.target.value));
+                                  }}
+                                />
+                                %
+                              </Flex>
+                            </Td>
+                          </Tr>
+                          <Tr>
+                            <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                              Minimum Withdrawal Period :
+                            </Td>
+                            <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                              <Flex
+                                alignCenter
+                                px={"4px"}
+                                py={"1px"}
+                                borderBottom={"1px solid #34383b"}
+                              >
+                                <CustomSelect
+                                  flex={"1"}
+                                  value={"0"}
+                                  onChange={(e: number) => {
+                                    setMiniumWithdrawal(e);
+                                  }}
+                                >
+                                  <SmOption value="0">1 Day</SmOption>
+                                  <SmOption value="1">1 Week</SmOption>
+                                  <SmOption value="2">2 Weeks</SmOption>
+                                  <SmOption value="3">1 Month</SmOption>
+                                  <SmOption value="4">2 Months</SmOption>
+                                </CustomSelect>
+                              </Flex>
+                            </Td>
+                          </Tr>
+                          <Tr>
+                            <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                              Public/Private Allocation :
+                            </Td>
+                            <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                              <Flex
+                                alignCenter
+                                p={"4px"}
+                                borderBottom={"1px solid #34383b"}
+                                gridGap={"20px"}
+                              >
+                                <RadioBtn
+                                  name={"private_allocation"}
+                                  value={"0"}
+                                  title={"false"}
+                                  selected
+                                  onChange={(e: any) => {
+                                    setPrivateAlloation(false);
+                                  }}
+                                />
+                                <RadioBtn
+                                  name={"private_allocation"}
+                                  value={"1"}
+                                  title={"true"}
+                                  onChange={(e: any) => {
+                                    setPrivateAlloation(true);
+                                  }}
+                                />
+                              </Flex>
+                            </Td>
+                          </Tr>
+                          <Tr>
+                            <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                              Referral Rewards :
+                            </Td>
+                            <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                              <Flex
+                                alignCenter
+                                p={"4px"}
+                                borderBottom={"1px solid #34383b"}
+                              >
+                                <Input
+                                  flex={"1"}
+                                  border={"none"}
+                                  background={"transparent"}
+                                  color={"white"}
+                                  placeholder={"input here..."}
+                                  readOnly={type === "modify"}
+                                  onChange={(e) => {
+                                    setReferralReward(parseInt(e.target.value));
+                                  }}
+                                />
+                                %
+                              </Flex>
+                            </Td>
+                          </Tr>
+                        </>
+                      }
+
                       <Tr>
-                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          Minimum Contribution :
-                        </Td>
-                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          <Flex
-                            alignCenter
-                            p={"4px"}
-                            borderBottom={"1px solid #34383b"}
-                          >
-                            <Input
-                              flex={"1"}
-                              border={"none"}
-                              background={"transparent"}
-                              color={"white"}
-                              placeholder={"input here..."}
-                              readOnly={type === "modify"}
-                              onChange={(e) => {
-                                setMiniumContribution(parseInt(e.target.value));
-                              }}
-                            />
-                            %
-                          </Flex>
-                        </Td>
-                      </Tr>
-                      <Tr>
-                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          Minimum Withdrawal Period :
-                        </Td>
-                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          <Flex
-                            alignCenter
-                            px={"4px"}
-                            py={"1px"}
-                            borderBottom={"1px solid #34383b"}
-                          >
-                            <CustomSelect
-                              flex={"1"}
-                              value={"0"}
-                              onChange={(e: number) => {
-                                setMiniumWithdrawal(e);
-                              }}
-                            >
-                              <SmOption value="0">1 Day</SmOption>
-                              <SmOption value="1">1 Week</SmOption>
-                              <SmOption value="2">2 Weeks</SmOption>
-                              <SmOption value="3">1 Month</SmOption>
-                              <SmOption value="4">2 Months</SmOption>
-                            </CustomSelect>
-                          </Flex>
-                        </Td>
-                      </Tr>
-                      <Tr>
-                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          Public/Private Allocation :
-                        </Td>
-                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          <Flex
-                            alignCenter
-                            p={"4px"}
-                            borderBottom={"1px solid #34383b"}
-                            gridGap={"20px"}
-                          >
-                            <RadioBtn
-                              name={"private_allocation"}
-                              value={"0"}
-                              title={"false"}
-                              selected
-                              onChange={(e: any) => {
-                                setPrivateAlloation(false);
-                              }}
-                            />
-                            <RadioBtn
-                              name={"private_allocation"}
-                              value={"1"}
-                              title={"true"}
-                              onChange={(e: any) => {
-                                setPrivateAlloation(true);
-                              }}
-                            />
-                          </Flex>
-                        </Td>
-                      </Tr>
-                      <Tr>
-                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          Referral Rewards :
-                        </Td>
-                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          <Flex
-                            alignCenter
-                            p={"4px"}
-                            borderBottom={"1px solid #34383b"}
-                          >
-                            <Input
-                              flex={"1"}
-                              border={"none"}
-                              background={"transparent"}
-                              color={"white"}
-                              placeholder={"input here..."}
-                              readOnly={type === "modify"}
-                              onChange={(e) => {
-                                setReferralReward(parseInt(e.target.value));
-                              }}
-                            />
-                            %
-                          </Flex>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"} cursor={"pointer"} onClick={() => setOpenMoreSetting(!openMoreSetting)} color={"#ab9b4e"} style={{ textDecoration: "underline" }}>
+                          {openMoreSetting ? 'Hide...' : 'Advanced Settings...'}
                         </Td>
                       </Tr>
                     </Tbody>
                   </Table>
-                </Flex>
-              </Flex>
-              <Flex gridGap={"8px"}>
-                {type === "modify" ? (
-                  <>
-                    <Flex
-                      alignCenter
-                      gridGap={"4px"}
-                      ml={"auto"}
-                      padding={"8px 16px"}
-                      background={"#0005"}
-                      p={"8px 16px"}
-                      border={"1px solid #34383b"}
-                      borderRadius={"8px"}
-                      cursor="pointer"
-                    >
-                      <CheckIcon size={"1.2em"} />
-                      Save
-                    </Flex>
-                    <Flex
-                      alignCenter
-                      gridGap={"4px"}
-                      padding={"8px 16px"}
-                      background={"#0005"}
-                      p={"8px 16px"}
-                      border={"1px solid #34383b"}
-                      borderRadius={"8px"}
-                      cursor="pointer"
-                      onClick={() => {
-                        setVisible(false);
-                      }}
-                    >
-                      <TimesIcon size={"1.2em"} />
-                      Cancel
-                    </Flex>
-                  </>
-                ) : (
-                  <Flex
-                    alignCenter
-                    gridGap={"4px"}
-                    ml={"auto"}
-                    padding={"8px 16px"}
-                    background={"#0005"}
-                    p={"8px 16px"}
-                    border={"1px solid #34383b"}
-                    borderRadius={"8px"}
-                    cursor="pointer"
-                    onClick={() => create_index()}
-                  >
-                    <CreateIcon size={"1.2em"} />
-                    Publish
+                  <Flex gridGap={"8px"}>
+                    {type === "modify" ? (
+                      <>
+                        <Flex
+                          alignCenter
+                          gridGap={"4px"}
+                          ml={"auto"}
+                          padding={"8px 16px"}
+                          background={"#0005"}
+                          p={"8px 16px"}
+                          border={"1px solid #34383b"}
+                          borderRadius={"8px"}
+                          cursor="pointer"
+                        >
+                          <CheckIcon size={"1.2em"} />
+                          Save
+                        </Flex>
+                        <Flex
+                          alignCenter
+                          gridGap={"4px"}
+                          padding={"8px 16px"}
+                          background={"#0005"}
+                          p={"8px 16px"}
+                          border={"1px solid #34383b"}
+                          borderRadius={"8px"}
+                          cursor="pointer"
+                          onClick={() => {
+                            setVisible(false);
+                          }}
+                        >
+                          <TimesIcon size={"1.2em"} />
+                          Cancel
+                        </Flex>
+                      </>
+                    ) : (
+                      <Flex
+                        alignCenter
+                        gridGap={"4px"}
+                        ml={"auto"}
+                        padding={"8px 16px"}
+                        background={"#0005"}
+                        p={"8px 16px"}
+                        border={"1px solid #34383b"}
+                        borderRadius={"8px"}
+                        cursor="pointer"
+                        onClick={() => create_index()}
+                      >
+                        <CreateIcon size={"1.2em"} />
+                        Publish
+                      </Flex>
+                    )}
                   </Flex>
-                )}
+                </Flex>
               </Flex>
             </Flex>
           </Flex>
