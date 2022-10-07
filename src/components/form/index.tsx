@@ -14,6 +14,7 @@ interface CustomSelectSelectProps {
   value?: any;
   [index: string]: any;
 }
+
 export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
   after,
   before,
@@ -31,7 +32,6 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
   const dropBox = useRef<any>();
   const dropPannel = useRef<any>();
   useEffect(() => {
-    console.log(`value:${value}`);
     if (!optionList) return;
     for (let i = 0; i < optionList.length; i++) {
       const each = optionList[i];
@@ -39,7 +39,7 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
         setCurrentOption(each);
       }
     }
-  }, [value, optionList]);
+  }, [value]);
   useEffect(() => {
     const handle = (event: any) => {
       if (dropBox?.current && !dropBox.current.contains(event.target)) {
@@ -75,7 +75,7 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
           selected: selected,
         };
       });
-      list.forEach((each: any) => {
+      list.map((each: any, index: any) => {
         if (each.selected) {
           setCurrentOption(each);
         }
@@ -86,10 +86,13 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
   return (
     <Box position={"relative"} ref={dropBox} {...props}>
       <Box
+        px={"18px"}
+        py={"12px"}
+        height={"100%"}
         whiteSpace={"nowrap"}
         fontWeight={"400"}
-        fontSize={"11px"}
-        lineHeight={"2em"}
+        lineHeight={"1em"}
+        color={"white"}
         cursor="pointer"
         display={"flex"}
         alignItems={"center"}
@@ -103,7 +106,8 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
         {currentOption ? currentOption.text : placeHolder || "select ..."}
         <Box
           ml={"auto"}
-          fontSize={"20px"}
+          fontSize={"1em"}
+          color={"white"}
           display={"flex"}
           alignItems={"center"}
         >
@@ -117,17 +121,17 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
         position={"absolute"}
         top={"105%"}
         left={"0px"}
-        px={"22px"}
-        py={"12px"}
-        bg={"#222129"}
-        backDrop={"blur(10px)"}
-        // border={"1px solid #333333"}
+        minWidth={"100%"}
+        bg={"normal"}
+        backdropFilter={"blur(10px)"}
         borderRadius={"8px"}
         ref={dropPannel}
         display={"flex"}
         flexDirection={"column"}
-        transition={"opacity 200ms"}
-        zIndex={isOpened ? 1000 : -1000}
+        transition={"var(--transition)"}
+        boxShadow={"1px 1px 10px -4px black"}
+        overflow={"hidden"}
+        zIndex={isOpened ? "1000" : "-1000"}
       >
         {optionList
           ? optionList.map((each: any, index: any) => {
@@ -155,8 +159,7 @@ interface SmOptionProps {
   value: any;
   [index: string]: any;
 }
-export const SmOption = styled.div<SmOptionProps>`
-  padding: 5px;
+export const SmOption = styled(Box)<SmOptionProps>`
   white-space: nowrap;
   display: flex;
   align-items: center;
@@ -168,6 +171,8 @@ export const SmOption = styled.div<SmOptionProps>`
 `;
 SmOption.defaultProps = {
   customTagType: "--411customisedOption--",
+  px: "16px",
+  py: "8px",
 };
 
 interface RadioBtnProps {

@@ -157,7 +157,7 @@ const ProfilePage = () => {
       >
         <Flex flex={1} col gridGap={"20px"}>
           <Flex height={"42px"}>
-            <Flex fontSize={"24px"} fontWeight={"bold"}>
+            <Flex fontFamily={"art"} fontSize={"24px"} fontWeight={"bold"}>
               My Profile
             </Flex>
             <Flex
@@ -226,6 +226,7 @@ const ProfilePage = () => {
         <Flex flex={1} col gridGap={"20px"}>
           <Flex
             height={"42px"}
+            fontFamily={"art"}
             fontSize={"20px"}
             fontWeight={"bold"}
             borderBottom={"1px solid #34383b"}
@@ -239,7 +240,7 @@ const ProfilePage = () => {
                   <Flex
                     col
                     flex={1}
-                    background={"#101012"}
+                    background={"#302d38"}
                     p={"20px 40px"}
                     border={"1px solid #34383b"}
                     borderRadius={"10px 40px"}
@@ -252,10 +253,10 @@ const ProfilePage = () => {
                       fontWeight={"500"}
                       alignItems={"center"}
                       gridGap={"8px"}
-                      color={"#49abc9"}
+                      color={"#70e094"}
                     >
                       20
-                      <Box fontSize={"0.7em"} opacity={"0.8"} color={"#2a3e5b"}>
+                      <Box fontSize={"0.7em"} opacity={"0.8"} color={"#70e094"}>
                         %
                       </Box>
                     </Flex>
@@ -263,7 +264,7 @@ const ProfilePage = () => {
                   <Flex
                     col
                     flex={1}
-                    background={"#101012"}
+                    background={"#302d38"}
                     p={"20px 40px"}
                     border={"1px solid #34383b"}
                     borderRadius={"10px 40px"}
@@ -276,10 +277,10 @@ const ProfilePage = () => {
                       fontWeight={"500"}
                       alignItems={"center"}
                       gridGap={"8px"}
-                      color={"#49abc9"}
+                      color={"#70e094"}
                     >
                       20
-                      <Box fontSize={"0.7em"} opacity={"0.8"} color={"#2a3e5b"}>
+                      <Box fontSize={"0.7em"} opacity={"0.8"} color={"#70e094"}>
                         %
                       </Box>
                     </Flex>
@@ -289,7 +290,7 @@ const ProfilePage = () => {
                   <Flex
                     col
                     flex={1}
-                    background={"#101012"}
+                    background={"#302d38"}
                     p={"20px 40px"}
                     border={"1px solid #34383b"}
                     borderRadius={"10px 40px"}
@@ -302,10 +303,10 @@ const ProfilePage = () => {
                       fontWeight={"500"}
                       alignItems={"center"}
                       gridGap={"8px"}
-                      color={"#49abc9"}
+                      color={"#70e094"}
                     >
                       20
-                      <Box fontSize={"0.7em"} opacity={"0.8"} color={"#2a3e5b"}>
+                      <Box fontSize={"0.7em"} opacity={"0.8"} color={"#70e094"}>
                         %
                       </Box>
                     </Flex>
@@ -313,7 +314,7 @@ const ProfilePage = () => {
                   <Flex
                     col
                     flex={1}
-                    background={"#101012"}
+                    background={"#302d38"}
                     p={"20px 40px"}
                     border={"1px solid #34383b"}
                     borderRadius={"10px 40px"}
@@ -326,10 +327,10 @@ const ProfilePage = () => {
                       fontWeight={"500"}
                       alignItems={"center"}
                       gridGap={"8px"}
-                      color={"#49abc9"}
+                      color={"#70e094"}
                     >
                       20
-                      <Box fontSize={"0.7em"} opacity={"0.8"} color={"#2a3e5b"}>
+                      <Box fontSize={"0.7em"} opacity={"0.8"} color={"#70e094"}>
                         %
                       </Box>
                     </Flex>
@@ -339,7 +340,7 @@ const ProfilePage = () => {
               <Flex
                 flexFull
                 col
-                background={"#101012"}
+                background={"#302d38"}
                 p={"20px"}
                 border={"1px solid #34383b"}
                 borderRadius={"40px 10px"}
@@ -376,6 +377,7 @@ const ProfilePage = () => {
           <Flex flex={1} col gridGap={"20px"}>
             <Flex
               height={"42px"}
+              fontFamily={"art"}
               fontSize={"20px"}
               fontWeight={"bold"}
               borderBottom={"1px solid #34383b"}
@@ -394,6 +396,7 @@ const ProfilePage = () => {
           <Flex flex={1} col gridGap={"20px"}>
             <Flex
               height={"42px"}
+              fontFamily={"art"}
               fontSize={"20px"}
               fontWeight={"bold"}
               borderBottom={"1px solid #34383b"}

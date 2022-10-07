@@ -1,3 +1,7 @@
+@font-face {
+  font-family: art;
+  src: url("assets/font/cardinalphoto-medium.otf");
+}
 body {
   user-select: none;
 }

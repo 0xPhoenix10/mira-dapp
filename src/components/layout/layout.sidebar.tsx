@@ -18,9 +18,10 @@ const LayoutSidebar = () => {
     <Flex
       col
       spaceBetween
+      bg={"#222129"}
       p={"5px"}
       minWidth={visibleSidebar ? "220px" : "0px"}
-      borderRight={"1px solid #1e2022"}
+      borderRight={"1px solid #333334"}
       transition={"200ms"}
     >
       <Flex width={"100%"}>
@@ -37,25 +38,25 @@ const LayoutSidebar = () => {
             active
             icon={<AboutIcon />}
             title={"About"}
-            url={"https://mirafinance.io/about-us"}
+            url={"https://mirafinance.io/"}
           />
-          <Box background={"#1e2022"} width={"80%"} height={"1px"} />
+          <Box background={"#333334"} width={"80%"} height={"1px"} />
           <SideBarBtn
             icon={<GuideIcon />}
             title={"Guide"}
             url={"https://docs.mirafinance.io"}
           />
-          <Box background={"#1e2022"} width={"80%"} height={"1px"} />
+          <Box background={"#333334"} width={"80%"} height={"1px"} />
           <SideBarBtn
             icon={<DocsIcon />}
             title={"Docs"}
             url={"https://docs.mirafinance.io"}
           />
-          <Box background={"#1e2022"} width={"80%"} height={"1px"} />
+          <Box background={"#333334"} width={"80%"} height={"1px"} />
           <SideBarBtn
             icon={<WhitePaperIcon />}
             title={"WhitePaper"}
-            url={"https://paper.mirafinance.io"}
+            url={"https://docs.google.com/document/d/1k_GITgkgBLo5I6YYzjAmYXqd17bhls1HynuO7dgBo54/edit"}
           />
         </Flex>
         <Flex>
@@ -64,7 +65,7 @@ const LayoutSidebar = () => {
             bg={"#0003"}
             p={"4px 8px"}
             fontSize={"20px"}
-            border={"1px solid #1e2022"}
+            border={"1px solid #333334"}
             borderRadius={"4px"}
             cursor={"pointer"}
             onClick={() => {

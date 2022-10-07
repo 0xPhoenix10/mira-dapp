@@ -32,9 +32,9 @@ interface IData {
 export const ChartBox: React.FC<ChartBoxProps> = ({
   title = "Chart Box",
   cursor = "revert",
-  onClick = () => { },
+  onClick = () => {},
   cursorAll,
-  onClickAll = () => { },
+  onClickAll = () => {},
   ...props
 }) => {
   const [activeIndex, setActiveIndex] = React.useState(0);
@@ -91,17 +91,19 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
     backgroundColor: "#000",
     color: "lightgrey",
     padding: "2px 15px",
-    fontSize: "12px"
+    fontSize: "12px",
   };
 
   const CustomizedTooltip = React.memo((props: any) => {
     if (props.payload.length > 0) {
-      const sum = data.reduce((a, v) => a = a + v.value, 0)
+      const sum = data.reduce((a, v) => (a = a + v.value), 0);
 
       const item: IData = props.payload[0];
       return (
         <div style={style}>
-          <p>{item.name} - {(Number(item.value) / sum * 100).toFixed(0)}%</p>
+          <p>
+            {item.name} - {((Number(item.value) / sum) * 100).toFixed(0)}%
+          </p>
         </div>
       );
     }
@@ -118,7 +120,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
   return (
     <Flex
       col
-      background={"#101012"}
+      background={"#302d38"}
       p={"20px"}
       border={"1px solid #34383b"}
       borderRadius={"20px"}
@@ -149,7 +151,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
                 cy="50%"
                 labelLine={false}
                 label={renderCustomizedLabel}
-                outerRadius={"90%"}
+                outerRadius={"100%"}
                 fill="#8884d8"
                 stroke={"transparent"}
                 dataKey="value"
@@ -166,8 +168,8 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
             </PieChart>
           </ResponsiveContainer>
         </Flex>
-        <Flex col gridGap={"4px"} cursor={"pointer"}>
-          <Flex mb={"8px"} fontSize={"18px"} fontWeight={"bold"} mx={"auto"}>
+        <Flex col gridGap={"4px"} color={"lightgrey"} cursor={"pointer"}>
+          <Flex mb={"8px"} fontSize={"18px"} fontWeight={"bold"} color={"#70e094"} mx={"auto"}>
             Mira
           </Flex>
           <CustomTooltip
@@ -177,7 +179,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
             placement="top"
           >
             <Flex gridGap={"8px"}>
-              <Box>1d</Box>
+              <Box>1d ⓘ</Box>
               <Box>:</Box>
               <Box>0.2%</Box>
             </Flex>
@@ -189,7 +191,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
             placement="top"
           >
             <Flex gridGap={"8px"}>
-              <Box>1w</Box>
+              <Box>1w ⓘ</Box>
               <Box>:</Box>
               <Box>4.1%</Box>
             </Flex>
@@ -201,7 +203,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
             placement="top"
           >
             <Flex gridGap={"8px"}>
-              <Box>1y</Box>
+              <Box>1y ⓘ</Box>
               <Box>:</Box>
               <Box>18.5%</Box>
             </Flex>
@@ -213,7 +215,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
             placement="top"
           >
             <Flex gridGap={"8px"}>
-              <Box>Ratio</Box>
+              <Box>Sharpe Ratio ⓘ</Box>
               <Box>:</Box>
               <Box>0.23</Box>
             </Flex>
@@ -225,7 +227,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
             placement="top"
           >
             <Flex gridGap={"8px"}>
-              <Box>TVL</Box>
+              <Box>TVL ⓘ</Box>
               <Box>:</Box>
               <Box>3.2M</Box>
             </Flex>
@@ -237,14 +239,14 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
             placement="top"
           >
             <Flex gridGap={"8px"}>
-              <Box>Expert</Box>
+              <Box>Expert ⓘ</Box>
               <Box>:</Box>
               <Box>✓</Box>
             </Flex>
           </CustomTooltip>
         </Flex>
       </Flex>
-      <Box fontSize={"16px"} fontWeight={"bold"} opacity={"0.3"}>
+      <Box fontSize={"16px"} fontWeight={"bold"}>
         {title}
       </Box>
     </Flex>
@@ -257,8 +259,8 @@ interface IndexModalBodyProps {
 }
 export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   type = "modify",
-  setVisible = () => { },
-  setAllocationVisible = () => { },
+  setVisible = () => {},
+  setAllocationVisible = () => {},
   allocationData,
   ...props
 }) => {
@@ -272,8 +274,6 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   const [privateAllocation, setPrivateAlloation] = useState<boolean>(false);
   const [referralReward, setReferralReward] = useState<number>(0);
   const [openMoreSetting, setOpenMoreSetting] = useState(false);
-  const [activeIndex, setActiveIndex] = React.useState(0);
-  const [isHovered, setHovered] = React.useState(false);
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
@@ -367,29 +367,24 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
     backgroundColor: "#000",
     color: "lightgrey",
     padding: "2px 15px",
-    fontSize: "12px"
+    fontSize: "12px",
   };
 
   const CustomizedTooltip = React.memo((props: any) => {
     if (props.payload.length > 0) {
-      const sum = allocationData.reduce((a, v) => a = a + v.value, 0)
+      const sum = allocationData.reduce((a, v) => (a = a + v.value), 0);
 
       const item: IData = props.payload[0];
       return (
         <div style={style}>
-          <p>{item.name} - {(Number(item.value) / sum * 100).toFixed(0)}%</p>
+          <p>
+            {item.name} - {((Number(item.value) / sum) * 100).toFixed(0)}%
+          </p>
         </div>
       );
     }
     return null;
   });
-
-  const onPieEnter = (data, index) => {
-    setActiveIndex(index);
-    setHovered(true);
-  };
-
-  const onPieLeave = () => setHovered(false);
 
   return (
     <>
@@ -427,7 +422,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
           <Flex justifyCenter gridGap={"16px"}>
             <Flex
               col
-              background={"#101012"}
+              background={"#302d38"}
               p={"20px"}
               border={"1px solid #34383b"}
               borderRadius={"20px"}
@@ -439,8 +434,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                   <Flex col>
                     <Flex width={"200px"} aspectRatio={"1"}>
                       <ResponsiveContainer>
-                        {
-                          allocationData && Array.isArray(allocationData) &&
+                        {allocationData && Array.isArray(allocationData) && (
                           <PieChart
                             width={300}
                             height={300}
@@ -452,29 +446,27 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                           >
                             <Tooltip content={<CustomizedTooltip />} />
                             <Pie
-                              activeIndex={isHovered ? activeIndex : null}
-                              activeShape={renderActiveShape}
                               data={allocationData}
                               cx="50%"
                               cy="50%"
                               labelLine={false}
                               label={renderCustomizedLabel}
-                              outerRadius={"90%"}
+                              outerRadius={"100%"}
                               fill="#8884d8"
                               stroke={"transparent"}
                               dataKey="value"
-                              onMouseEnter={onPieEnter}
-                              onMouseLeave={onPieLeave}
                             >
-                              {allocationData.map((entry: any, index: number) => (
-                                <Cell
-                                  key={`cell-${index}`}
-                                  fill={COLORS[index % 4]}
-                                />
-                              ))}
+                              {allocationData.map(
+                                (entry: any, index: number) => (
+                                  <Cell
+                                    key={`cell-${index}`}
+                                    fill={COLORS[index % 4]}
+                                  />
+                                )
+                              )}
                             </Pie>
                           </PieChart>
-                        }
+                        )}
                       </ResponsiveContainer>
                     </Flex>
                     {type === "modify" && (
@@ -621,8 +613,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                           </Flex>
                         </Td>
                       </Tr>
-                      {
-                        openMoreSetting &&
+                      {openMoreSetting && (
                         <>
                           <Tr>
                             <Td px={"4px"} py={"2px"} borderBottom={"none"}>
@@ -642,7 +633,9 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                   placeholder={"input here..."}
                                   readOnly={type === "modify"}
                                   onChange={(e) => {
-                                    setMiniumContribution(parseInt(e.target.value));
+                                    setMiniumContribution(
+                                      parseInt(e.target.value)
+                                    );
                                   }}
                                 />
                                 %
@@ -733,11 +726,19 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                             </Td>
                           </Tr>
                         </>
-                      }
+                      )}
 
                       <Tr>
-                        <Td px={"4px"} py={"2px"} borderBottom={"none"} cursor={"pointer"} onClick={() => setOpenMoreSetting(!openMoreSetting)} color={"#ab9b4e"} style={{ textDecoration: "underline" }}>
-                          {openMoreSetting ? 'Hide...' : 'Advanced Settings...'}
+                        <Td
+                          px={"4px"}
+                          py={"2px"}
+                          borderBottom={"none"}
+                          cursor={"pointer"}
+                          onClick={() => setOpenMoreSetting(!openMoreSetting)}
+                          color={"#ab9b4e"}
+                          style={{ textDecoration: "underline" }}
+                        >
+                          {openMoreSetting ? "Hide..." : "Advanced Settings..."}
                         </Td>
                       </Tr>
                     </Tbody>
@@ -863,7 +864,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
           </Flex>
           <Flex
             gridGap={"16px"}
-            background={"#101012"}
+            background={"#302d38"}
             p={"20px"}
             border={"1px solid #34383b"}
             borderRadius={"10px"}
