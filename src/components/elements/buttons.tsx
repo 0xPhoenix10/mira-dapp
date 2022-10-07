@@ -1,4 +1,4 @@
-import { Box } from "components/base";
+import { Box, Link } from "components/base";
 import styled from "styled-components";
 
 interface ArtButtonProps {
@@ -13,7 +13,7 @@ export const ArtButton: React.FC<ArtButtonProps> = ({
   borderWidth = "3px",
   borderRadius = "100px",
   padding = "8px 24px",
-  btnColor = "#000000",
+  btnColor = "#302d38",
   onClick = () => {},
   children,
   ...props
@@ -62,3 +62,16 @@ const ArtButtonBase = styled(Box)<ArtButtonProps>`
     }
   }
 `;
+
+export const NormalBtn = styled(Link)``;
+NormalBtn.defaultProps = {
+  alignItems: "center",
+  gridGap: "4px",
+  ml: "auto",
+  padding: "8px 16px",
+  background: "#302d38",
+  p: "8px 16px",
+  border: "1px solid #34383b",
+  borderRadius: "8px",
+  cursor: "pointer",
+};

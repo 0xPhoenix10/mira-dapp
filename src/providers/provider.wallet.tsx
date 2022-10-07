@@ -55,20 +55,21 @@ const WalletConnectModal: React.FC<{ setOpenConnectModal: any }> = ({
     >
       <Box
         margin={"auto"}
-        bg={"white"}
+        bg={"#222129"}
         padding={"32px"}
+        border={"1px solid #34383b"}
         borderRadius={"16px"}
         display={"flex"}
         flexDirection={"column"}
         gridGap={"32px"}
         alignItems={"center"}
       >
-        <Box fontSize={"18px"} fontWeight={"700"} color={"#0B181F"}>
+        <Box fontSize={"18px"} fontWeight={"700"} color={"white"}>
           Connect to a wallet
         </Box>
         <Box display={"flex"} flexDirection={"column"} gridGap={"16px"}>
           <Box
-            bg={"darkBlueBlack"}
+            bg={"#302D38"}
             padding={"24px 32px"}
             borderRadius={"16px"}
             display={"flex"}
@@ -87,7 +88,7 @@ const WalletConnectModal: React.FC<{ setOpenConnectModal: any }> = ({
             </Box>
           </Box>
           <Box
-            bg={"darkBlueBlack"}
+            bg={"#302D38"}
             padding={"24px 32px"}
             borderRadius={"16px"}
             display={"flex"}

@@ -108,17 +108,19 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
     backgroundColor: "#000",
     color: "lightgrey",
     padding: "2px 15px",
-    fontSize: "12px"
+    fontSize: "12px",
   };
 
   const CustomizedTooltip = React.memo((props: any) => {
     if (props.payload.length > 0) {
-      const sum = data.reduce((a, v) => a = a + v.value, 0)
+      const sum = data.reduce((a, v) => (a = a + v.value), 0);
 
       const item: IData = props.payload[0];
       return (
         <div style={style}>
-          <p>{item.name} - {(Number(item.value) / sum * 100).toFixed(0)}%</p>
+          <p>
+            {item.name} - {((Number(item.value) / sum) * 100).toFixed(0)}%
+          </p>
         </div>
       );
     }

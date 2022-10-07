@@ -19,7 +19,7 @@ export const ModalParent: React.FC<ModalParentProps> = ({
       {visible && (
         <Flex
           position={"fixed"}
-          backDrop={"blur(5px)"}
+          backdropFilter={"blur(5px)"}
           top={"0px"}
           left={"0px"}
           background={"#0008"}

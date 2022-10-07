@@ -40,7 +40,7 @@ const WithdrawModalBody: React.FC<{ [index: string]: any }> = ({
       </Flex>
       <Flex
         col
-        background={"#101012"}
+        background={"#302d38"}
         p={"20px"}
         border={"1px solid #34383b"}
         borderRadius={"20px"}

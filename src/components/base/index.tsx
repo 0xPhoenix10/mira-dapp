@@ -36,7 +36,7 @@ export interface AllProps
     ShadowProps,
     SpaceProps,
     TypographyProps {
-  backDrop?: any;
+  backdropFilter?: any;
   transition?: any;
   transform?: any;
   cursor?: "pointer" | "reverse";
@@ -96,7 +96,7 @@ const rowGap = system({
 const columnGap = system({
   columnGap: true,
 });
-const backDrop = system({
+const backdropFilter = system({
   backdropFilter: true,
 });
 const transition = system({
@@ -146,7 +146,7 @@ export const allCompose = compose(
   clipPath,
   columnGap,
   rowGap,
-  backDrop,
+  backdropFilter,
   transition,
   filter,
   visibility,

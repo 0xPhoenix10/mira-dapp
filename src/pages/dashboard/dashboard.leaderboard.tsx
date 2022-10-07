@@ -135,6 +135,7 @@ const DashboardLeaderBoard = () => {
         >
           <Flex alignItems={"flex-end"} gridGap={"8px"}>
             <Box
+              fontFamily={"art"}
               fontSize={currentTab === 0 ? "20px" : "16px"}
               opacity={currentTab === 0 ? "1" : "0.5"}
               fontWeight={"bold"}
@@ -149,6 +150,7 @@ const DashboardLeaderBoard = () => {
             </Box>
             {walletConnected && (
               <Box
+                fontFamily={"art"}
                 fontSize={currentTab === 1 ? "20px" : "16px"}
                 opacity={currentTab === 1 ? "1" : "0.5"}
                 fontWeight={"bold"}
@@ -167,7 +169,7 @@ const DashboardLeaderBoard = () => {
             alignCenter
             gridGap={"4px"}
             ml={"auto"}
-            background={"#0005"}
+            background={"#302d38"}
             p={"8px 16px"}
             border={"1px solid #34383b"}
             borderRadius={"8px"}
@@ -207,7 +209,7 @@ const DashboardLeaderBoard = () => {
                     disableInteractive
                     placement="top"
                   >
-                    <span>TVL</span>
+                    <span>TVL ⓘ</span>
                   </CustomTooltip>
                 </Th>
                 <Th>YTD %</Th>
@@ -218,7 +220,7 @@ const DashboardLeaderBoard = () => {
                     disableInteractive
                     placement="top"
                   >
-                    <span>Founded</span>
+                    <span>Founded ⓘ</span>
                   </CustomTooltip>
                 </Th>
                 <Th>
@@ -228,7 +230,7 @@ const DashboardLeaderBoard = () => {
                     disableInteractive
                     placement="top"
                   >
-                    <span>Management Fee</span>
+                    <span>Management Fee ⓘ</span>
                   </CustomTooltip>
                 </Th>
                 <Th>
@@ -238,7 +240,7 @@ const DashboardLeaderBoard = () => {
                     disableInteractive
                     placement="top"
                   >
-                    <span>Locked</span>
+                    <span>Locked ⓘ</span>
                   </CustomTooltip>
                 </Th>
                 {walletConnected && (
