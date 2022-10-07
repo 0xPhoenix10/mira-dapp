@@ -3,16 +3,17 @@ import { Box } from "components/base";
 import { Flex } from "components/base/container";
 import { CreateIcon, WarningIcon } from "components/icons";
 import { ModalParent } from "components/modal";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChartBox, IndexListModalBody, IndexModalBody } from "../components";
 import { PortfolioModalBody } from "./portfolio.modal.body";
 import { IndexAllocationModalBody } from "../index.allocation.modal";
 import { IndexAllocation } from "../../utils/types";
+import { Carousel3D } from "./comp.dashboard";
 
 const DashboardRecommended = () => {
   const { walletConnected } = useWalletHook();
   const [createMmodalVisible, setCreateModalVisible] = useState(false);
-  const [modifyMmodalVisible, setModifyModalVisible] = useState(false);
+  const [modifyModalVisible, setModifyModalVisible] = useState(false);
   const [recommendedModalVisible, setRecommendedModalVisible] = useState(false);
   const [myIndexesModalVisible, setMyIndexesModalVisible] = useState(false);
   const [walletConnectAlertVisible, setWalletConnectAlertVisible] =
@@ -34,7 +35,12 @@ const DashboardRecommended = () => {
       value: 50,
     },
   ]);
-
+  const Carousel3D1 = useRef(null);
+  const Carousel3D2 = useRef(null);
+  useEffect(() => {
+    Carousel3D1?.current?.reset();
+    Carousel3D2?.current?.reset();
+  }, [walletConnected]);
   return (
     <>
       {
@@ -77,7 +83,7 @@ const DashboardRecommended = () => {
 
       {
         <ModalParent
-          visible={modifyMmodalVisible}
+          visible={modifyModalVisible}
           setVisible={setModifyModalVisible}
         >
           <IndexModalBody
@@ -129,6 +135,7 @@ const DashboardRecommended = () => {
         <Flex flex={1} col gridGap={"20px"}>
           <Flex alignCenter height={"50px"} borderBottom={"1px solid #34383b"}>
             <Box
+              fontFamily={"art"}
               fontSize={"20px"}
               fontWeight={"bold"}
               cursor={"pointer"}
@@ -156,41 +163,45 @@ const DashboardRecommended = () => {
               </Flex>
             )}
           </Flex>
-          <Flex justifyCenter gridGap={"16px"}>
-            <ChartBox
-              flex={1}
-              width={"0px"}
-              maxWidth={"70%"}
-              title={"Aptos Defi Pulse"}
-              cursorAll={"pointer"}
-              onClickAll={() => {
-                setPortfolioModalVisible(true);
-              }}
-            />
-            {!walletConnected && (
-              <>
-                <ChartBox
-                  flex={1}
-                  width={"0px"}
-                  maxWidth={"70%"}
-                  title={"Aptos Gaming Pulse"}
-                  cursorAll={"pointer"}
-                  onClickAll={() => {
-                    setPortfolioModalVisible(true);
-                  }}
-                />
-                <ChartBox
-                  flex={1}
-                  width={"0px"}
-                  maxWidth={"70%"}
-                  title={"Broad Crypto"}
-                  cursorAll={"pointer"}
-                  onClickAll={() => {
-                    setPortfolioModalVisible(true);
-                  }}
-                />
-              </>
-            )}
+          <Flex
+            mx={!walletConnected ? "auto" : "unset"}
+            width={!walletConnected ? "60%" : "unset"}
+            col
+            alignCenter
+            position={"relative"}
+          >
+            <Carousel3D
+              ref={Carousel3D1}
+              stop={portfolioModalVisible || modifyModalVisible}
+            >
+              <ChartBox
+                width={"100%"}
+                maxWidth={"70%"}
+                title={"Aptos Defi Pulse"}
+                cursorAll={"pointer"}
+                onClickAll={() => {
+                  setPortfolioModalVisible(true);
+                }}
+              />
+              <ChartBox
+                width={"100%"}
+                maxWidth={"70%"}
+                title={"Aptos Gaming Pulse"}
+                cursorAll={"pointer"}
+                onClickAll={() => {
+                  setPortfolioModalVisible(true);
+                }}
+              />
+              <ChartBox
+                width={"100%"}
+                maxWidth={"70%"}
+                title={"Broad Crypto"}
+                cursorAll={"pointer"}
+                onClickAll={() => {
+                  setPortfolioModalVisible(true);
+                }}
+              />
+            </Carousel3D>
           </Flex>
         </Flex>
         {walletConnected && (
@@ -202,6 +213,7 @@ const DashboardRecommended = () => {
             >
               <Flex alignItems={"flex-end"} gridGap={"8px"}>
                 <Box
+                  fontFamily={"art"}
                   fontSize={currentTab === 0 ? "20px" : "16px"}
                   opacity={currentTab === 0 ? "1" : "0.5"}
                   fontWeight={"bold"}
@@ -215,6 +227,7 @@ const DashboardRecommended = () => {
                   My Indexes
                 </Box>
                 <Box
+                  fontFamily={"art"}
                   fontSize={currentTab === 1 ? "20px" : "16px"}
                   opacity={currentTab === 1 ? "1" : "0.5"}
                   fontWeight={"bold"}
@@ -245,16 +258,41 @@ const DashboardRecommended = () => {
               </Flex>
             </Flex>
             <Flex justifyCenter gridGap={"16px"}>
-              <ChartBox
-                flex={1}
-                width={"0px"}
-                maxWidth={"70%"}
-                title={"Aptos Defi Pulse"}
-                cursor={"pointer"}
-                onClick={() => {
-                  setModifyModalVisible(true);
-                }}
-              />
+              <Carousel3D
+                ref={Carousel3D2}
+                stop={portfolioModalVisible || modifyModalVisible}
+              >
+                <ChartBox
+                  flex={1}
+                  width={"0px"}
+                  maxWidth={"70%"}
+                  title={"Aptos Defi Pulse"}
+                  cursor={"pointer"}
+                  onClick={() => {
+                    setModifyModalVisible(true);
+                  }}
+                />
+                <ChartBox
+                  flex={1}
+                  width={"0px"}
+                  maxWidth={"70%"}
+                  title={"Aptos Defi Pulse"}
+                  cursor={"pointer"}
+                  onClick={() => {
+                    setModifyModalVisible(true);
+                  }}
+                />
+                <ChartBox
+                  flex={1}
+                  width={"0px"}
+                  maxWidth={"70%"}
+                  title={"Aptos Defi Pulse"}
+                  cursor={"pointer"}
+                  onClick={() => {
+                    setModifyModalVisible(true);
+                  }}
+                />
+              </Carousel3D>
             </Flex>
           </Flex>
         )}

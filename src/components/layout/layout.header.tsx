@@ -56,8 +56,9 @@ const LayoutHeader = () => {
       row
       spaceBetween
       alignCenter
+      bg={"#222129"}
       p={"10px 40px"}
-      borderBottom={"1px solid #1e2022"}
+      borderBottom={"1px solid #333334"}
       gridGap={"16px"}
     >
       <Box
@@ -77,7 +78,7 @@ const LayoutHeader = () => {
         <Flex
           center
           ml={"auto"}
-          background={"linear-gradient(90deg, #131313, #2b2b2b)"}
+          // background={"linear-gradient(90deg, #131313, #2b2b2b)"}
           borderRadius={"100%"}
           width={"40px"}
           height={"40px"}
@@ -94,7 +95,7 @@ const LayoutHeader = () => {
         <></>
       )}
       <ArtButton
-        btnColor={walletConnected ? "#0d3d3b" : "#000000"}
+        // btnColor={walletConnected ? "#0d3d3b" : "#000000"}
         color={walletConnected ? "#74bd7b" : "green"}
         onClick={() => {
           walletConnected ? walletDisconnect() : openConnectModal();
