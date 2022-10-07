@@ -434,7 +434,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
               gridGap={"12px"}
               {...props}
             >
-              <Flex justifyCenter gridGap={"16px"}>
+              <Flex justifyCenter gridGap={"16px"} alignCenter>
                 {(type === "modify" || type === "create") && (
                   <Flex col>
                     <Flex width={"200px"} aspectRatio={"1"}>
@@ -513,7 +513,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                     )}
                   </Flex>
                 )}
-                <Flex col gridGap={"4px"}>
+                <Flex col gridGap={"4px"} minWidth={"395px"} minHeight={"310px"} justifyCenter>
                   <Table>
                     <Tbody>
                       <Tr>
