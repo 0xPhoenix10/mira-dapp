@@ -84,6 +84,8 @@ const DashboardRecommended = () => {
             flex={1}
             type={"modify"}
             setVisible={setModifyModalVisible}
+            setAllocationVisible={setIndexAllocationModalVisible}
+            allocationData={allocationData}
           />
         </ModalParent>
       }

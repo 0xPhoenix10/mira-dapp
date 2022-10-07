@@ -259,7 +259,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   type = "modify",
   setVisible = () => { },
   setAllocationVisible = () => { },
-  allocationData,
+  allocationData = [],
   ...props
 }) => {
   const { walletConnected, signAndSubmitTransaction } = useWalletHook();
