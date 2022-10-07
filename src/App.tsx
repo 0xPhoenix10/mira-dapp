@@ -1,5 +1,6 @@
 import Layout from "components/layout";
 import DashboardPage from "pages/dashboard";
+import OurTokenPage from "pages/ourtoken";
 import ProfilePage from "pages/profile";
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path={""} element={<DashboardPage />} />
           <Route path={"profile"} element={<ProfilePage />} />
+          <Route path={"ourtokens"} element={<OurTokenPage />} />
         </Routes>
       </Layout>
     </BrowserRouter>

@@ -8,28 +8,32 @@ import {
   FarmIcon,
   LaunchpadIcon,
   ExplorerIcon,
+  CoinIcon,
 } from "components/icons";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const LayoutFooter = () => {
+  const location = useLocation();
+  const navigate = useNavigate()
   return (
-    <Flex justifyCenter p={"15px"} pb={"0px"} borderTop={"1px solid #1e2022"}>
-      <Flex gridGap={"20px"}>
-        <FooterBtn active title={"Invest & Manage"} icon={<ManageIcon />} />
-        <Box bg={"#1e2022"} width={"1px"} height={"calc(100% - 10px)"} />
-        <FooterBtn title={"Token"} icon={<StakeIcon />} />
-        <Box bg={"#1e2022"} width={"1px"} height={"calc(100% - 10px)"} />
-        <FooterBtn title={"Stake"} icon={<StakeIcon />} />
-        <Box bg={"#1e2022"} width={"1px"} height={"calc(100% - 10px)"} />
-        <FooterBtn title={"Swap"} icon={<SwapIcon />} />
-        <Box bg={"#1e2022"} width={"1px"} height={"calc(100% - 10px)"} />
-        <FooterBtn title={"Mine"} icon={<MineIcon />} />
-        <Box bg={"#1e2022"} width={"1px"} height={"calc(100% - 10px)"} />
-        <FooterBtn title={"Liquidity Farm"} icon={<FarmIcon />} />
-        <Box bg={"#1e2022"} width={"1px"} height={"calc(100% - 10px)"} />
-        <FooterBtn title={"Launchpad"} icon={<LaunchpadIcon />} />
-        <Box bg={"#1e2022"} width={"1px"} height={"calc(100% - 10px)"} />
-        <FooterBtn title={"Explorer"} icon={<ExplorerIcon />} />
+    <Flex
+      background={"#222129"}
+      justifyCenter
+      p={"15px"}
+      pb={"0px"}
+      borderTop={"1px solid #333334"}
+    >
+      <Flex gridGap={"25px"}>
+        <FooterBtn active={location.pathname === "/"} title={"Invest & Manage"} icon={<ManageIcon />} onClick={()=>navigate("/")} />
+        <FooterBtn active={location.pathname === "/ourtokens"} title={"Our Tokens"} icon={<CoinIcon />} onClick={()=>navigate("/ourtokens")} />
+        <FooterBtn active={location.pathname === "/121212"} title={"Token"} icon={<StakeIcon />} onClick={()=>navigate("/121212")} />
+        <FooterBtn active={location.pathname === "/121212"} title={"Stake"} icon={<StakeIcon />} onClick={()=>navigate("/121212")} />
+        <FooterBtn active={location.pathname === "/121212"} title={"Swap"} icon={<SwapIcon />} onClick={()=>navigate("/121212")} />
+        <FooterBtn active={location.pathname === "/121212"} title={"Mine"} icon={<MineIcon />} onClick={()=>navigate("/121212")} />
+        <FooterBtn active={location.pathname === "/121212"} title={"Liquidity Farm"} icon={<FarmIcon />} onClick={()=>navigate("/121212")} />
+        <FooterBtn active={location.pathname === "/121212"} title={"Launchpad"} icon={<LaunchpadIcon />} onClick={()=>navigate("/121212")} />
+        <FooterBtn active={location.pathname === "/121212"} title={"Explorer"} icon={<ExplorerIcon />} onClick={()=>navigate("/121212")} />
       </Flex>
     </Flex>
   );
@@ -41,6 +45,7 @@ const FooterBtnBase = styled(Box)`
 `;
 FooterBtnBase.defaultProps = {
   p: "14px 28px",
+  fontFamily: "art",
   whiteSpace: "nowrap",
   cursor: "pointer",
   transition: "100ms",

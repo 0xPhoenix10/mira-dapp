@@ -51,7 +51,7 @@ const LayoutHeader = () => {
       spaceBetween
       alignCenter
       p={"10px 40px"}
-      borderBottom={"1px solid #1e2022"}
+      borderBottom={"1px solid #333334"}
       gridGap={"16px"}
     >
 <<<<<<< HEAD

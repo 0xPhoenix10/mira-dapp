@@ -49,7 +49,7 @@ export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = ({
       </Flex>
       <Flex
         gridGap={"16px"}
-        background={"#101012"}
+        background={"#302d38"}
         p={"20px"}
         border={"1px solid #34383b"}
         borderRadius={"10px"}
