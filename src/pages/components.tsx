@@ -272,6 +272,8 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   const [privateAllocation, setPrivateAlloation] = useState<boolean>(false);
   const [referralReward, setReferralReward] = useState<number>(0);
   const [openMoreSetting, setOpenMoreSetting] = useState(false);
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [isHovered, setHovered] = React.useState(false);
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
@@ -382,6 +384,13 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
     return null;
   });
 
+  const onPieEnter = (data, index) => {
+    setActiveIndex(index);
+    setHovered(true);
+  };
+
+  const onPieLeave = () => setHovered(false);
+
   return (
     <>
       {visibleDeposit || visibleWithdraw ? (
@@ -443,15 +452,19 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                           >
                             <Tooltip content={<CustomizedTooltip />} />
                             <Pie
+                              activeIndex={isHovered ? activeIndex : null}
+                              activeShape={renderActiveShape}
                               data={allocationData}
                               cx="50%"
                               cy="50%"
                               labelLine={false}
                               label={renderCustomizedLabel}
-                              outerRadius={"100%"}
+                              outerRadius={"90%"}
                               fill="#8884d8"
                               stroke={"transparent"}
                               dataKey="value"
+                              onMouseEnter={onPieEnter}
+                              onMouseLeave={onPieLeave}
                             >
                               {allocationData.map((entry: any, index: number) => (
                                 <Cell
