@@ -25,15 +25,15 @@ const LayoutFooter = () => {
       borderTop={"1px solid #333334"}
     >
       <Flex gridGap={"25px"}>
-        <FooterBtn active={location.pathname === "/"} title={"Invest & Manage"} icon={<ManageIcon />} onClick={()=>navigate("/")} />
-        <FooterBtn active={location.pathname === "/ourtokens"} title={"Our Tokens"} icon={<CoinIcon />} onClick={()=>navigate("/ourtokens")} />
-        <FooterBtn active={location.pathname === "/121212"} title={"Token"} icon={<StakeIcon />} onClick={()=>navigate("/121212")} />
-        <FooterBtn active={location.pathname === "/121212"} title={"Stake"} icon={<StakeIcon />} onClick={()=>navigate("/121212")} />
-        <FooterBtn active={location.pathname === "/121212"} title={"Swap"} icon={<SwapIcon />} onClick={()=>navigate("/121212")} />
-        <FooterBtn active={location.pathname === "/121212"} title={"Mine"} icon={<MineIcon />} onClick={()=>navigate("/121212")} />
-        <FooterBtn active={location.pathname === "/121212"} title={"Liquidity Farm"} icon={<FarmIcon />} onClick={()=>navigate("/121212")} />
-        <FooterBtn active={location.pathname === "/121212"} title={"Launchpad"} icon={<LaunchpadIcon />} onClick={()=>navigate("/121212")} />
-        <FooterBtn active={location.pathname === "/121212"} title={"Explorer"} icon={<ExplorerIcon />} onClick={()=>navigate("/121212")} />
+        <FooterBtn active={location.pathname === "/"} title={"Our Tokens"} icon={<CoinIcon />} onClick={() => navigate("/")} />
+        <FooterBtn active={location.pathname === "/dashboard"} title={"Invest & Manage"} icon={<ManageIcon />} onClick={() => navigate("/dashboard")} />
+        {/* <FooterBtn active={location.pathname === "/121212"} title={"Token"} icon={<StakeIcon />} onClick={() => navigate("/121212")} /> */}
+        <FooterBtn active={location.pathname === "/121212"} title={"Stake"} icon={<StakeIcon />} onClick={() => navigate("/121212")} />
+        <FooterBtn active={location.pathname === "/121212"} title={"Swap"} icon={<SwapIcon />} onClick={() => navigate("/121212")} />
+        {/* <FooterBtn active={location.pathname === "/121212"} title={"Mine"} icon={<MineIcon />} onClick={() => navigate("/121212")} /> */}
+        {/* <FooterBtn active={location.pathname === "/121212"} title={"Liquidity Farm"} icon={<FarmIcon />} onClick={() => navigate("/121212")} /> */}
+        <FooterBtn active={location.pathname === "/121212"} title={"Launchpad"} icon={<LaunchpadIcon />} onClick={() => navigate("/121212")} />
+        <FooterBtn active={location.pathname === "/121212"} title={"Explorer"} icon={<ExplorerIcon />} onClick={() => navigate("/121212")} />
       </Flex>
     </Flex>
   );
@@ -59,15 +59,14 @@ interface FooterBtnProps {
 const FooterBtn: React.FC<FooterBtnProps> = ({
   icon = "",
   title = "",
-  onClick = () => {},
+  onClick = () => { },
   active,
 }) => {
   return (
     <FooterBtnBase
       background={active ? "linear-gradient(#74BD7B, #70cee6)" : "none"}
-      boxShadow={`${
-        active ? `0px 0px 7px 0px black, ` : ``
-      }-5px -3px 10px 0px #fff1, -5px 5px 10px 0px #fff1, 5px 3px 10px 0px #0006`}
+      boxShadow={`${active ? `0px 0px 7px 0px black, ` : ``
+        }-5px -3px 10px 0px #fff1, -5px 5px 10px 0px #fff1, 5px 3px 10px 0px #0006`}
       borderRadius={"10px 10px 0px 0px"}
       border={active ? "2px solid white" : "0px"}
       borderBottom={"none"}

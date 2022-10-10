@@ -12,9 +12,9 @@ function App() {
     <BrowserRouter>
       <Layout>
         <Routes>
-          <Route path={""} element={<DashboardPage />} />
+          <Route path={""} element={<OurTokenPage />} />
           <Route path={"profile"} element={<ProfilePage />} />
-          <Route path={"ourtokens"} element={<OurTokenPage />} />
+          <Route path={"dashboard"} element={<DashboardPage />} />
         </Routes>
       </Layout>
     </BrowserRouter>
