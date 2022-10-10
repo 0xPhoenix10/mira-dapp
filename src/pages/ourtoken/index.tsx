@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Box, Link, Table, Tbody, Td, Th, Thead, Tr } from "components/base";
 import { ChartBox } from "pages/components";
 import { Flex } from "components/base/container";
@@ -19,19 +19,27 @@ import { CustomSelect, SmOption } from "components/form";
 import { ArrowIcon, ExchangeIcon } from "components/icons";
 import { ArtButton, NormalBtn } from "components/elements/buttons";
 import { useWalletHook } from "common/hooks/wallet";
+import { renderActiveShape } from "../../common/recharts/piechart";
+
+interface IData {
+  name: string;
+  value: string | number;
+}
 
 const OurTokenPage: React.FC = () => {
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [isHovered, setHovered] = React.useState(false);
   const data1 = [
-    { name: "APT", value: 100 },
-    { name: "ETH", value: 100 },
-    { name: "BTC", value: 100 },
-    { name: "DOT", value: 100 },
+    { name: "WORM", value: 350 },
+    { name: "PYTH", value: 300 },
+    { name: "CLOCK", value: 200 },
+    { name: "OTTER", value: 400 },
   ];
   const COLORS = [
-    "#97acd0",
-    "#5c87bf",
-    "#4a7ab2",
-    "#4470a5",
+    "#5a9e47",
+    "#23b5b5",
+    "#527da7",
+    "#d4901c",
     "#3d6595",
     "#345882",
   ];
@@ -63,48 +71,79 @@ const OurTokenPage: React.FC = () => {
       </text>
     );
   };
+
+  const style = {
+    backgroundColor: "lightgrey",
+    color: "black",
+    padding: "2px 20px",
+    fontSize: "12px",
+  };
+
+  const CustomizedTooltip = React.memo((props: any) => {
+    if (props.payload.length > 0) {
+      const sum = data1.reduce((a, v) => (a = a + v.value), 0);
+
+      const item: IData = props.payload[0];
+      return (
+        <div style={style}>
+          <p>
+            {item.name} - {((Number(item.value) / sum) * 100).toFixed(0)}%
+          </p>
+        </div>
+      );
+    }
+    return null;
+  });
+
+  const onPieEnter = (data, index) => {
+    setActiveIndex(index);
+    setHovered(true);
+  };
+
+  const onPieLeave = () => setHovered(false);
+
   const data2 = [
     {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
+      name: "9/26",
+      uv: 40.00,
+      pv: 24.00,
+      amt: 24.00,
     },
     {
-      name: "Page B",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
+      name: "9/28",
+      uv: 30.00,
+      pv: 13.98,
+      amt: 22.10,
     },
     {
-      name: "Page C",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
+      name: "9/30",
+      uv: 20.00,
+      pv: 98.00,
+      amt: 22.90,
     },
     {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
+      name: "10/2",
+      uv: 27.80,
+      pv: 39.08,
+      amt: 20.00,
     },
     {
-      name: "Page E",
-      uv: 1890,
-      pv: 4800,
+      name: "10/2",
+      uv: 18.90,
+      pv: 48.00,
       amt: 2181,
     },
     {
-      name: "Page F",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
+      name: "10/4",
+      uv: 23.90,
+      pv: 38.00,
+      amt: 25.00,
     },
     {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
+      name: "10/6",
+      uv: 34.90,
+      pv: 43.00,
+      amt: 21.00,
     },
   ];
   const [currentTab, setCurrentTab] = useState(0);
@@ -126,7 +165,7 @@ const OurTokenPage: React.FC = () => {
               pb={"6px"}
               borderBottom={"1px solid #34383b"}
             >
-              BROAD EXPOSURE INDEX (BEI)
+              xHack Startup Index (XSI)
               <Flex
                 ml={"auto"}
                 mt={"auto"}
@@ -134,14 +173,33 @@ const OurTokenPage: React.FC = () => {
                 fontWeight={"normal"}
                 gridGap={"16px"}
               >
-                <Flex>48.29</Flex>/<Flex>4.1%</Flex>
+                <Flex
+                fontSize={"30px"}
+                fontWeight={"bold"}
+                >48.29</Flex>
+                <Flex
+                fontSize={"30px"}
+                fontWeight={"bold"}
+                >/</Flex>
+                <Flex
+                fontSize={"30px"}
+                fontWeight={"bold"}
+                color={"#70e094"}
+                >4.1%</Flex>
               </Flex>
             </Flex>
             <Flex p={"20px"}>
               <Flex flex={3} width={"0px"} p={"20px"} aspectRatio={"2"}>
                 <ResponsiveContainer>
-                  <PieChart width={300} height={300}>
+                  <PieChart
+                    width={300}
+                    height={300}
+                    //style={{ cursor: cursor }}
+                  >
+                    <Tooltip content={<CustomizedTooltip />} />
                     <Pie
+                      activeIndex={isHovered ? activeIndex : null}
+                      activeShape={renderActiveShape}
                       data={data1}
                       cx="50%"
                       cy="50%"
@@ -151,6 +209,8 @@ const OurTokenPage: React.FC = () => {
                       fill="#8884d8"
                       stroke={"transparent"}
                       dataKey="value"
+                      onMouseEnter={onPieEnter}
+                      onMouseLeave={onPieLeave}
                     >
                       {data1.map((entry, index) => (
                         <Cell
@@ -174,13 +234,13 @@ const OurTokenPage: React.FC = () => {
                     height={300}
                     data={data2}
                     margin={{
-                      top: 5,
-                      right: 30,
+                      top: 20,
+                      right: 0,
                       left: 20,
                       bottom: 5,
                     }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" />
+                    <CartesianGrid strokeDasharray="4 " floodColor={"#70e094"}/>
                     <XAxis dataKey="name" />
                     <YAxis />
                     {/* <Tooltip /> */}
@@ -188,7 +248,7 @@ const OurTokenPage: React.FC = () => {
                     <Line
                       type="monotone"
                       dataKey="pv"
-                      stroke="#8884d8"
+                      stroke="#70e094"
                       dot={false}
                       activeDot={{ r: 8 }}
                     />
@@ -248,7 +308,7 @@ const OurTokenPage: React.FC = () => {
         >
           <ChartBox
             width={"100%"}
-            title={"Aptos Defi Pulse"}
+            title={"xHack Startup Index"}
             cursorAll={"pointer"}
             onClickAll={() => {
               setCurrentTab(1);
@@ -256,7 +316,7 @@ const OurTokenPage: React.FC = () => {
           />
           <ChartBox
             width={"100%"}
-            title={"Aptos Defi Pulse"}
+            title={"L1 Exposure Index"}
             cursorAll={"pointer"}
             onClickAll={() => {
               setCurrentTab(1);
@@ -264,7 +324,7 @@ const OurTokenPage: React.FC = () => {
           />
           <ChartBox
             width={"100%"}
-            title={"Aptos Defi Pulse"}
+            title={"Broad DeFi Index"}
             cursorAll={"pointer"}
             onClickAll={() => {
               setCurrentTab(1);
@@ -272,7 +332,7 @@ const OurTokenPage: React.FC = () => {
           />
           <ChartBox
             width={"100%"}
-            title={"Aptos Defi Pulse"}
+            title={"Broad Wireless Index"}
             cursorAll={"pointer"}
             onClickAll={() => {
               setCurrentTab(1);
@@ -280,7 +340,7 @@ const OurTokenPage: React.FC = () => {
           />
           <ChartBox
             width={"100%"}
-            title={"Aptos Defi Pulse"}
+            title={"Broad Web3 Index"}
             cursorAll={"pointer"}
             onClickAll={() => {
               setCurrentTab(1);
@@ -288,7 +348,7 @@ const OurTokenPage: React.FC = () => {
           />
           <ChartBox
             width={"100%"}
-            title={"Aptos Defi Pulse"}
+            title={"Broad Gaming Index"}
             cursorAll={"pointer"}
             onClickAll={() => {
               setCurrentTab(1);
@@ -316,10 +376,10 @@ const SwapSection = () => {
       <Flex
         mx={"auto"}
         fontFamily={"art"}
-        fontSize={"18px"}
+        fontSize={"20px"}
         fontWeight={"bold"}
       >
-        Update
+        Swap
       </Flex>
       <Flex mt={"1em"} fontSize={"16px"}>
         From
@@ -329,7 +389,7 @@ const SwapSection = () => {
         mx={"auto"}
         fontSize={"2em"}
         p={"12px"}
-        border={"1px dashed #fff3"}
+        border={"1px solid #fff3"}
         borderRadius={"20px"}
       >
         <ExchangeIcon />
@@ -368,10 +428,10 @@ const SwapBox = () => {
     <Flex
       col
       gridGap={"12px"}
-      background={"#0005"}
+      background={"#3c3a45"}
       width={"300px"}
       p={"12px 24px"}
-      border={"1px dashed #fff3"}
+      border={"1px solid #fff3"}
       borderRadius={"20px"}
     >
       <Flex alignCenter justifyContent={"space-between"}>
@@ -384,14 +444,14 @@ const SwapBox = () => {
         <Flex bg={"#302d38"} borderRadius={"8px"}>
           <CustomSelect>
             <SmOption value={"APTOS"}>APTOS</SmOption>
-            <SmOption value={"BEI"}>BEI</SmOption>
+            <SmOption value={"XSI"}>XSI</SmOption>
           </CustomSelect>
         </Flex>
       </Flex>
       <Flex alignCenter justifyContent={"flex-end"} gridGap={"8px"}>
         <Flex>Balance :</Flex>
         <Flex>10</Flex>
-        <Link ml={"8px"} p={"4px 8px"} bg={"#0005"} borderRadius={"4px"}>
+        <Link ml={"8px"} p={"4px 8px"} bg={"#26242f"} borderRadius={"4px"}>
           Max
         </Link>
       </Flex>

@@ -30,7 +30,7 @@ export const Carousel3D: React.FC<{
       setCurrentSlide(
         (currentSlide + childNodes.length - 1) % childNodes.length
       );
-    }, 3000);
+    }, 5500);
     return () => clearTimeout(timeout);
   }, [currentSlide, stop]);
   return (
@@ -53,7 +53,7 @@ export const Carousel3D: React.FC<{
                 : "translateZ(-200px) scale(0)"
             }
             transition={"1500ms"}
-            // opacity={currentSlide === index ? "1" : "0.5"}
+            opacity={currentSlide === index ? "1" : "0.3"}
           >
             {each}
           </Flex>
@@ -62,7 +62,7 @@ export const Carousel3D: React.FC<{
       <Flex mt={"8px"} gridGap={"8px"}>
         <Link
           p={"8px 16px"}
-          border={"1px dashed #fff4"}
+          border={"1px solid #fff4"}
           borderRadius={"8px"}
           onClick={() =>
             setCurrentSlide((currentSlide + 1) % childNodes.length)
@@ -72,7 +72,7 @@ export const Carousel3D: React.FC<{
         </Link>
         <Link
           p={"8px 16px"}
-          border={"1px dashed #fff4"}
+          border={"1px solid #fff4"}
           borderRadius={"8px"}
           onClick={() =>
             setCurrentSlide(

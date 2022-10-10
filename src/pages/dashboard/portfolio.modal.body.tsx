@@ -49,17 +49,17 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   }, [walletConnected, miraIndexInfo.poolOwner, walletAddress]);
 
   const data = [
-    { name: "APT", value: 400 },
-    { name: "ETH", value: 300 },
-    { name: "BTC", value: 300 },
-    { name: "DOT", value: 200 },
+    { name: "WORM", value: 350 },
+    { name: "PYTH", value: 300 },
+    { name: "CLOCK", value: 200 },
+    { name: "OTTER", value: 400 },
   ];
 
   const COLORS = [
-    "#97acd0",
-    "#5c87bf",
-    "#4a7ab2",
-    "#4470a5",
+    "#5a9e47",
+    "#23b5b5",
+    "#527da7",
+    "#d4901c",
     "#3d6595",
     "#345882",
   ];
@@ -105,8 +105,8 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   };
 
   const style = {
-    backgroundColor: "#000",
-    color: "lightgrey",
+    backgroundColor: "lightgrey",
+    color: "black",
     padding: "2px 15px",
     fontSize: "12px",
   };
