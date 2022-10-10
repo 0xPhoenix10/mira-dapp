@@ -20,7 +20,7 @@ const wallets: WalletAdapter[] = [
 ];
 
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <WalletProvider
       wallets={wallets}
       autoConnect={true}
@@ -32,7 +32,7 @@ root.render(
         <App />
       </AllProvider>
     </WalletProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
