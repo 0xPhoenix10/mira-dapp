@@ -174,17 +174,17 @@ const OurTokenPage: React.FC = () => {
                 gridGap={"16px"}
               >
                 <Flex
-                fontSize={"30px"}
-                fontWeight={"bold"}
+                  fontSize={"30px"}
+                  fontWeight={"bold"}
                 >48.29</Flex>
                 <Flex
-                fontSize={"30px"}
-                fontWeight={"bold"}
+                  fontSize={"30px"}
+                  fontWeight={"bold"}
                 >/</Flex>
                 <Flex
-                fontSize={"30px"}
-                fontWeight={"bold"}
-                color={"#70e094"}
+                  fontSize={"30px"}
+                  fontWeight={"bold"}
+                  color={"#70e094"}
                 >4.1%</Flex>
               </Flex>
             </Flex>
@@ -194,7 +194,7 @@ const OurTokenPage: React.FC = () => {
                   <PieChart
                     width={300}
                     height={300}
-                    //style={{ cursor: cursor }}
+                  //style={{ cursor: cursor }}
                   >
                     <Tooltip content={<CustomizedTooltip />} />
                     <Pie
@@ -205,7 +205,7 @@ const OurTokenPage: React.FC = () => {
                       cy="50%"
                       labelLine={false}
                       label={renderCustomizedLabel}
-                      outerRadius={"100%"}
+                      outerRadius={"90%"}
                       fill="#8884d8"
                       stroke={"transparent"}
                       dataKey="value"
@@ -240,7 +240,7 @@ const OurTokenPage: React.FC = () => {
                       bottom: 5,
                     }}
                   >
-                    <CartesianGrid strokeDasharray="4 " floodColor={"#70e094"}/>
+                    <CartesianGrid strokeDasharray="4 " floodColor={"#70e094"} />
                     <XAxis dataKey="name" />
                     <YAxis />
                     {/* <Tooltip /> */}

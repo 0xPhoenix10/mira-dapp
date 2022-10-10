@@ -32,9 +32,9 @@ interface IData {
 export const ChartBox: React.FC<ChartBoxProps> = ({
   title = "Chart Box",
   cursor = "revert",
-  onClick = () => {},
+  onClick = () => { },
   cursorAll,
-  onClickAll = () => {},
+  onClickAll = () => { },
   ...props
 }) => {
   const [activeIndex, setActiveIndex] = React.useState(0);
@@ -151,7 +151,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
                 cy="50%"
                 labelLine={false}
                 label={renderCustomizedLabel}
-                outerRadius={"100%"}
+                outerRadius={"90%"}
                 fill="#8884d8"
                 stroke={"transparent"}
                 dataKey="value"
@@ -265,8 +265,8 @@ interface IndexModalBodyProps {
 }
 export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   type = "modify",
-  setVisible = () => {},
-  setAllocationVisible = () => {},
+  setVisible = () => { },
+  setAllocationVisible = () => { },
   allocationData = [],
   ...props
 }) => {
@@ -280,6 +280,8 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   const [privateAllocation, setPrivateAlloation] = useState<boolean>(false);
   const [referralReward, setReferralReward] = useState<number>(0);
   const [openMoreSetting, setOpenMoreSetting] = useState(false);
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [isHovered, setHovered] = React.useState(false);
 
   const COLORS = [
     "#5a9e47",
@@ -399,6 +401,13 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
     return null;
   });
 
+  const onPieEnter = (data, index) => {
+    setActiveIndex(index);
+    setHovered(true);
+  };
+
+  const onPieLeave = () => setHovered(false);
+
   return (
     <>
       {visibleDeposit || visibleWithdraw ? (
@@ -459,15 +468,19 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                           >
                             <Tooltip content={<CustomizedTooltip />} />
                             <Pie
+                              activeIndex={isHovered ? activeIndex : null}
+                              activeShape={renderActiveShape}
                               data={allocationData}
                               cx="50%"
                               cy="50%"
                               labelLine={false}
                               label={renderCustomizedLabel}
-                              outerRadius={"100%"}
+                              outerRadius={"90%"}
                               fill="#8884d8"
                               stroke={"transparent"}
                               dataKey="value"
+                              onMouseEnter={onPieEnter}
+                              onMouseLeave={onPieLeave}
                             >
                               {allocationData.map(
                                 (entry: any, index: number) => (
