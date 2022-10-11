@@ -30,7 +30,7 @@ interface IItem {
   id: string,
   link: string,
   title: string,
-  icon: React.ReactElement,
+  icon: string,
 }
 
 const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
@@ -89,38 +89,57 @@ const StyledMenu = styled((props: MenuProps) => (
 }));
 
 const defaultMenuList = [
-  { id: 'our_tokens', link: '/', title: 'Our Tokens', icon: <CoinIcon /> },
-  { id: 'invest_manage', link: '/dashboard', title: 'Invest & Manage', icon: <ManageIcon /> },
-  { id: 'stake', link: '/stake', title: 'Stake', icon: <StakeIcon /> },
-  { id: 'swap', link: '/swap', title: 'Swap', icon: <SwapIcon /> },
-  { id: 'launchpad', link: '/launchpad', title: 'Launchpad', icon: <LaunchpadIcon /> },
-  { id: 'explorer', link: '/explorer', title: 'Explorer', icon: <ExplorerIcon /> }
+  { id: 'our_tokens', link: '/', title: 'Our Tokens', icon: 'CoinIcon' },
+  { id: 'invest_manage', link: '/dashboard', title: 'Invest & Manage', icon: 'ManageIcon' },
+  { id: 'stake', link: '/stake', title: 'Stake', icon: 'StakeIcon' },
+  { id: 'swap', link: '/swap', title: 'Swap', icon: 'SwapIcon' },
+  { id: 'launchpad', link: '/launchpad', title: 'Launchpad', icon: 'LaunchpadIcon' },
+  { id: 'explorer', link: '/explorer', title: 'Explorer', icon: 'ExplorerIcon' },
 ];
 
-const moreMenuList = [
-  { id: 'mine', link: '/mine', title: 'Mine', icon: <MineIcon /> },
-  { id: 'farm', link: '/farm', title: 'Liquidity Farm', icon: <FarmIcon /> }
+const defaultMoreMenuList = [
+  { id: 'mine', link: '/mine', title: 'Mine', icon: 'MineIcon' },
+  { id: 'farm', link: '/farm', title: 'Liquidity Farm', icon: 'FarmIcon' }
+];
+const defaultRemoveMenuList = [
+  { id: 'stake', link: '/stake', title: 'Stake', icon: 'StakeIcon' },
+  { id: 'swap', link: '/swap', title: 'Swap', icon: 'SwapIcon' },
+  { id: 'launchpad', link: '/launchpad', title: 'Launchpad', icon: 'LaunchpadIcon' },
+  { id: 'explorer', link: '/explorer', title: 'Explorer', icon: 'ExplorerIcon' },
 ];
 
 const LayoutFooter = () => {
   const location = useLocation();
   const navigate = useNavigate()
-  const [items, setItems] = useState<IItem[]>(defaultMenuList);
-  const [moreItems, setMoreItems] = useState<IItem[]>(moreMenuList);
+  const [items, setItems] = useState<IItem[]>([]);
+  const [moreItems, setMoreItems] = useState<IItem[]>([]);
   const [removeItems, setRemoveItems] = useState<IItem[]>([]);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMoreMenu = Boolean(anchorEl);
 
-  // useEffect(() => {
-  //   var array = JSON.parse(localStorage.getItem('showlist'));
-    
-  //   if (array) {
-  //     setItems[array];
-  //   } else {
-  //     setItems[defaultMenuList];
-  //   }
-  // })
+  useEffect(() => {
+    var menuList = JSON.parse(localStorage.getItem('menuList'));
+    if(items.length == 0) {
+      var moreMenuList = JSON.parse(localStorage.getItem('moreMenuList'));
+      var removeMenuList = JSON.parse(localStorage.getItem('removeMenuList'));
+      if(menuList && menuList.length > 0 ) {
+        setItems(menuList);
+      } else {
+        setItems(defaultMenuList);
+      }
+      if(moreMenuList) {
+        setMoreItems(moreMenuList);
+      } else {
+        setMoreItems(defaultMoreMenuList);
+      }
+      if(removeMenuList) {
+        setRemoveItems(removeMenuList);
+      } else {
+        setRemoveItems(defaultRemoveMenuList)
+      }
+    }
+  }, [items, moreItems, removeItems]);
 
   const handleMoreMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -167,9 +186,37 @@ const LayoutFooter = () => {
       result.source.index,
       result.destination.index
     );
-
+    
+    localStorage.setItem('menuList', JSON.stringify(newItems));
     setItems(newItems)
-    // localStorage.setItem('showlist', JSON.stringify(newItems));
+  }
+
+  const getIconComponent = (iconName: string) => {
+    var res = <CoinIcon />;
+    switch(iconName) {
+      case 'CoinIcon':
+        res = <CoinIcon />;
+        break;
+      case 'StakeIcon':
+        res = <StakeIcon />;
+        break;
+      case 'SwapIcon':
+        res = <SwapIcon />;
+        break;
+      case 'LaunchpadIcon':
+        res = <LaunchpadIcon />;
+        break;
+      case 'ExplorerIcon':
+        res = <ExplorerIcon />;
+        break;
+      case 'MineIcon':
+        res = <MineIcon />;
+        break;
+      case 'FarmIcon':
+        res = <FarmIcon />;
+        break;
+    }
+    return res;
   }
 
   const addNewMenu = (index) => {
@@ -178,18 +225,22 @@ const LayoutFooter = () => {
     }
 
     items.push(moreItems[index]);
+    localStorage.setItem('menuList', JSON.stringify(items));
     setItems(items);
 
     if(removeItems.length === 0) {
       var new_array: IItem[] = [];
       new_array.push(moreItems[index]);
+      localStorage.setItem('removeMenuList', JSON.stringify(new_array));
       setRemoveItems(new_array);
     } else {
       removeItems.push(moreItems[index]);
+      localStorage.setItem('removeMenuList', JSON.stringify(removeItems));
       setRemoveItems(removeItems);
     }
 
     moreItems.splice(index, 1);
+    localStorage.setItem('moreMenuList', JSON.stringify(moreItems));
     setMoreItems(moreItems);
 
     handleMoreMenuClose();
@@ -201,18 +252,22 @@ const LayoutFooter = () => {
     }
 
     var filteredArray = items.filter((element: any) => element.id !== removeItems[index]['id']);
+    localStorage.setItem('menuList', JSON.stringify(filteredArray));
     setItems(filteredArray);
 
     if(moreItems.length === 0) {
       var new_array: IItem[] = [];
       new_array.push(removeItems[index]);
+      localStorage.setItem('moreMenuList', JSON.stringify(new_array));
       setMoreItems(new_array);
     } else {
       moreItems.push(removeItems[index]);
+      localStorage.setItem('moreMenuList', JSON.stringify(moreItems));
       setMoreItems(moreItems);
     }
 
     removeItems.splice(index, 1);
+    localStorage.setItem('removeMenuList', JSON.stringify(removeItems));
     setRemoveItems(removeItems);
 
     handleMoreMenuClose();
@@ -248,7 +303,7 @@ const LayoutFooter = () => {
                         provided.draggableProps.style
                       )}
                     >
-                      {<FooterBtn active={location.pathname === item.link} title={item.title} icon={item.icon} onClick={() => navigate(item.link)} />}
+                      {<FooterBtn active={location.pathname === item.link} title={item.title} icon={getIconComponent(item.icon)} onClick={() => navigate(item.link)} />}
                     </div>
                   )}
                 </Draggable>
@@ -281,7 +336,7 @@ const LayoutFooter = () => {
           onClose={handleMoreMenuClose}
         >
           {moreItems.map((item, index) => (
-            <MenuItem onClick={() => addNewMenu(index)} disableRipple >
+            <MenuItem onClick={() => addNewMenu(index)} disableRipple key={index}>
               <AddIcon />
               {item.title}
             </MenuItem>
@@ -291,7 +346,7 @@ const LayoutFooter = () => {
           }
           {(removeItems.length !== 0) && (
             removeItems.map((item, index) => (
-              <MenuItem onClick={() => removeMenu(index)} disableRipple>
+              <MenuItem onClick={() => removeMenu(index)} disableRipple key={index}>
                 <RemoveIcon />
                 {item.title}
               </MenuItem>
