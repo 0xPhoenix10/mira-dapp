@@ -107,7 +107,7 @@ const LayoutFooter = () => {
   const navigate = useNavigate()
   const [items, setItems] = useState<IItem[]>(defaultMenuList);
   const [moreItems, setMoreItems] = useState<IItem[]>(moreMenuList);
-  const [removeItems, setRemoveItems] = useState<IItem[]>();
+  const [removeItems, setRemoveItems] = useState<IItem[]>([]);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMoreMenu = Boolean(anchorEl);
@@ -125,6 +125,7 @@ const LayoutFooter = () => {
   const handleMoreMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleMoreMenuClose = () => {
     setAnchorEl(null);
   };
@@ -179,7 +180,7 @@ const LayoutFooter = () => {
     items.push(moreItems[index]);
     setItems(items);
 
-    if(removeItems === undefined) {
+    if(removeItems.length === 0) {
       var new_array: IItem[] = [];
       new_array.push(moreItems[index]);
       setRemoveItems(new_array);
@@ -190,6 +191,8 @@ const LayoutFooter = () => {
 
     moreItems.splice(index, 1);
     setMoreItems(moreItems);
+
+    handleMoreMenuClose();
   }
 
   const removeMenu = (index) => {
@@ -211,6 +214,8 @@ const LayoutFooter = () => {
 
     removeItems.splice(index, 1);
     setRemoveItems(removeItems);
+
+    handleMoreMenuClose();
   }
 
   return (
@@ -276,15 +281,15 @@ const LayoutFooter = () => {
           onClose={handleMoreMenuClose}
         >
           {moreItems.map((item, index) => (
-            <MenuItem onMouseUpCapture={() => addNewMenu(index)} disableRipple >
+            <MenuItem onClick={() => addNewMenu(index)} disableRipple >
               <AddIcon />
               {item.title}
             </MenuItem>
           ))}
-          {(removeItems !== undefined) && 
+          {(removeItems.length !== 0) && 
             <Divider sx={{ my: 0.5 }} textAlign="left">Added</Divider>
           }
-          {(removeItems !== undefined) && (
+          {(removeItems.length !== 0) && (
             removeItems.map((item, index) => (
               <MenuItem onClick={() => removeMenu(index)} disableRipple>
                 <RemoveIcon />
