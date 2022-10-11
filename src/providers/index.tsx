@@ -1,5 +1,6 @@
 import React from "react";
 import ThemesProvider from "./provider.theme";
+import FrontProvider from "./provider.front";
 import LayoutProvider from "./provider.wallet";
 
 type AllProviderProps = {
@@ -8,7 +9,9 @@ type AllProviderProps = {
 const AllProvider: React.FC<AllProviderProps> = ({ children }) => {
   return (
     <ThemesProvider>
-      <LayoutProvider>{children}</LayoutProvider>
+      <LayoutProvider>
+        <FrontProvider>{children}</FrontProvider>
+      </LayoutProvider>
     </ThemesProvider>
   );
 };

@@ -9,6 +9,7 @@ type FrontProviderProps = {
 const FrontProvider: React.FC<FrontProviderProps> = ({ children }) => {
   const [visibleSidebar, setVisibleSidebar] = useState(false);
   const [currentPage, setCurrentPage] = useState("");
+  const [currentChain, setCurrentChain] = useState("APTOS");
   return (
     <FrontContext.Provider
       value={{
@@ -16,6 +17,8 @@ const FrontProvider: React.FC<FrontProviderProps> = ({ children }) => {
         setCurrentPage: setCurrentPage,
         visibleSidebar: visibleSidebar,
         setVisibleSidebar: setVisibleSidebar,
+        currentChain: currentChain,
+        setCurrentChain: setCurrentChain,
       }}
     >
       {children}

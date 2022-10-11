@@ -3,6 +3,8 @@ import React, { ReactComponentElement, useEffect, useState } from "react";
 import { Box } from "components/base";
 import { Flex } from "components/base/container";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { FrontContext } from "providers/provider.front";
+import { useContext } from "react";
 
 import {
   ManageIcon,
@@ -92,50 +94,117 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
-const defaultMenuList = [
-  { id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" },
-  {
-    id: "invest_manage",
-    link: "/invest",
-    title: "Invest & Manage",
-    icon: "ManageIcon",
-  },
-  { id: "stake", link: "/stake", title: "Stake", icon: "StakeIcon" },
-  { id: "swap", link: "/swap", title: "Swap", icon: "SwapIcon" },
-  {
-    id: "launchpad",
-    link: "/launchpad",
-    title: "Launchpad",
-    icon: "LaunchpadIcon",
-  },
-  {
-    id: "explorer",
-    link: "/explorer",
-    title: "Explorer",
-    icon: "ExplorerIcon",
-  },
-];
+const defaultMenuList = {
+  APTOS: [
+    { id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" },
+    { id: "invest_manage", link: "/invest", title: "Invest & Manage", icon: "ManageIcon", },
+    { id: "stake", link: "/stake", title: "Stake", icon: "StakeIcon" },
+    { id: "swap", link: "/swap", title: "Swap", icon: "SwapIcon" },
+    { id: "launchpad", link: "/launchpad", title: "Launchpad", icon: "LaunchpadIcon", },
+    { id: "explorer", link: "/explorer", title: "Explorer", icon: "ExplorerIcon", },
+  ],
+  SUI: [
+    { id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" },
+  ],
+  SOLANA: [
+    { id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" },
+    { id: "step_finance", link: "https://www.step.finance/", title: "Step Finance", icon: "ManageIcon" },
+    { id: "stake", link: "/stake", title: "Stake", icon: "StakeIcon" },
+    { id: "solster_finance", link: "/invest", title: "Solster Finance",
+      icon: "SwapIcon", },
+    { id: "solster_finance1", link: "/invest", title: "Solster Finance",
+      icon: "SwapIcon", },
+    { id: "explorer", link: "/explorer", title: "SolanaFM", icon: "ExplorerIcon", },
+  ],
+  AVALANCHE: [
+    { id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" },
+  ],
+  ETHEREUM: [
+    { id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" },
+  ],
+  POLYGON: [
+    { id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" },
+  ],
+  FANTOM: [
+    { id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" },
+  ],
+  OPTIMISM: [
+    { id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" },
+  ],
+  AURORA: [
+    { id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" },
+  ],
+  COSMOS: [
+    { id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" },
+  ],
+};
 
-const defaultMoreMenuList = [
-  { id: "mine", link: "/mine", title: "Mine", icon: "MineIcon" },
-  { id: "farm", link: "/farm", title: "Liquidity Farm", icon: "FarmIcon" },
-];
-const defaultRemoveMenuList = [
-  { id: "stake", link: "/stake", title: "Stake", icon: "StakeIcon" },
-  { id: "swap", link: "/swap", title: "Swap", icon: "SwapIcon" },
-  {
-    id: "launchpad",
-    link: "/launchpad",
-    title: "Launchpad",
-    icon: "LaunchpadIcon",
-  },
-  {
-    id: "explorer",
-    link: "/explorer",
-    title: "Explorer",
-    icon: "ExplorerIcon",
-  },
-];
+const defaultMoreMenuList = {
+  APTOS: [
+    { id: "mine", link: "/mine", title: "Mine", icon: "MineIcon" },
+    { id: "farm", link: "/farm", title: "Liquidity Farm", icon: "FarmIcon" },
+  ],
+  SUI: [
+    { id: "mine", link: "/mine", title: "Mine", icon: "MineIcon" },
+    { id: "farm", link: "/farm", title: "Liquidity Farm", icon: "FarmIcon" },
+  ],
+  SOLANA: [
+    { id: "mine", link: "/mine", title: "Mine", icon: "MineIcon" },
+    { id: "farm", link: "/farm", title: "Liquidity Farm", icon: "FarmIcon" },
+  ],
+  AVALANCHE: [
+    { id: "mine", link: "/mine", title: "Mine", icon: "MineIcon" },
+    { id: "farm", link: "/farm", title: "Liquidity Farm", icon: "FarmIcon" },
+  ],
+  ETHEREUM: [
+    { id: "mine", link: "/mine", title: "Mine", icon: "MineIcon" },
+    { id: "farm", link: "/farm", title: "Liquidity Farm", icon: "FarmIcon" },
+  ],
+  POLYGON: [
+    { id: "mine", link: "/mine", title: "Mine", icon: "MineIcon" },
+    { id: "farm", link: "/farm", title: "Liquidity Farm", icon: "FarmIcon" },
+  ],
+  FANTOM: [
+    { id: "mine", link: "/mine", title: "Mine", icon: "MineIcon" },
+    { id: "farm", link: "/farm", title: "Liquidity Farm", icon: "FarmIcon" },
+  ],
+  OPTIMISM: [
+    { id: "mine", link: "/mine", title: "Mine", icon: "MineIcon" },
+    { id: "farm", link: "/farm", title: "Liquidity Farm", icon: "FarmIcon" },
+  ],
+  AURORA: [
+    { id: "mine", link: "/mine", title: "Mine", icon: "MineIcon" },
+    { id: "farm", link: "/farm", title: "Liquidity Farm", icon: "FarmIcon" },
+  ],
+  COSMOS: [
+    { id: "mine", link: "/mine", title: "Mine", icon: "MineIcon" },
+    { id: "farm", link: "/farm", title: "Liquidity Farm", icon: "FarmIcon" },
+  ],
+};
+const defaultRemoveMenuList = {
+  APTOS: [
+    { id: "stake", link: "/stake", title: "Stake", icon: "StakeIcon" },
+    { id: "swap", link: "/swap", title: "Swap", icon: "SwapIcon" },
+    { id: "launchpad", link: "/launchpad", title: "Launchpad", icon: "LaunchpadIcon", },
+    { id: "explorer", link: "/explorer", title: "Explorer", icon: "ExplorerIcon", },
+  ],
+  SUI: [],
+  SOLANA: [
+    { id: "stake", link: "/stake", title: "Stake", icon: "StakeIcon" },
+    { id: "solster_finance", link: "/invest", title: "Solster Finance",
+      icon: "SwapIcon", },
+    { id: "solster_finance1", link: "/invest", title: "Solster Finance",
+      icon: "SwapIcon", },
+    { id: "explorer", link: "/explorer", title: "SolanaFM", icon: "ExplorerIcon", },
+  ],
+  AVALANCHE: [],
+  ETHEREUM: [],
+  POLYGON: [],
+  FANTOM: [],
+  OPTIMISM: [],
+  AURORA: [],
+  COSMOS: [],
+}
 
 const LayoutFooter = () => {
   const location = useLocation();
@@ -146,26 +215,32 @@ const LayoutFooter = () => {
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMoreMenu = Boolean(anchorEl);
+  const { currentChain } = useContext(FrontContext);
 
   useEffect(() => {
-    var menuList = JSON.parse(localStorage.getItem("menuList"));
+    console.log("currentChain", currentChain)
+    setItems([])
+  }, [currentChain]);
+
+  useEffect(() => {
+    var menuList = JSON.parse(localStorage.getItem(`${currentChain}_menuList`));
     if (items.length == 0) {
-      var moreMenuList = JSON.parse(localStorage.getItem("moreMenuList"));
-      var removeMenuList = JSON.parse(localStorage.getItem("removeMenuList"));
+      var moreMenuList = JSON.parse(localStorage.getItem(`${currentChain}_moreMenuList`));
+      var removeMenuList = JSON.parse(localStorage.getItem(`${currentChain}_removeMenuList`));
       if (menuList && menuList.length > 0) {
         setItems(menuList);
       } else {
-        setItems(defaultMenuList);
+        setItems(defaultMenuList[currentChain]);
       }
       if (moreMenuList) {
         setMoreItems(moreMenuList);
       } else {
-        setMoreItems(defaultMoreMenuList);
+        setMoreItems(defaultMoreMenuList[currentChain]);
       }
       if (removeMenuList) {
         setRemoveItems(removeMenuList);
       } else {
-        setRemoveItems(defaultRemoveMenuList);
+        setRemoveItems(defaultRemoveMenuList[currentChain]);
       }
     }
   }, [items, moreItems, removeItems]);
@@ -216,7 +291,7 @@ const LayoutFooter = () => {
       result.destination.index
     );
 
-    localStorage.setItem("menuList", JSON.stringify(newItems));
+    localStorage.setItem(`${currentChain}_menuList`, JSON.stringify(newItems));
     setItems(newItems);
   };
 
@@ -254,22 +329,22 @@ const LayoutFooter = () => {
     }
 
     items.push(moreItems[index]);
-    localStorage.setItem("menuList", JSON.stringify(items));
+    localStorage.setItem(`${currentChain}_menuList`, JSON.stringify(items));
     setItems(items);
 
     if (removeItems.length === 0) {
       var new_array: IItem[] = [];
       new_array.push(moreItems[index]);
-      localStorage.setItem("removeMenuList", JSON.stringify(new_array));
+      localStorage.setItem(`${currentChain}_removeMenuList`, JSON.stringify(new_array));
       setRemoveItems(new_array);
     } else {
       removeItems.push(moreItems[index]);
-      localStorage.setItem("removeMenuList", JSON.stringify(removeItems));
+      localStorage.setItem(`${currentChain}_removeMenuList`, JSON.stringify(removeItems));
       setRemoveItems(removeItems);
     }
 
     moreItems.splice(index, 1);
-    localStorage.setItem("moreMenuList", JSON.stringify(moreItems));
+    localStorage.setItem(`${currentChain}_moreMenuList`, JSON.stringify(moreItems));
     setMoreItems(moreItems);
 
     handleMoreMenuClose();
@@ -283,22 +358,22 @@ const LayoutFooter = () => {
     var filteredArray = items.filter(
       (element: any) => element.id !== removeItems[index]["id"]
     );
-    localStorage.setItem("menuList", JSON.stringify(filteredArray));
+    localStorage.setItem(`${currentChain}_menuList`, JSON.stringify(filteredArray));
     setItems(filteredArray);
 
     if (moreItems.length === 0) {
       var new_array: IItem[] = [];
       new_array.push(removeItems[index]);
-      localStorage.setItem("moreMenuList", JSON.stringify(new_array));
+      localStorage.setItem(`${currentChain}_moreMenuList`, JSON.stringify(new_array));
       setMoreItems(new_array);
     } else {
       moreItems.push(removeItems[index]);
-      localStorage.setItem("moreMenuList", JSON.stringify(moreItems));
+      localStorage.setItem(`${currentChain}_moreMenuList`, JSON.stringify(moreItems));
       setMoreItems(moreItems);
     }
 
     removeItems.splice(index, 1);
-    localStorage.setItem("removeMenuList", JSON.stringify(removeItems));
+    localStorage.setItem(`${currentChain}_removeMenuList`, JSON.stringify(removeItems));
     setRemoveItems(removeItems);
 
     handleMoreMenuClose();
