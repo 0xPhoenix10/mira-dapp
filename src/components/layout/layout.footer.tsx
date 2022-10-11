@@ -97,24 +97,55 @@ const StyledMenu = styled((props: MenuProps) => (
 const defaultMenuList = {
   APTOS: [
     { id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" },
-    { id: "invest_manage", link: "/invest", title: "Invest & Manage", icon: "ManageIcon", },
+    {
+      id: "invest_manage",
+      link: "/invest",
+      title: "Invest & Manage",
+      icon: "ManageIcon",
+    },
     { id: "stake", link: "/stake", title: "Stake", icon: "StakeIcon" },
     { id: "swap", link: "/swap", title: "Swap", icon: "SwapIcon" },
-    { id: "launchpad", link: "/launchpad", title: "Launchpad", icon: "LaunchpadIcon", },
-    { id: "explorer", link: "/explorer", title: "Explorer", icon: "ExplorerIcon", },
+    {
+      id: "launchpad",
+      link: "/launchpad",
+      title: "Launchpad",
+      icon: "LaunchpadIcon",
+    },
+    {
+      id: "explorer",
+      link: "/explorer",
+      title: "Explorer",
+      icon: "ExplorerIcon",
+    },
   ],
-  SUI: [
-    { id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" },
-  ],
+  SUI: [{ id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" }],
   SOLANA: [
     { id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" },
-    { id: "step_finance", link: "https://www.step.finance/", title: "Step Finance", icon: "ManageIcon" },
+    {
+      id: "step_finance",
+      link: "https://www.step.finance/",
+      title: "Step Finance",
+      icon: "ManageIcon",
+    },
     { id: "stake", link: "/stake", title: "Stake", icon: "StakeIcon" },
-    { id: "solster_finance", link: "/invest", title: "Solster Finance",
-      icon: "SwapIcon", },
-    { id: "solster_finance1", link: "/invest", title: "Solster Finance",
-      icon: "SwapIcon", },
-    { id: "explorer", link: "/explorer", title: "SolanaFM", icon: "ExplorerIcon", },
+    {
+      id: "solster_finance",
+      link: "/invest",
+      title: "Solster Finance",
+      icon: "SwapIcon",
+    },
+    {
+      id: "solster_finance1",
+      link: "/invest",
+      title: "Solster Finance",
+      icon: "SwapIcon",
+    },
+    {
+      id: "explorer",
+      link: "/explorer",
+      title: "SolanaFM",
+      icon: "ExplorerIcon",
+    },
   ],
   AVALANCHE: [
     { id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" },
@@ -185,17 +216,40 @@ const defaultRemoveMenuList = {
   APTOS: [
     { id: "stake", link: "/stake", title: "Stake", icon: "StakeIcon" },
     { id: "swap", link: "/swap", title: "Swap", icon: "SwapIcon" },
-    { id: "launchpad", link: "/launchpad", title: "Launchpad", icon: "LaunchpadIcon", },
-    { id: "explorer", link: "/explorer", title: "Explorer", icon: "ExplorerIcon", },
+    {
+      id: "launchpad",
+      link: "/launchpad",
+      title: "Launchpad",
+      icon: "LaunchpadIcon",
+    },
+    {
+      id: "explorer",
+      link: "/explorer",
+      title: "Explorer",
+      icon: "ExplorerIcon",
+    },
   ],
   SUI: [],
   SOLANA: [
     { id: "stake", link: "/stake", title: "Stake", icon: "StakeIcon" },
-    { id: "solster_finance", link: "/invest", title: "Solster Finance",
-      icon: "SwapIcon", },
-    { id: "solster_finance1", link: "/invest", title: "Solster Finance",
-      icon: "SwapIcon", },
-    { id: "explorer", link: "/explorer", title: "SolanaFM", icon: "ExplorerIcon", },
+    {
+      id: "solster_finance",
+      link: "/invest",
+      title: "Solster Finance",
+      icon: "SwapIcon",
+    },
+    {
+      id: "solster_finance1",
+      link: "/invest",
+      title: "Solster Finance",
+      icon: "SwapIcon",
+    },
+    {
+      id: "explorer",
+      link: "/explorer",
+      title: "SolanaFM",
+      icon: "ExplorerIcon",
+    },
   ],
   AVALANCHE: [],
   ETHEREUM: [],
@@ -204,7 +258,7 @@ const defaultRemoveMenuList = {
   OPTIMISM: [],
   AURORA: [],
   COSMOS: [],
-}
+};
 
 const LayoutFooter = () => {
   const location = useLocation();
@@ -218,15 +272,19 @@ const LayoutFooter = () => {
   const { currentChain } = useContext(FrontContext);
 
   useEffect(() => {
-    console.log("currentChain", currentChain)
-    setItems([])
+    console.log("currentChain", currentChain);
+    setItems([]);
   }, [currentChain]);
 
   useEffect(() => {
     var menuList = JSON.parse(localStorage.getItem(`${currentChain}_menuList`));
     if (items.length == 0) {
-      var moreMenuList = JSON.parse(localStorage.getItem(`${currentChain}_moreMenuList`));
-      var removeMenuList = JSON.parse(localStorage.getItem(`${currentChain}_removeMenuList`));
+      var moreMenuList = JSON.parse(
+        localStorage.getItem(`${currentChain}_moreMenuList`)
+      );
+      var removeMenuList = JSON.parse(
+        localStorage.getItem(`${currentChain}_removeMenuList`)
+      );
       if (menuList && menuList.length > 0) {
         setItems(menuList);
       } else {
@@ -335,16 +393,25 @@ const LayoutFooter = () => {
     if (removeItems.length === 0) {
       var new_array: IItem[] = [];
       new_array.push(moreItems[index]);
-      localStorage.setItem(`${currentChain}_removeMenuList`, JSON.stringify(new_array));
+      localStorage.setItem(
+        `${currentChain}_removeMenuList`,
+        JSON.stringify(new_array)
+      );
       setRemoveItems(new_array);
     } else {
       removeItems.push(moreItems[index]);
-      localStorage.setItem(`${currentChain}_removeMenuList`, JSON.stringify(removeItems));
+      localStorage.setItem(
+        `${currentChain}_removeMenuList`,
+        JSON.stringify(removeItems)
+      );
       setRemoveItems(removeItems);
     }
 
     moreItems.splice(index, 1);
-    localStorage.setItem(`${currentChain}_moreMenuList`, JSON.stringify(moreItems));
+    localStorage.setItem(
+      `${currentChain}_moreMenuList`,
+      JSON.stringify(moreItems)
+    );
     setMoreItems(moreItems);
 
     handleMoreMenuClose();
@@ -358,22 +425,34 @@ const LayoutFooter = () => {
     var filteredArray = items.filter(
       (element: any) => element.id !== removeItems[index]["id"]
     );
-    localStorage.setItem(`${currentChain}_menuList`, JSON.stringify(filteredArray));
+    localStorage.setItem(
+      `${currentChain}_menuList`,
+      JSON.stringify(filteredArray)
+    );
     setItems(filteredArray);
 
     if (moreItems.length === 0) {
       var new_array: IItem[] = [];
       new_array.push(removeItems[index]);
-      localStorage.setItem(`${currentChain}_moreMenuList`, JSON.stringify(new_array));
+      localStorage.setItem(
+        `${currentChain}_moreMenuList`,
+        JSON.stringify(new_array)
+      );
       setMoreItems(new_array);
     } else {
       moreItems.push(removeItems[index]);
-      localStorage.setItem(`${currentChain}_moreMenuList`, JSON.stringify(moreItems));
+      localStorage.setItem(
+        `${currentChain}_moreMenuList`,
+        JSON.stringify(moreItems)
+      );
       setMoreItems(moreItems);
     }
 
     removeItems.splice(index, 1);
-    localStorage.setItem(`${currentChain}_removeMenuList`, JSON.stringify(removeItems));
+    localStorage.setItem(
+      `${currentChain}_removeMenuList`,
+      JSON.stringify(removeItems)
+    );
     setRemoveItems(removeItems);
 
     handleMoreMenuClose();
