@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { ReactComponentElement, useEffect, useState } from "react";
 import { Box } from "components/base";
 import { Flex } from "components/base/container";
@@ -27,8 +28,11 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 interface IItem {
   id: string,
-  content: React.ReactElement,
+  link: string,
+  title: string,
+  icon: React.ReactElement,
 }
+
 const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
   background: 'none',
   boxShadow: '-5px -3px 10px 0px #fff1, -5px 5px 10px 0px #fff1, 5px 3px 10px 0px #0006',
@@ -84,38 +88,40 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
+const defaultMenuList = [
+  { id: 'our_tokens', link: '/', title: 'Our Tokens', icon: <CoinIcon /> },
+  { id: 'invest_manage', link: '/dashboard', title: 'Invest & Manage', icon: <ManageIcon /> },
+  { id: 'stake', link: '/stake', title: 'Stake', icon: <StakeIcon /> },
+  { id: 'swap', link: '/swap', title: 'Swap', icon: <SwapIcon /> },
+  { id: 'launchpad', link: '/launchpad', title: 'Launchpad', icon: <LaunchpadIcon /> },
+  { id: 'explorer', link: '/explorer', title: 'Explorer', icon: <ExplorerIcon /> }
+];
+
+const moreMenuList = [
+  { id: 'mine', link: '/mine', title: 'Mine', icon: <MineIcon /> },
+  { id: 'farm', link: '/farm', title: 'Liquidity Farm', icon: <FarmIcon /> }
+];
+
 const LayoutFooter = () => {
   const location = useLocation();
   const navigate = useNavigate()
-  const [items, setItems] = useState<IItem[]>([
-    {
-      id: 'our_tokens',
-      content: <FooterBtn active={location.pathname === "/"} title={"Our Tokens"} icon={<CoinIcon />} onClick={() => navigate("/")} />
-    },
-    {
-      id: 'invest_manage',
-      content: <FooterBtn active={location.pathname === "/dashboard"} title={"Invest & Manage"} icon={<ManageIcon />} onClick={() => navigate("/dashboard")} />
-    },
-    {
-      id: 'stake',
-      content: <FooterBtn active={location.pathname === "/121212"} title={"Stake"} icon={<StakeIcon />} onClick={() => navigate("/121212")} />
-    },
-    {
-      id: 'swap',
-      content: <FooterBtn active={location.pathname === "/121212"} title={"Swap"} icon={<SwapIcon />} onClick={() => navigate("/121212")} />
-    },
-    {
-      id: 'launchpad',
-      content: <FooterBtn active={location.pathname === "/121212"} title={"Launchpad"} icon={<LaunchpadIcon />} onClick={() => navigate("/121212")} />
-    },
-    {
-      id: 'explorer',
-      content: <FooterBtn active={location.pathname === "/121212"} title={"Explorer"} icon={<ExplorerIcon />} onClick={() => navigate("/121212")} />
-    },
-  ]);
+  const [items, setItems] = useState<IItem[]>(defaultMenuList);
+  const [moreItems, setMoreItems] = useState<IItem[]>(moreMenuList);
+  const [removeItems, setRemoveItems] = useState<IItem[]>();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMoreMenu = Boolean(anchorEl);
+
+  // useEffect(() => {
+  //   var array = JSON.parse(localStorage.getItem('showlist'));
+    
+  //   if (array) {
+  //     setItems[array];
+  //   } else {
+  //     setItems[defaultMenuList];
+  //   }
+  // })
+
   const handleMoreMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -162,7 +168,51 @@ const LayoutFooter = () => {
     );
 
     setItems(newItems)
+    // localStorage.setItem('showlist', JSON.stringify(newItems));
   }
+
+  const addNewMenu = (index) => {
+    if(moreItems[index]['title'] === undefined) {
+      return;
+    }
+
+    items.push(moreItems[index]);
+    setItems(items);
+
+    if(removeItems === undefined) {
+      var new_array: IItem[] = [];
+      new_array.push(moreItems[index]);
+      setRemoveItems(new_array);
+    } else {
+      removeItems.push(moreItems[index]);
+      setRemoveItems(removeItems);
+    }
+
+    moreItems.splice(index, 1);
+    setMoreItems(moreItems);
+  }
+
+  const removeMenu = (index) => {
+    if(removeItems[index]['title'] === undefined) {
+      return;
+    }
+
+    var filteredArray = items.filter((element: any) => element.id !== removeItems[index]['id']);
+    setItems(filteredArray);
+
+    if(moreItems.length === 0) {
+      var new_array: IItem[] = [];
+      new_array.push(removeItems[index]);
+      setMoreItems(new_array);
+    } else {
+      moreItems.push(removeItems[index]);
+      setMoreItems(moreItems);
+    }
+
+    removeItems.splice(index, 1);
+    setRemoveItems(removeItems);
+  }
+
   return (
     <Flex
       background={"#222129"}
@@ -193,7 +243,7 @@ const LayoutFooter = () => {
                         provided.draggableProps.style
                       )}
                     >
-                      {item.content}
+                      {<FooterBtn active={location.pathname === item.link} title={item.title} icon={item.icon} onClick={() => navigate(item.link)} />}
                     </div>
                   )}
                 </Draggable>
@@ -225,23 +275,23 @@ const LayoutFooter = () => {
           open={openMoreMenu}
           onClose={handleMoreMenuClose}
         >
-          <MenuItem disableRipple>
-            <AddIcon />
-            Edit
-          </MenuItem>
-          <MenuItem disableRipple>
-            <AddIcon />
-            Duplicate
-          </MenuItem>
-          <Divider sx={{ my: 0.5 }} textAlign="left">Added</Divider>
-          <MenuItem onClick={handleMoreMenuClose} disableRipple>
-            <RemoveIcon />
-            Archive
-          </MenuItem>
-          <MenuItem onClick={handleMoreMenuClose} disableRipple>
-            <RemoveIcon />
-            More
-          </MenuItem>
+          {moreItems.map((item, index) => (
+            <MenuItem onMouseUpCapture={() => addNewMenu(index)} disableRipple >
+              <AddIcon />
+              {item.title}
+            </MenuItem>
+          ))}
+          {(removeItems !== undefined) && 
+            <Divider sx={{ my: 0.5 }} textAlign="left">Added</Divider>
+          }
+          {(removeItems !== undefined) && (
+            removeItems.map((item, index) => (
+              <MenuItem onClick={() => removeMenu(index)} disableRipple>
+                <RemoveIcon />
+                {item.title}
+              </MenuItem>
+            ))
+          )}
         </StyledMenu>
       </Flex>
     </Flex>
