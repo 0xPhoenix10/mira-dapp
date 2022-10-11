@@ -2,7 +2,7 @@
 import React, { ReactComponentElement, useEffect, useState } from "react";
 import { Box } from "components/base";
 import { Flex } from "components/base/container";
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import {
   ManageIcon,
@@ -17,71 +17,75 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import styledComponents from "styled-components";
 
-import { styled, alpha } from '@mui/material/styles';
-import Button, { ButtonProps } from '@mui/material/Button';
-import Menu, { MenuProps } from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Divider from '@mui/material/Divider';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { styled, alpha } from "@mui/material/styles";
+import Button, { ButtonProps } from "@mui/material/Button";
+import Menu, { MenuProps } from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Divider from "@mui/material/Divider";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 interface IItem {
-  id: string,
-  link: string,
-  title: string,
-  icon: string,
+  id: string;
+  link: string;
+  title: string;
+  icon: string;
 }
 
 const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
-  background: 'none',
-  boxShadow: '-5px -3px 10px 0px #fff1, -5px 5px 10px 0px #fff1, 5px 3px 10px 0px #0006',
+  background: "none",
+  boxShadow:
+    "-5px -3px 10px 0px #fff1, -5px 5px 10px 0px #fff1, 5px 3px 10px 0px #0006",
   borderRadius: "10px 10px 0px 0px",
-  border: '0px',
+  border: "0px",
   borderBottom: "none",
   color: "#fff8",
 
-  '&:hover': {
-    background: 'none',
-    boxShadow: '-5px -3px 10px 0px #fff1, -5px 5px 10px 0px #fff1, 5px 3px 10px 0px #0006',
-    color: '#fff'
+  "&:hover": {
+    background: "none",
+    boxShadow:
+      "-5px -3px 10px 0px #fff1, -5px 5px 10px 0px #fff1, 5px 3px 10px 0px #0006",
+    color: "#fff",
   },
 }));
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
     elevation={0}
     anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'right',
+      vertical: "bottom",
+      horizontal: "right",
     }}
     transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
+      vertical: "top",
+      horizontal: "right",
     }}
     {...props}
   />
 ))(({ theme }) => ({
-  '& .MuiPaper-root': {
+  "& .MuiPaper-root": {
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 180,
     color:
-      theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
+      theme.palette.mode === "light"
+        ? "rgb(55, 65, 81)"
+        : theme.palette.grey[300],
     boxShadow:
-      'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
-    '& .MuiMenu-list': {
-      padding: '4px 0',
+      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+    "& .MuiMenu-list": {
+      padding: "4px 0",
     },
-    '& .MuiMenuItem-root': {
-      '& .MuiSvgIcon-root': {
+    "& .MuiMenuItem-root": {
+      "& .MuiSvgIcon-root": {
         fontSize: 18,
         color: theme.palette.text.secondary,
         marginRight: theme.spacing(1.5),
       },
-      '&:active': {
+      "&:active": {
         backgroundColor: alpha(
           theme.palette.primary.main,
-          theme.palette.action.selectedOpacity,
+          theme.palette.action.selectedOpacity
         ),
       },
     },
@@ -89,28 +93,53 @@ const StyledMenu = styled((props: MenuProps) => (
 }));
 
 const defaultMenuList = [
-  { id: 'our_tokens', link: '/', title: 'Our Tokens', icon: 'CoinIcon' },
-  { id: 'invest_manage', link: '/dashboard', title: 'Invest & Manage', icon: 'ManageIcon' },
-  { id: 'stake', link: '/stake', title: 'Stake', icon: 'StakeIcon' },
-  { id: 'swap', link: '/swap', title: 'Swap', icon: 'SwapIcon' },
-  { id: 'launchpad', link: '/launchpad', title: 'Launchpad', icon: 'LaunchpadIcon' },
-  { id: 'explorer', link: '/explorer', title: 'Explorer', icon: 'ExplorerIcon' },
+  { id: "our_tokens", link: "/", title: "Our Tokens", icon: "CoinIcon" },
+  {
+    id: "invest_manage",
+    link: "/dashboard",
+    title: "Invest & Manage",
+    icon: "ManageIcon",
+  },
+  { id: "stake", link: "/stake", title: "Stake", icon: "StakeIcon" },
+  { id: "swap", link: "/swap", title: "Swap", icon: "SwapIcon" },
+  {
+    id: "launchpad",
+    link: "/launchpad",
+    title: "Launchpad",
+    icon: "LaunchpadIcon",
+  },
+  {
+    id: "explorer",
+    link: "/explorer",
+    title: "Explorer",
+    icon: "ExplorerIcon",
+  },
 ];
 
 const defaultMoreMenuList = [
-  { id: 'mine', link: '/mine', title: 'Mine', icon: 'MineIcon' },
-  { id: 'farm', link: '/farm', title: 'Liquidity Farm', icon: 'FarmIcon' }
+  { id: "mine", link: "/mine", title: "Mine", icon: "MineIcon" },
+  { id: "farm", link: "/farm", title: "Liquidity Farm", icon: "FarmIcon" },
 ];
 const defaultRemoveMenuList = [
-  { id: 'stake', link: '/stake', title: 'Stake', icon: 'StakeIcon' },
-  { id: 'swap', link: '/swap', title: 'Swap', icon: 'SwapIcon' },
-  { id: 'launchpad', link: '/launchpad', title: 'Launchpad', icon: 'LaunchpadIcon' },
-  { id: 'explorer', link: '/explorer', title: 'Explorer', icon: 'ExplorerIcon' },
+  { id: "stake", link: "/stake", title: "Stake", icon: "StakeIcon" },
+  { id: "swap", link: "/swap", title: "Swap", icon: "SwapIcon" },
+  {
+    id: "launchpad",
+    link: "/launchpad",
+    title: "Launchpad",
+    icon: "LaunchpadIcon",
+  },
+  {
+    id: "explorer",
+    link: "/explorer",
+    title: "Explorer",
+    icon: "ExplorerIcon",
+  },
 ];
 
 const LayoutFooter = () => {
   const location = useLocation();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [items, setItems] = useState<IItem[]>([]);
   const [moreItems, setMoreItems] = useState<IItem[]>([]);
   const [removeItems, setRemoveItems] = useState<IItem[]>([]);
@@ -119,24 +148,24 @@ const LayoutFooter = () => {
   const openMoreMenu = Boolean(anchorEl);
 
   useEffect(() => {
-    var menuList = JSON.parse(localStorage.getItem('menuList'));
-    if(items.length == 0) {
-      var moreMenuList = JSON.parse(localStorage.getItem('moreMenuList'));
-      var removeMenuList = JSON.parse(localStorage.getItem('removeMenuList'));
-      if(menuList && menuList.length > 0 ) {
+    var menuList = JSON.parse(localStorage.getItem("menuList"));
+    if (items.length == 0) {
+      var moreMenuList = JSON.parse(localStorage.getItem("moreMenuList"));
+      var removeMenuList = JSON.parse(localStorage.getItem("removeMenuList"));
+      if (menuList && menuList.length > 0) {
         setItems(menuList);
       } else {
         setItems(defaultMenuList);
       }
-      if(moreMenuList) {
+      if (moreMenuList) {
         setMoreItems(moreMenuList);
       } else {
         setMoreItems(defaultMoreMenuList);
       }
-      if(removeMenuList) {
+      if (removeMenuList) {
         setRemoveItems(removeMenuList);
       } else {
-        setRemoveItems(defaultRemoveMenuList)
+        setRemoveItems(defaultRemoveMenuList);
       }
     }
   }, [items, moreItems, removeItems]);
@@ -151,27 +180,27 @@ const LayoutFooter = () => {
 
   // a little function to help us with reordering the result
   const reorder = (list, startIndex, endIndex) => {
-    const result:IItem[] = Array.from(list);
+    const result: IItem[] = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
 
     return result;
   };
-  const getListStyle = isDraggingOver => ({
+  const getListStyle = (isDraggingOver) => ({
     // background: isDraggingOver ? 'lightblue' : 'inherit',
-    display: 'flex',
-    padding: '0px 15px',
+    display: "flex",
+    padding: "0px 15px",
   });
   const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
-    userSelect: 'none',
+    userSelect: "none",
     // padding: grid * 2,
-    paddingTop: '5px',
+    paddingTop: "5px",
     // margin: `0 ${grid}px 0 0`,
-  
+
     // change background colour if dragging
     // background: isDragging ? 'lightgreen' : 'inherit',
-  
+
     // styles we need to apply on draggables
     ...draggableStyle,
   });
@@ -186,92 +215,94 @@ const LayoutFooter = () => {
       result.source.index,
       result.destination.index
     );
-    
-    localStorage.setItem('menuList', JSON.stringify(newItems));
-    setItems(newItems)
-  }
+
+    localStorage.setItem("menuList", JSON.stringify(newItems));
+    setItems(newItems);
+  };
 
   const getIconComponent = (iconName: string) => {
     var res = <CoinIcon />;
-    switch(iconName) {
-      case 'CoinIcon':
+    switch (iconName) {
+      case "CoinIcon":
         res = <CoinIcon />;
         break;
-      case 'StakeIcon':
+      case "StakeIcon":
         res = <StakeIcon />;
         break;
-      case 'SwapIcon':
+      case "SwapIcon":
         res = <SwapIcon />;
         break;
-      case 'LaunchpadIcon':
+      case "LaunchpadIcon":
         res = <LaunchpadIcon />;
         break;
-      case 'ExplorerIcon':
+      case "ExplorerIcon":
         res = <ExplorerIcon />;
         break;
-      case 'MineIcon':
+      case "MineIcon":
         res = <MineIcon />;
         break;
-      case 'FarmIcon':
+      case "FarmIcon":
         res = <FarmIcon />;
         break;
     }
     return res;
-  }
+  };
 
   const addNewMenu = (index) => {
-    if(moreItems[index]['title'] === undefined) {
+    if (moreItems[index]["title"] === undefined) {
       return;
     }
 
     items.push(moreItems[index]);
-    localStorage.setItem('menuList', JSON.stringify(items));
+    localStorage.setItem("menuList", JSON.stringify(items));
     setItems(items);
 
-    if(removeItems.length === 0) {
+    if (removeItems.length === 0) {
       var new_array: IItem[] = [];
       new_array.push(moreItems[index]);
-      localStorage.setItem('removeMenuList', JSON.stringify(new_array));
+      localStorage.setItem("removeMenuList", JSON.stringify(new_array));
       setRemoveItems(new_array);
     } else {
       removeItems.push(moreItems[index]);
-      localStorage.setItem('removeMenuList', JSON.stringify(removeItems));
+      localStorage.setItem("removeMenuList", JSON.stringify(removeItems));
       setRemoveItems(removeItems);
     }
 
     moreItems.splice(index, 1);
-    localStorage.setItem('moreMenuList', JSON.stringify(moreItems));
+    localStorage.setItem("moreMenuList", JSON.stringify(moreItems));
     setMoreItems(moreItems);
 
     handleMoreMenuClose();
-  }
+  };
 
   const removeMenu = (index) => {
-    if(removeItems[index]['title'] === undefined) {
+    if (removeItems[index]["title"] === undefined) {
       return;
     }
 
-    var filteredArray = items.filter((element: any) => element.id !== removeItems[index]['id']);
-    localStorage.setItem('menuList', JSON.stringify(filteredArray));
+    var filteredArray = items.filter(
+      (element: any) => element.id !== removeItems[index]["id"]
+    );
+    localStorage.setItem("menuList", JSON.stringify(filteredArray));
     setItems(filteredArray);
 
-    if(moreItems.length === 0) {
+    if (moreItems.length === 0) {
       var new_array: IItem[] = [];
       new_array.push(removeItems[index]);
-      localStorage.setItem('moreMenuList', JSON.stringify(new_array));
+      localStorage.setItem("moreMenuList", JSON.stringify(new_array));
       setMoreItems(new_array);
     } else {
       moreItems.push(removeItems[index]);
-      localStorage.setItem('moreMenuList', JSON.stringify(moreItems));
+      localStorage.setItem("moreMenuList", JSON.stringify(moreItems));
       setMoreItems(moreItems);
     }
 
     removeItems.splice(index, 1);
-    localStorage.setItem('removeMenuList', JSON.stringify(removeItems));
+    localStorage.setItem("removeMenuList", JSON.stringify(removeItems));
     setRemoveItems(removeItems);
 
     handleMoreMenuClose();
-  }
+  };
 
   return (
     <Flex
@@ -303,7 +334,14 @@ const LayoutFooter = () => {
                         provided.draggableProps.style
                       )}
                     >
-                      {<FooterBtn active={location.pathname === item.link} title={item.title} icon={getIconComponent(item.icon)} onClick={() => navigate(item.link)} />}
+                      {
+                        <FooterBtn
+                          active={location.pathname === item.link}
+                          title={item.title}
+                          icon={getIconComponent(item.icon)}
+                          onClick={() => navigate(item.link)}
+                        />
+                      }
                     </div>
                   )}
                 </Draggable>
@@ -316,9 +354,9 @@ const LayoutFooter = () => {
       <Flex gridGap={"25px"} pt={"5px"} ml={"10px"}>
         <StyledButton
           id="demo-customized-button"
-          aria-controls={openMoreMenu ? 'demo-customized-menu' : undefined}
+          aria-controls={openMoreMenu ? "demo-customized-menu" : undefined}
           aria-haspopup="true"
-          aria-expanded={openMoreMenu ? 'true' : undefined}
+          aria-expanded={openMoreMenu ? "true" : undefined}
           variant="contained"
           disableElevation
           onClick={handleMoreMenuClick}
@@ -329,29 +367,38 @@ const LayoutFooter = () => {
         <StyledMenu
           id="demo-customized-menu"
           MenuListProps={{
-            'aria-labelledby': 'demo-customized-button',
+            "aria-labelledby": "demo-customized-button",
           }}
           anchorEl={anchorEl}
           open={openMoreMenu}
           onClose={handleMoreMenuClose}
         >
           {moreItems.map((item, index) => (
-            <MenuItem onClick={() => addNewMenu(index)} disableRipple key={index}>
+            <MenuItem
+              onClick={() => addNewMenu(index)}
+              disableRipple
+              key={index}
+            >
               <AddIcon />
               {item.title}
             </MenuItem>
           ))}
-          {(removeItems.length !== 0) && 
-            <Divider sx={{ my: 0.5 }} textAlign="left">Added</Divider>
-          }
-          {(removeItems.length !== 0) && (
+          {removeItems.length !== 0 && (
+            <Divider sx={{ my: 0.5 }} textAlign="left">
+              Added
+            </Divider>
+          )}
+          {removeItems.length !== 0 &&
             removeItems.map((item, index) => (
-              <MenuItem onClick={() => removeMenu(index)} disableRipple key={index}>
+              <MenuItem
+                onClick={() => removeMenu(index)}
+                disableRipple
+                key={index}
+              >
                 <RemoveIcon />
                 {item.title}
               </MenuItem>
-            ))
-          )}
+            ))}
         </StyledMenu>
       </Flex>
     </Flex>
@@ -378,14 +425,15 @@ interface FooterBtnProps {
 const FooterBtn: React.FC<FooterBtnProps> = ({
   icon = "",
   title = "",
-  onClick = () => { },
+  onClick = () => {},
   active,
 }) => {
   return (
     <FooterBtnBase
       background={active ? "linear-gradient(#74BD7B, #70cee6)" : "none"}
-      boxShadow={`${active ? `0px 0px 7px 0px black, ` : ``
-        }-5px -3px 10px 0px #fff1, -5px 5px 10px 0px #fff1, 5px 3px 10px 0px #0006`}
+      boxShadow={`${
+        active ? `0px 0px 7px 0px black, ` : ``
+      }-5px -3px 10px 0px #fff1, -5px 5px 10px 0px #fff1, 5px 3px 10px 0px #0006`}
       borderRadius={"10px 10px 0px 0px"}
       border={active ? "2px solid white" : "0px"}
       borderBottom={"none"}
