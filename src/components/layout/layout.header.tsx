@@ -5,10 +5,12 @@ import { ArtButton } from "components/elements/buttons";
 import { UserIcon } from "components/icons";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { MODULE_ADDR, NODE_URL } from "config";
+import { MODULE_ADDR, NODE_URL, CHAIN_LIST } from "config";
 import { AptosClient } from "aptos";
 import { getRandomizeString } from "../../utils";
 import { CustomSelect, SmOption } from "components/form";
+import { FrontContext } from "providers/provider.front";
+import { useContext } from "react";
 
 const LayoutHeader = () => {
   const navigate = useNavigate();
@@ -19,6 +21,7 @@ const LayoutHeader = () => {
     walletDisconnect,
     signAndSubmitTransaction,
   } = useWalletHook();
+  const { currentChain, setCurrentChain } = useContext(FrontContext);
   // const [createdMiraAccount, setCreatedMiraAccount] = useState<boolean>(false);
 
   useEffect(() => {
@@ -76,17 +79,22 @@ const LayoutHeader = () => {
       </Box>
       {/* && createdMiraAccount */}
       <ArtButton ml={"auto"} padding={"0px"}>
-        <CustomSelect>
-          <SmOption value={"APTOS"}>APTOS</SmOption>
-          <SmOption value={"SUI"}>SUI</SmOption>
-          <SmOption value={"SOLANA"}>SOLANA</SmOption>
-          <SmOption value={"AVALANCHE"}>AVALANCHE</SmOption>
-          <SmOption value={"ETHEREUM"}>ETHEREUM</SmOption>
-          <SmOption value={"POLYGON"}>POLYGON</SmOption>
-          <SmOption value={"FANTOM"}>FANTOM</SmOption>
-          <SmOption value={"OPTIMISM"}>OPTIMISM</SmOption>
-          <SmOption value={"AURORA"}>AURORA</SmOption>
-          <SmOption value={"COSMOS"}>COSMOS</SmOption>
+        <CustomSelect
+          onChange={(e) => {
+            setCurrentChain(e);
+          }}
+        >
+          {CHAIN_LIST.map((item, index) => {
+            return (
+              <SmOption
+                key={index}
+                selected={item == currentChain ? true : false}
+                value={item}
+              >
+                {item}
+              </SmOption>
+            );
+          })}
         </CustomSelect>
       </ArtButton>
       {walletConnected ? (
