@@ -32,9 +32,9 @@ interface IData {
 export const ChartBox: React.FC<ChartBoxProps> = ({
   title = "Chart Box",
   cursor = "revert",
-  onClick = () => { },
+  onClick = () => {},
   cursorAll,
-  onClickAll = () => { },
+  onClickAll = () => {},
   ...props
 }) => {
   const [activeIndex, setActiveIndex] = React.useState(0);
@@ -265,8 +265,8 @@ interface IndexModalBodyProps {
 }
 export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   type = "modify",
-  setVisible = () => { },
-  setAllocationVisible = () => { },
+  setVisible = () => {},
+  setAllocationVisible = () => {},
   allocationData = [],
   ...props
 }) => {

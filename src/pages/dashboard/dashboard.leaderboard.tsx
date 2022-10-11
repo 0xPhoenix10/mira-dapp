@@ -13,6 +13,7 @@ import DepositModalBody from "./deposit.modal.body";
 import WithdrawModalBody from "./withdraw.modal.body";
 import { UpdateIndexProviderContext } from "./index";
 import { PortfolioModalBody } from "./portfolio.modal.body";
+import { CustomSelect, SmOption } from "components/form";
 
 interface MiraIndex {
   poolName: string;
@@ -80,6 +81,10 @@ const DashboardLeaderBoard = () => {
     }
     setMiraIndexes(create_pool_events);
   };
+
+  const [searchValue, setSearchValue] = useState("");
+  const [filterValue, setFilterValue] = useState("all");
+  const [sortValue, setSortValue] = useState("");
 
   return (
     <>
@@ -170,28 +175,71 @@ const DashboardLeaderBoard = () => {
             gridGap={"4px"}
             ml={"auto"}
             background={"#302d38"}
-            p={"8px 16px"}
+            px={"18px"}
+            py={"10px"}
             border={"1px solid #34383b"}
             borderRadius={"8px"}
           >
             <Input
+              value={searchValue}
               border={"none"}
               background={"transparent"}
               color={"white"}
               placeholder={"Search"}
+              onChange={(e) => {
+                setSearchValue(e.target.value);
+              }}
             />
             <SearchIcon />
           </Flex>
-          <Flex alignCenter gridGap={"4px"} cursor={"pointer"}>
-            <FilterIcon />
-            Filter
+          <Flex
+            alignCenter
+            gridGap={"4px"}
+            cursor={"pointer"}
+            background={"#302d38"}
+            border={"1px solid #34383b"}
+            borderRadius={"8px"}
+          >
+            <CustomSelect
+              before={
+                <>
+                  <FilterIcon /> Search in :{" "}
+                </>
+              }
+              onChange={setFilterValue}
+            >
+              <SmOption value={"all"} selected>
+                All
+              </SmOption>
+              <SmOption value={"poolName"}>Index Name</SmOption>
+              <SmOption value={"managementFee"}>Management Fee</SmOption>
+              <SmOption value={"founded"}>Founded</SmOption>
+            </CustomSelect>
           </Flex>
-          <Flex alignCenter gridGap={"4px"} cursor={"pointer"}>
-            <SortIcon />
-            Sort
+          <Flex
+            alignCenter
+            gridGap={"4px"}
+            cursor={"pointer"}
+            background={"#302d38"}
+            border={"1px solid #34383b"}
+            borderRadius={"8px"}
+          >
+            <CustomSelect
+              before={
+                <>
+                  <SortIcon /> Sort by :{" "}
+                </>
+              }
+              onChange={setSortValue}
+            >
+              <SmOption value={"poolName"}>Index Name</SmOption>
+              <SmOption value={"managementFee"}>Management Fee</SmOption>
+              <SmOption value={"founded"}>Founded</SmOption>
+            </CustomSelect>
           </Flex>
         </Flex>
         <Flex
+          col
           gridGap={"16px"}
           background={"#302D38"}
           p={"20px"}
@@ -253,87 +301,121 @@ const DashboardLeaderBoard = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {miraIndexes.map((miraIndex, index) => {
-                return (
-                  <Tr key={index}>
-                    <Td>
-                      <Flex
-                        alignCenter
-                        gridGap={"10px"}
-                        cursor={"pointer"}
-                        onClick={() => {
-                          setSelectIndexInfo(miraIndex);
-                          setPortfolioModalVisible(true);
-                        }}
-                      >
-                        <Box
-                          background={"linear-gradient(90deg,#fceabb,#f8b500)"}
-                          borderRadius={"100%"}
-                          width={"25px"}
-                          height={"25px"}
-                        ></Box>
-                        {miraIndex.poolName}
-                      </Flex>
-                    </Td>
-                    <Td>-</Td>
-                    <Td>-%</Td>
-                    <Td>{miraIndex.founded}</Td>
-                    {/*<Td>Dec 1, 2000</Td>*/}
-                    <Td>{miraIndex.managementFee}%</Td>
-                    <Td>No</Td>
-                    {walletConnected && (
+              {miraIndexes
+                .sort((a: any, b: any) =>
+                  a[sortValue]?.toString().toUpperCase() >
+                  b[sortValue]?.toString().toUpperCase()
+                    ? 1
+                    : -1
+                )
+                .map((miraIndex, index) => {
+                  let flag = false;
+                  if (searchValue) {
+                    if (filterValue === "all") {
+                      for (const key in miraIndex) {
+                        if (
+                          miraIndex[key]
+                            .toUpperCase()
+                            .search(searchValue.toUpperCase()) != -1
+                        ) {
+                          flag = true;
+                          break;
+                        } else continue;
+                      }
+                    } else {
+                      if (
+                        miraIndex[filterValue]
+                          .toUpperCase()
+                          .search(searchValue.toUpperCase()) != -1
+                      ) {
+                        flag = true;
+                      }
+                    }
+                  }
+                  return searchValue && !flag ? (
+                    ""
+                  ) : (
+                    <Tr key={index}>
                       <Td>
                         <Flex
-                          justifyCenter
-                          padding={"4px 8px"}
-                          background={"#0005"}
-                          border={"1px solid #34383b"}
-                          borderRadius={"4px"}
-                          cursor={"pointer"}
-                        >
-                          Share with this
-                        </Flex>
-                      </Td>
-                    )}
-                    {walletConnected && (
-                      <Td>
-                        <Flex
-                          justifyCenter
-                          padding={"4px 8px"}
-                          background={"#0005"}
-                          border={"1px solid #34383b"}
-                          borderRadius={"4px"}
+                          alignCenter
+                          gridGap={"10px"}
                           cursor={"pointer"}
                           onClick={() => {
                             setSelectIndexInfo(miraIndex);
-                            setShowDepositModal(true);
+                            setPortfolioModalVisible(true);
                           }}
                         >
-                          Deposit
+                          <Box
+                            background={
+                              "linear-gradient(90deg,#fceabb,#f8b500)"
+                            }
+                            borderRadius={"100%"}
+                            width={"25px"}
+                            height={"25px"}
+                          />
+                          {miraIndex.poolName}
                         </Flex>
                       </Td>
-                    )}
-                    {walletConnected && (
-                      <Td>
-                        <Flex
-                          justifyCenter
-                          padding={"4px 8px"}
-                          background={"#0005"}
-                          border={"1px solid #34383b"}
-                          borderRadius={"4px"}
-                          cursor={"pointer"}
-                          onClick={() => {
-                            setSelectIndexInfo(miraIndex);
-                            setShowWithdrawModal(true);
-                          }}
-                        >
-                          Withdraw
-                        </Flex>
-                      </Td>
-                    )}
-                  </Tr>
-                );
-              })}
+                      <Td>-</Td>
+                      <Td>-%</Td>
+                      <Td>{miraIndex.founded}</Td>
+                      {/*<Td>Dec 1, 2000</Td>*/}
+                      <Td>{miraIndex.managementFee}%</Td>
+                      <Td>No</Td>
+                      {walletConnected && (
+                        <Td>
+                          <Flex
+                            justifyCenter
+                            padding={"4px 8px"}
+                            background={"#0005"}
+                            border={"1px solid #34383b"}
+                            borderRadius={"4px"}
+                            cursor={"pointer"}
+                          >
+                            Share with this
+                          </Flex>
+                        </Td>
+                      )}
+                      {walletConnected && (
+                        <Td>
+                          <Flex
+                            justifyCenter
+                            padding={"4px 8px"}
+                            background={"#0005"}
+                            border={"1px solid #34383b"}
+                            borderRadius={"4px"}
+                            cursor={"pointer"}
+                            onClick={() => {
+                              setSelectIndexInfo(miraIndex);
+                              setShowDepositModal(true);
+                            }}
+                          >
+                            Deposit
+                          </Flex>
+                        </Td>
+                      )}
+                      {walletConnected && (
+                        <Td>
+                          <Flex
+                            justifyCenter
+                            padding={"4px 8px"}
+                            background={"#0005"}
+                            border={"1px solid #34383b"}
+                            borderRadius={"4px"}
+                            cursor={"pointer"}
+                            onClick={() => {
+                              setSelectIndexInfo(miraIndex);
+                              setShowWithdrawModal(true);
+                            }}
+                          >
+                            Withdraw
+                          </Flex>
+                        </Td>
+                      )}
+                    </Tr>
+                  );
+                })}
             </Tbody>
           </Table>
         </Flex>
