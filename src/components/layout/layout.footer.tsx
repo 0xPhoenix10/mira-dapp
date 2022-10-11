@@ -93,10 +93,10 @@ const StyledMenu = styled((props: MenuProps) => (
 }));
 
 const defaultMenuList = [
-  { id: "our_tokens", link: "/", title: "Our Tokens", icon: "CoinIcon" },
+  { id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" },
   {
     id: "invest_manage",
-    link: "/dashboard",
+    link: "/invest",
     title: "Invest & Manage",
     icon: "ManageIcon",
   },
