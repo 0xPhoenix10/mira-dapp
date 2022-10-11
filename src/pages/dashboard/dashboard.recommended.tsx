@@ -224,7 +224,7 @@ const DashboardRecommended = () => {
                   }}
                   transition={"100ms"}
                 >
-                  My Indexes
+                  My Investments
                 </Box>
                 <Box
                   fontFamily={"art"}
@@ -238,7 +238,7 @@ const DashboardRecommended = () => {
                   }}
                   transition={"100ms"}
                 >
-                  My Investments
+                  My Index Funds
                 </Box>
               </Flex>
               <Flex

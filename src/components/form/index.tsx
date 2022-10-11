@@ -61,24 +61,18 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
         if (each.props.customTagType !== "--411customisedOption--") {
           return null;
         }
-        const value = each.props.value;
+        const eachValue = each.props.value;
         const text = each.props.children;
         const selected = each.props.selected;
         list.push({
-          value: value,
+          value: eachValue,
           text: text,
-          selected: selected,
+          selected: !currentOption && selected,
         });
-        return {
-          value: value,
-          text: text,
-          selected: selected,
-        };
       });
       list.map((each: any, index: any) => {
-        if (each.selected) {
-          setCurrentOption(each);
-        }
+        if (each.value === value) setCurrentOption(each);
+        else if (each.selected) setCurrentOption(each);
       });
       setOptionList(list);
     }
@@ -91,6 +85,7 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
         height={"100%"}
         whiteSpace={"nowrap"}
         fontWeight={"400"}
+        fontSize={"14px"}
         lineHeight={"1em"}
         color={"white"}
         cursor="pointer"

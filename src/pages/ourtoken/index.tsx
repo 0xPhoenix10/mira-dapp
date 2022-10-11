@@ -105,45 +105,45 @@ const OurTokenPage: React.FC = () => {
   const data2 = [
     {
       name: "9/26",
-      uv: 40.00,
-      pv: 24.00,
-      amt: 24.00,
+      uv: 40.0,
+      pv: 24.0,
+      amt: 24.0,
     },
     {
       name: "9/28",
-      uv: 30.00,
+      uv: 30.0,
       pv: 13.98,
-      amt: 22.10,
+      amt: 22.1,
     },
     {
       name: "9/30",
-      uv: 20.00,
-      pv: 98.00,
-      amt: 22.90,
+      uv: 20.0,
+      pv: 98.0,
+      amt: 22.9,
     },
     {
       name: "10/2",
-      uv: 27.80,
+      uv: 27.8,
       pv: 39.08,
-      amt: 20.00,
+      amt: 20.0,
     },
     {
       name: "10/2",
-      uv: 18.90,
-      pv: 48.00,
+      uv: 18.9,
+      pv: 48.0,
       amt: 2181,
     },
     {
       name: "10/4",
-      uv: 23.90,
-      pv: 38.00,
-      amt: 25.00,
+      uv: 23.9,
+      pv: 38.0,
+      amt: 25.0,
     },
     {
       name: "10/6",
-      uv: 34.90,
-      pv: 43.00,
-      amt: 21.00,
+      uv: 34.9,
+      pv: 43.0,
+      amt: 21.0,
     },
   ];
   const [currentTab, setCurrentTab] = useState(0);
@@ -173,19 +173,15 @@ const OurTokenPage: React.FC = () => {
                 fontWeight={"normal"}
                 gridGap={"16px"}
               >
-                <Flex
-                  fontSize={"30px"}
-                  fontWeight={"bold"}
-                >48.29</Flex>
-                <Flex
-                  fontSize={"30px"}
-                  fontWeight={"bold"}
-                >/</Flex>
-                <Flex
-                  fontSize={"30px"}
-                  fontWeight={"bold"}
-                  color={"#70e094"}
-                >4.1%</Flex>
+                <Flex fontSize={"30px"} fontWeight={"bold"}>
+                  48.29
+                </Flex>
+                <Flex fontSize={"30px"} fontWeight={"bold"}>
+                  /
+                </Flex>
+                <Flex fontSize={"30px"} fontWeight={"bold"} color={"#70e094"}>
+                  4.1%
+                </Flex>
               </Flex>
             </Flex>
             <Flex p={"20px"}>
@@ -194,7 +190,7 @@ const OurTokenPage: React.FC = () => {
                   <PieChart
                     width={300}
                     height={300}
-                  //style={{ cursor: cursor }}
+                    //style={{ cursor: cursor }}
                   >
                     <Tooltip content={<CustomizedTooltip />} />
                     <Pie
@@ -240,7 +236,10 @@ const OurTokenPage: React.FC = () => {
                       bottom: 5,
                     }}
                   >
-                    <CartesianGrid strokeDasharray="4 " floodColor={"#70e094"} />
+                    <CartesianGrid
+                      strokeDasharray="4 "
+                      floodColor={"#70e094"}
+                    />
                     <XAxis dataKey="name" />
                     <YAxis />
                     {/* <Tooltip /> */}

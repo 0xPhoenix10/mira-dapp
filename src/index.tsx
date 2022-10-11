@@ -21,17 +21,17 @@ const wallets: WalletAdapter[] = [
 
 root.render(
   // <React.StrictMode>
-    <WalletProvider
-      wallets={wallets}
-      autoConnect={true}
-      onError={(error: Error) => {
-        console.log("wallet error:", error);
-      }}
-    >
-      <AllProvider>
-        <App />
-      </AllProvider>
-    </WalletProvider>
+  <WalletProvider
+    wallets={wallets}
+    autoConnect={true}
+    onError={(error: Error) => {
+      console.log("wallet error:", error);
+    }}
+  >
+    <AllProvider>
+      <App />
+    </AllProvider>
+  </WalletProvider>
   // </React.StrictMode>
 );
 

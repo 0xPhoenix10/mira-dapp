@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { MODULE_ADDR, NODE_URL } from "config";
 import { AptosClient } from "aptos";
 import { getRandomizeString } from "../../utils";
+import { CustomSelect, SmOption } from "components/form";
 
 const LayoutHeader = () => {
   const navigate = useNavigate();
@@ -74,10 +75,23 @@ const LayoutHeader = () => {
         />
       </Box>
       {/* && createdMiraAccount */}
+      <ArtButton ml={"auto"} padding={"0px"}>
+        <CustomSelect>
+          <SmOption value={"APTOS"}>APTOS</SmOption>
+          <SmOption value={"SUI"}>SUI</SmOption>
+          <SmOption value={"SOLANA"}>SOLANA</SmOption>
+          <SmOption value={"AVALANCHE"}>AVALANCHE</SmOption>
+          <SmOption value={"ETHEREUM"}>ETHEREUM</SmOption>
+          <SmOption value={"POLYGON"}>POLYGON</SmOption>
+          <SmOption value={"FANTOM"}>FANTOM</SmOption>
+          <SmOption value={"OPTIMISM"}>OPTIMISM</SmOption>
+          <SmOption value={"AURORA"}>AURORA</SmOption>
+          <SmOption value={"COSMOS"}>COSMOS</SmOption>
+        </CustomSelect>
+      </ArtButton>
       {walletConnected ? (
         <Flex
           center
-          ml={"auto"}
           // background={"linear-gradient(90deg, #131313, #2b2b2b)"}
           borderRadius={"100%"}
           width={"40px"}
