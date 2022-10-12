@@ -3,7 +3,7 @@ import { Box } from "components/base";
 import { Flex } from "components/base/container";
 import { CreateIcon, WarningIcon } from "components/icons";
 import { ModalParent } from "components/modal";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import {
   ChartBox,
   IndexListModalBody,
@@ -16,9 +16,30 @@ import { PortfolioModalBody } from "./portfolio.modal.body";
 import { IndexAllocationModalBody } from "../index.allocation.modal";
 import { IndexAllocation } from "../../utils/types";
 import { Carousel3D } from "./comp.dashboard";
+import { UpdateIndexProviderContext } from "./index";
+import { AptosClient } from "aptos";
+import { MODULE_ADDR, NODE_URL } from "config";
+import { getFormatedDate, getStringFee } from "../../utils";
+
+interface MiraIndex {
+  poolName: string;
+  poolAddress: string;
+  poolOwner: string;
+  managementFee: string;
+  founded: string;
+}
+
+interface CreatePoolEvent {
+  pool_name: string;
+  pool_address: string;
+  pool_owner: string;
+  private_allocation: boolean;
+  management_fee: number;
+  founded: number;
+}
 
 const DashboardRecommended = () => {
-  const { walletConnected } = useWalletHook();
+  const { walletAddress, walletConnected } = useWalletHook();
   const [createMmodalVisible, setCreateModalVisible] = useState(false);
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [modifyModalVisible, setModifyModalVisible] = useState(false);
@@ -43,11 +64,41 @@ const DashboardRecommended = () => {
   ]);
   const Carousel3D1 = useRef(null);
   const Carousel3D2 = useRef(null);
+  const { updateIndex } = useContext(UpdateIndexProviderContext);
+  const [miraMyIndexes, setMiraMyIndexes] = useState<MiraIndex[]>([]);
+  const [miraMyInvests, setMiraMyInvests] = useState<MiraIndex[]>([]);
 
   useEffect(() => {
     Carousel3D1?.current?.reset();
     Carousel3D2?.current?.reset();
   }, [walletConnected]);
+
+  useEffect(() => {
+    fetchIndexes();
+  }, [updateIndex]);
+
+  const fetchIndexes = async () => {
+    const client = new AptosClient(NODE_URL);
+    let events = await client.getEventsByEventHandle(
+      MODULE_ADDR,
+      `${MODULE_ADDR}::mira::MiraStatus`,
+      "create_pool_events",
+      { limit: 1000 }
+    );
+    let create_pool_events: MiraIndex[] = [];
+    for (let ev of events) {
+      let e: CreatePoolEvent = ev.data;
+      if (e.private_allocation || walletAddress != e.pool_owner) continue;
+      create_pool_events.push({
+        poolName: e.pool_name,
+        poolAddress: e.pool_address,
+        poolOwner: e.pool_owner,
+        managementFee: getStringFee(e.management_fee),
+        founded: getFormatedDate(e.founded),
+      });
+    }
+    setMiraMyIndexes(create_pool_events);
+  };
   return (
     <>
       {
@@ -271,39 +322,74 @@ const DashboardRecommended = () => {
                 Create
               </Flex>
             </Flex>
-            <Flex justifyCenter gridGap={"16px"}>
-              <Carousel3D
-                ref={Carousel3D2}
-                stop={portfolioModalVisible || modifyModalVisible}
-              >
-                <BlankCard
-                  flex={1}
-                  width={"0px"}
-                  maxWidth={"70%"}
-                  minHeight={"245px"}
-                  type={isInvest ? "invest" : "index"}
-                />
-                <ChartBox
-                  flex={1}
-                  width={"0px"}
-                  maxWidth={"70%"}
-                  title={"Aptos Defi Pulse"}
-                  cursor={"pointer"}
-                  onClick={() => {
-                    setModifyModalVisible(true);
-                  }}
-                />
-                <ChartBox
-                  flex={1}
-                  width={"0px"}
-                  maxWidth={"70%"}
-                  title={"Aptos Defi Pulse"}
-                  cursor={"pointer"}
-                  onClick={() => {
-                    setModifyModalVisible(true);
-                  }}
-                />
-              </Carousel3D>
+            <Flex justifyCenter gridGap={"16px"} height={"100%"} alignCenter>
+              {
+                isInvest ? (
+                  miraMyInvests.length > 0 ? (
+                    <Carousel3D
+                      ref={Carousel3D2}
+                      stop={portfolioModalVisible || modifyModalVisible}
+                    >
+                      {
+                        miraMyInvests.map((item, index) => {
+                          return (
+                            <ChartBox
+                              key={index}
+                              flex={1}
+                              width={"0px"}
+                              maxWidth={"70%"}
+                              title={item.poolName}
+                              cursor={"pointer"}
+                              onClick={() => {
+                                setModifyModalVisible(true);
+                              }}
+                            />
+                          )
+                        })
+                      }
+                    </Carousel3D>
+                  ) : (
+                    <BlankCard
+                      flex={1}
+                      maxWidth={"70%"}
+                      minHeight={"245px"}
+                      type={"invest"}
+                    />
+                  )
+                ) : (
+                  miraMyIndexes.length > 0 ? (
+                    <Carousel3D
+                      ref={Carousel3D2}
+                      stop={portfolioModalVisible || modifyModalVisible}
+                    >
+                      {
+                        miraMyIndexes.map((item, index) => {
+                          return (
+                            <ChartBox
+                              key={index}
+                              flex={1}
+                              width={"0px"}
+                              maxWidth={"70%"}
+                              title={item.poolName}
+                              cursor={"pointer"}
+                              onClick={() => {
+                                setModifyModalVisible(true);
+                              }}
+                            />
+                          )
+                        })
+                      }
+                    </Carousel3D>
+                  ) : (
+                    <BlankCard
+                      flex={1}
+                      maxWidth={"70%"}
+                      minHeight={"245px"}
+                      type={"index"}
+                    />
+                  )
+                )
+              }
             </Flex>
           </Flex>
         )}
