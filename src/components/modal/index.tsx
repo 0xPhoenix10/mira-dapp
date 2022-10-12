@@ -4,12 +4,14 @@ import { useRef } from "react";
 
 type ModalParentProps = {
   visible: boolean;
+  width?: string;
   setVisible: (arg: boolean) => void;
   children?: React.ReactNode;
 };
 
 export const ModalParent: React.FC<ModalParentProps> = ({
   visible,
+  width='auto',
   setVisible,
   children,
 }) => {
@@ -40,6 +42,7 @@ export const ModalParent: React.FC<ModalParentProps> = ({
             border={"1px solid #34383b"}
             borderRadius={"20px"}
             boxSizing={"border-box"}
+            width={width}
           >
             <Flex
               ml={"auto"}
