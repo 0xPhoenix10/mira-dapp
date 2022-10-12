@@ -43,6 +43,7 @@ import DepositModalBody from "./dashboard/deposit.modal.body";
 import WithdrawModalBody from "./dashboard/withdraw.modal.body";
 import { renderActiveShape } from "../common/recharts/piechart";
 import { ArtButton, NormalBtn } from "components/elements/buttons";
+import { IndexAllocation } from "../utils/types";
 
 interface ChartBoxProps {
   title?: string;
@@ -862,11 +863,348 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   );
 };
 
+export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
+  setVisible = () => {},
+  ...props
+}) => {
+  const { walletConnected, signAndSubmitTransaction } = useWalletHook();
+  const [nameValue, setNameValue] = useState<string>("");
+  const [totalAmount, setTotalAmount] = useState<number>(0);
+  const [managementFee, setManagementFee] = useState<number>(0);
+  const [rebalancingPeriod, setRebalancingPeriod] = useState<number>(0);
+  const [minimumContribution, setMiniumContribution] = useState<number>(0);
+  const [miniumWithdrawal, setMiniumWithdrawal] = useState<number>(0);
+  const [privateAllocation, setPrivateAlloation] = useState<boolean>(false);
+  const [referralReward, setReferralReward] = useState<number>(0);
+  const [openMoreSetting, setOpenMoreSetting] = useState(false);
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [isHovered, setHovered] = React.useState(false);
+  const { updateIndex, setUpdateIndex } = useContext(
+    UpdateIndexProviderContext
+  );
+
+  const style = {
+    backgroundColor: "#000",
+    color: "lightgrey",
+    padding: "2px 15px",
+    fontSize: "12px",
+  };
+
+  return (
+    <Flex col gridGap={"10px"}>
+      <Flex
+        py={"8px"}
+        fontSize={"18px"}
+        fontWeight={"500"}
+        borderBottom={"1px solid #34383b"}
+      >
+        Update Settings
+      </Flex>
+      <Flex justifyCenter gridGap={"16px"}>
+        <Flex
+          col
+          background={"#302d38"}
+          p={"20px"}
+          border={"1px solid #34383b"}
+          borderRadius={"20px"}
+          gridGap={"12px"}
+          {...props}
+        >
+          <Flex justifyCenter gridGap={"16px"} alignCenter>
+            <Flex
+              col
+              gridGap={"4px"}
+              minWidth={"395px"}
+              minHeight={"310px"}
+              justifyCenter
+            >
+              <Table>
+                <Tbody>
+                  <Tr>
+                    <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                      Name :
+                    </Td>
+                    <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                      <Flex
+                        alignCenter
+                        p={"4px"}
+                        borderBottom={"1px solid #34383b"}
+                      >
+                        <Input
+                          border={"none"}
+                          background={"transparent"}
+                          color={"white"}
+                          placeholder={"input here..."}
+                          readOnly={true}
+                          onChange={(e) => {
+                            setNameValue(e.target.value);
+                          }}
+                        />
+                      </Flex>
+                    </Td>
+                  </Tr>
+                  <Tr>
+                    <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                      Deposit amount :
+                    </Td>
+                    <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                      <Flex
+                        alignCenter
+                        p={"4px"}
+                        borderBottom={"1px solid #34383b"}
+                      >
+                        <Input
+                          flex={"1"}
+                          type={"number"}
+                          border={"none"}
+                          background={"transparent"}
+                          color={"white"}
+                          placeholder={"input here..."}
+                          max={"100"}
+                          min={"0"}
+                          onChange={(e) => {
+                            setTotalAmount(parseInt(e.target.value));
+                          }}
+                        />
+                      </Flex>
+                    </Td>
+                  </Tr>
+                  <Tr>
+                    <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                      Management fee :
+                    </Td>
+                    <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                      <Flex
+                        alignCenter
+                        p={"4px"}
+                        borderBottom={"1px solid #34383b"}
+                      >
+                        <Input
+                          flex={"1"}
+                          type={"number"}
+                          border={"none"}
+                          background={"transparent"}
+                          color={"white"}
+                          placeholder={"input here..."}
+                          max={"100"}
+                          min={"0"}
+                          onChange={(e) => {
+                            setManagementFee(parseInt(e.target.value));
+                          }}
+                        />
+                        %
+                      </Flex>
+                    </Td>
+                  </Tr>
+                  <Tr>
+                    <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                      Rebalancing :
+                    </Td>
+                    <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                      <Flex
+                        alignCenter
+                        px={"4px"}
+                        py={"1px"}
+                        borderBottom={"1px solid #34383b"}
+                      >
+                        <CustomSelect
+                          flex={"1"}
+                          onChange={(e: number) => {
+                            setRebalancingPeriod(e);
+                          }}
+                          value={0}
+                        >
+                          <SmOption value="0">1 Day</SmOption>
+                          <SmOption value="1">1 Week</SmOption>
+                          <SmOption value="2">2 Weeks</SmOption>
+                          <SmOption value="3">1 Month</SmOption>
+                          <SmOption value="4">2 Months</SmOption>
+                        </CustomSelect>
+                      </Flex>
+                    </Td>
+                  </Tr>
+                  {openMoreSetting && (
+                    <>
+                      <Tr>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          Minimum Contribution :
+                        </Td>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          <Flex
+                            alignCenter
+                            p={"4px"}
+                            borderBottom={"1px solid #34383b"}
+                          >
+                            <Input
+                              flex={"1"}
+                              border={"none"}
+                              background={"transparent"}
+                              color={"white"}
+                              placeholder={"input here..."}
+                              onChange={(e) => {
+                                setMiniumContribution(parseInt(e.target.value));
+                              }}
+                            />
+                            %
+                          </Flex>
+                        </Td>
+                      </Tr>
+                      <Tr>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          Minimum Withdrawal Period :
+                        </Td>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          <Flex
+                            alignCenter
+                            px={"4px"}
+                            py={"1px"}
+                            borderBottom={"1px solid #34383b"}
+                          >
+                            <CustomSelect
+                              flex={"1"}
+                              value={"0"}
+                              onChange={(e: number) => {
+                                setMiniumWithdrawal(e);
+                              }}
+                            >
+                              <SmOption value="0">1 Day</SmOption>
+                              <SmOption value="1">1 Week</SmOption>
+                              <SmOption value="2">2 Weeks</SmOption>
+                              <SmOption value="3">1 Month</SmOption>
+                              <SmOption value="4">2 Months</SmOption>
+                            </CustomSelect>
+                          </Flex>
+                        </Td>
+                      </Tr>
+                      <Tr>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          Public/Private Allocation :
+                        </Td>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          <Flex
+                            alignCenter
+                            p={"4px"}
+                            borderBottom={"1px solid #34383b"}
+                            gridGap={"20px"}
+                          >
+                            <RadioBtn
+                              name={"private_allocation"}
+                              value={"0"}
+                              title={"false"}
+                              selected
+                              onChange={(e: any) => {
+                                setPrivateAlloation(false);
+                              }}
+                            />
+                            <RadioBtn
+                              name={"private_allocation"}
+                              value={"1"}
+                              title={"true"}
+                              onChange={(e: any) => {
+                                setPrivateAlloation(true);
+                              }}
+                            />
+                          </Flex>
+                        </Td>
+                      </Tr>
+                      <Tr>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          Referral Rewards :
+                        </Td>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          <Flex
+                            alignCenter
+                            p={"4px"}
+                            borderBottom={"1px solid #34383b"}
+                          >
+                            <Input
+                              flex={"1"}
+                              border={"none"}
+                              background={"transparent"}
+                              color={"white"}
+                              placeholder={"input here..."}
+                              onChange={(e) => {
+                                setReferralReward(parseInt(e.target.value));
+                              }}
+                            />
+                            %
+                          </Flex>
+                        </Td>
+                      </Tr>
+                    </>
+                  )}
+
+                  <Tr>
+                    <Td
+                      px={"4px"}
+                      py={"2px"}
+                      borderBottom={"none"}
+                      cursor={"pointer"}
+                      onClick={() => setOpenMoreSetting(!openMoreSetting)}
+                      color={"#ab9b4e"}
+                      style={{ textDecoration: "underline" }}
+                    >
+                      {openMoreSetting ? "Hide..." : "Advanced Settings..."}
+                    </Td>
+                  </Tr>
+                </Tbody>
+              </Table>
+              <Flex gridGap={"8px"}>
+                <Flex
+                  alignCenter
+                  gridGap={"4px"}
+                  ml={"auto"}
+                  padding={"8px 16px"}
+                  background={"#0005"}
+                  p={"8px 16px"}
+                  border={"1px solid #34383b"}
+                  borderRadius={"8px"}
+                  cursor="pointer"
+                >
+                  <CheckIcon size={"1.2em"} />
+                  Save
+                </Flex>
+                <Flex
+                  alignCenter
+                  gridGap={"4px"}
+                  padding={"8px 16px"}
+                  background={"#0005"}
+                  p={"8px 16px"}
+                  border={"1px solid #34383b"}
+                  borderRadius={"8px"}
+                  cursor="pointer"
+                  onClick={() => {
+                    setVisible(false);
+                  }}
+                >
+                  <TimesIcon size={"1.2em"} />
+                  Cancel
+                </Flex>
+              </Flex>
+            </Flex>
+          </Flex>
+        </Flex>
+      </Flex>
+    </Flex>
+  );
+};
+
 export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
   title = "???",
   ...props
 }) => {
   const [visiblePortfolio, setVisiblePortfolio] = useState(false);
+  const [allocationData, setAllocationData] = useState<IndexAllocation[]>([
+    {
+      name: "BTC",
+      value: 50,
+    },
+    {
+      name: "USDT",
+      value: 50,
+    },
+  ]);
+
   return (
     <>
       {visiblePortfolio ? (
@@ -886,7 +1224,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
           >
             <ArrowIcon dir={"left"} />
           </Flex>
-          <PortfolioModalBody />
+          <ModifyModalBody flex={1} allocationData={allocationData} />
         </>
       ) : (
         <Flex col gridGap={"10px"}>
@@ -998,6 +1336,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
 export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
   miraIndexInfo = {},
   setVisible = () => {},
+  setUpdateVisible = () => {},
   setAllocationVisible = () => {},
   allocationData = [],
   ...props
@@ -1321,6 +1660,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
           <UpdateSection
             setVisibleDeposit={setVisibleDeposit}
             setVisibleWithdraw={setVisibleWithdraw}
+            setUpdateVisible={setUpdateVisible}
           />
         </Flex>
       )}
@@ -1331,10 +1671,12 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
 type UpdateSectionProps = {
   setVisibleDeposit: (arg: boolean) => void;
   setVisibleWithdraw: (arg: boolean) => void;
+  setUpdateVisible: (arg: boolean) => void;
 };
 const UpdateSection: React.FC<UpdateSectionProps> = ({
   setVisibleDeposit,
   setVisibleWithdraw,
+  setUpdateVisible,
 }) => {
   const { walletConnected } = useWalletHook();
   const [isInvest, setInvest] = React.useState(true);
@@ -1364,6 +1706,9 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
           minWidth={"150px"}
           padding={"12px 24px"}
           textAlign={"center"}
+          onClick={() => {
+            setUpdateVisible(true);
+          }}
         >
           Change Settings
         </ArtButton>
