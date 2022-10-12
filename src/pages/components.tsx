@@ -18,6 +18,7 @@ import {
   SearchIcon,
   TimesIcon,
   ExchangeIcon,
+  WarningIcon,
 } from "components/icons";
 import { CustomTooltip } from "components/elements/tooptip";
 import React, { useEffect, useContext, useState } from "react";
@@ -59,9 +60,9 @@ interface IData {
 export const ChartBox: React.FC<ChartBoxProps> = ({
   title = "Chart Box",
   cursor = "revert",
-  onClick = () => {},
+  onClick = () => { },
   cursorAll,
-  onClickAll = () => {},
+  onClickAll = () => { },
   ...props
 }) => {
   const [activeIndex, setActiveIndex] = React.useState(0);
@@ -286,14 +287,57 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
   );
 };
 
+interface BlankCardProps {
+  type?: "invest" | "index";
+  [index: string]: any;
+}
+
+export const BlankCard: React.FC<BlankCardProps> = ({
+  type = "invest",
+  ...props
+}) => {
+  return (
+    <Flex
+      col
+      background={"#302d38"}
+      p={"20px"}
+      border={"1px solid #34383b"}
+      borderRadius={"20px"}
+      gridGap={"12px"}
+      {...props}
+    >
+      <Flex
+        justifyCenter
+        pt={"50px"}
+        alignCenter
+        gridGap={"16px"}
+      >
+        <Flex aspectRatio={"1"} color={"lightgrey"}>
+          <WarningIcon size="40px" />
+        </Flex>
+        <Flex col gridGap={"4px"} color={"lightgrey"}>
+          <p
+            style={{
+              fontSize: "16px"
+            }}
+          >
+            {type === "invest" && "You haven't invested in any portfolios yet. Check out Our Tokens or browse the Leaderboard to get started!"}
+            {type === "index" && "You haven't created an index yet. Click here to get started!"}
+          </p>
+        </Flex>
+      </Flex>
+    </Flex>
+  );
+};
+
 interface IndexModalBodyProps {
   type?: "modify" | "create";
   [index: string]: any;
 }
 export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   type = "modify",
-  setVisible = () => {},
-  setAllocationVisible = () => {},
+  setVisible = () => { },
+  setAllocationVisible = () => { },
   allocationData = [],
   ...props
 }) => {
@@ -865,7 +909,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
 };
 
 export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
-  setVisible = () => {},
+  setVisible = () => { },
   ...props
 }) => {
   const [nameValue, setNameValue] = useState<string>("");
@@ -1208,7 +1252,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
             ml={"auto"}
             cursor="pointer"
             onClick={() => {
-              if(updateModalVisible || indexAllocationModalVisible) {
+              if (updateModalVisible || indexAllocationModalVisible) {
                 setVisiblePortfolio(true);
               } else {
                 setVisiblePortfolio(false);
@@ -1220,25 +1264,29 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
           >
             <ArrowIcon dir={"left"} />
           </Flex>
-          {
-            visiblePortfolio && 
+          {visiblePortfolio && (
             <ModifyModalBody
               flex={1}
-              setUpdateVisible={(bValue) => {setUpdateModalVisible(bValue); setVisiblePortfolio(false)}}
-              setAllocationVisible={(bValue) => {setIndexAllocationModalVisible(bValue); setVisiblePortfolio(false)}}
+              setUpdateVisible={(bValue) => {
+                setUpdateModalVisible(bValue);
+                setVisiblePortfolio(false);
+              }}
+              setAllocationVisible={(bValue) => {
+                setIndexAllocationModalVisible(bValue);
+                setVisiblePortfolio(false);
+              }}
               allocationData={allocationData}
             />
-          }
+          )}
           {updateModalVisible && <UpdateModalBody />}
-          {
-            indexAllocationModalVisible && 
+          {indexAllocationModalVisible && (
             <IndexAllocationModalBody
               flex={1}
               type={"create"}
               allocationData={allocationData}
               setAllocationData={setAllocationData}
             />
-          }
+          )}
         </>
       ) : (
         <Flex col gridGap={"10px"}>
@@ -1349,9 +1397,9 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
 
 export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
   miraIndexInfo = {},
-  setVisible = () => {},
-  setUpdateVisible = () => {},
-  setAllocationVisible = () => {},
+  setVisible = () => { },
+  setUpdateVisible = () => { },
+  setAllocationVisible = () => { },
   allocationData = [],
   ...props
 }) => {

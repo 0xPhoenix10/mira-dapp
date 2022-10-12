@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Flex } from "../../components/base/container";
-import { Link, Table, Tbody, Td, Tr, Th, Thead, } from "../../components/base";
+import { Link, Table, Tbody, Td, Tr, Th, Thead } from "../../components/base";
 import DepositModalBody from "./deposit.modal.body";
 import WithdrawModalBody from "./withdraw.modal.body";
 import { useWalletHook } from "../../common/hooks/wallet";
@@ -354,7 +354,10 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
               </Flex>
             </Flex>
           </Flex>
-          <BuySellSection setVisibleDeposit={setVisibleDeposit} setVisibleWithdraw={setVisibleWithdraw}/>
+          <BuySellSection
+            setVisibleDeposit={setVisibleDeposit}
+            setVisibleWithdraw={setVisibleWithdraw}
+          />
         </Flex>
         // <Flex col gridGap={"10px"}>
         //   <Flex
@@ -571,19 +574,32 @@ const BuySellSection: React.FC<BuySellSectionProps> = ({
       >
         Buy / Sell
       </Flex>
-      <Flex mt={"1em"} fontSize={"16px"} alignCenter justifyContent={"space-around"}>
-        <Flex cursor={"pointer"} onClick={()=> setInvest(true)} color={isInvest?"#d15151":"#fafafa"}>Invest</Flex>
-        <Link
-          m={"auto 0px"}
-          fontSize={"2em"}
-          transform={"rotate(90deg)"}
+      <Flex
+        mt={"1em"}
+        fontSize={"16px"}
+        alignCenter
+        justifyContent={"space-around"}
+      >
+        <Flex
+          cursor={"pointer"}
+          onClick={() => setInvest(true)}
+          color={isInvest ? "#d15151" : "#fafafa"}
         >
+          Invest
+        </Flex>
+        <Link m={"auto 0px"} fontSize={"2em"} transform={"rotate(90deg)"}>
           <ExchangeIcon />
         </Link>
-        <Flex cursor={"pointer"} onClick={()=> setInvest(false)} color={!isInvest?"#d15151":"#fafafa"}>Withdraw</Flex>
+        <Flex
+          cursor={"pointer"}
+          onClick={() => setInvest(false)}
+          color={!isInvest ? "#d15151" : "#fafafa"}
+        >
+          Withdraw
+        </Flex>
       </Flex>
       <BuySellBox />
-      
+
       {walletConnected ? (
         <ArtButton
           mt={"24px"}
@@ -591,7 +607,9 @@ const BuySellSection: React.FC<BuySellSectionProps> = ({
           minWidth={"150px"}
           padding={"12px 24px"}
           textAlign={"center"}
-          onClick={()=>isInvest ? setVisibleDeposit(true) : setVisibleWithdraw(true)}
+          onClick={() =>
+            isInvest ? setVisibleDeposit(true) : setVisibleWithdraw(true)
+          }
         >
           {isInvest ? "INVEST" : "WITHDRAW"}
         </ArtButton>

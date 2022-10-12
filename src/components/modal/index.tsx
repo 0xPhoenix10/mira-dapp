@@ -12,10 +12,10 @@ type ModalParentProps = {
 
 export const ModalParent: React.FC<ModalParentProps> = ({
   visible,
-  width='auto',
+  width = "auto",
   setVisible,
   children,
-  zIndex="1000",
+  zIndex = "1000",
 }) => {
   const modalContainer = useRef<any>();
   return (
