@@ -4,7 +4,7 @@ import { Flex } from "components/base/container";
 import { CreateIcon, WarningIcon } from "components/icons";
 import { ModalParent } from "components/modal";
 import { useEffect, useRef, useState } from "react";
-import { ChartBox, IndexListModalBody, IndexModalBody, ModifyModalBody } from "../components";
+import { ChartBox, IndexListModalBody, IndexModalBody, ModifyModalBody, UpdateModalBody } from "../components";
 import { PortfolioModalBody } from "./portfolio.modal.body";
 import { IndexAllocationModalBody } from "../index.allocation.modal";
 import { IndexAllocation } from "../../utils/types";
@@ -13,6 +13,7 @@ import { Carousel3D } from "./comp.dashboard";
 const DashboardRecommended = () => {
   const { walletConnected } = useWalletHook();
   const [createMmodalVisible, setCreateModalVisible] = useState(false);
+  const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [modifyModalVisible, setModifyModalVisible] = useState(false);
   const [recommendedModalVisible, setRecommendedModalVisible] = useState(false);
   const [myIndexesModalVisible, setMyIndexesModalVisible] = useState(false);
@@ -68,6 +69,18 @@ const DashboardRecommended = () => {
       }
       {
         <ModalParent
+          visible={updateModalVisible}
+          setVisible={setUpdateModalVisible}
+          zIndex={"1002"}
+        >
+          <UpdateModalBody
+            flex={1}
+            setVisible={setUpdateModalVisible}
+          />
+        </ModalParent>
+      }
+      {
+        <ModalParent
           visible={indexAllocationModalVisible}
           setVisible={setIndexAllocationModalVisible}
           zIndex={"1004"}
@@ -90,6 +103,7 @@ const DashboardRecommended = () => {
           <ModifyModalBody
             flex={1}
             setVisible={setModifyModalVisible}
+            setUpdateVisible={setUpdateModalVisible}
             setAllocationVisible={setIndexAllocationModalVisible}
             allocationData={allocationData}
           />
@@ -108,15 +122,7 @@ const DashboardRecommended = () => {
           visible={myIndexesModalVisible}
           setVisible={setMyIndexesModalVisible}
         >
-          <IndexListModalBody flex={1} title={"My Indexes"} />
-        </ModalParent>
-      }
-      {
-        <ModalParent
-          visible={myIndexesModalVisible}
-          setVisible={setMyIndexesModalVisible}
-        >
-          <IndexListModalBody flex={1} title={"My Indexes"} />
+          <IndexListModalBody flex={1} type={"create"} title={"My Indexes"} />
         </ModalParent>
       }
       {
@@ -234,7 +240,7 @@ const DashboardRecommended = () => {
                   cursor={"pointer"}
                   onClick={() => {
                     if (currentTab !== 1) setCurrentTab(1);
-                    else setRecommendedModalVisible(true);
+                    else setMyIndexesModalVisible(true);
                   }}
                   transition={"100ms"}
                 >
