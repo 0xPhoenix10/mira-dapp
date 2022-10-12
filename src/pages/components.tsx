@@ -44,6 +44,7 @@ import WithdrawModalBody from "./dashboard/withdraw.modal.body";
 import { renderActiveShape } from "../common/recharts/piechart";
 import { ArtButton, NormalBtn } from "components/elements/buttons";
 import { IndexAllocation } from "../utils/types";
+import { IndexAllocationModalBody } from "./index.allocation.modal";
 
 interface ChartBoxProps {
   title?: string;
@@ -867,7 +868,6 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
   setVisible = () => {},
   ...props
 }) => {
-  const { walletConnected, signAndSubmitTransaction } = useWalletHook();
   const [nameValue, setNameValue] = useState<string>("");
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [managementFee, setManagementFee] = useState<number>(0);
@@ -877,18 +877,6 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
   const [privateAllocation, setPrivateAlloation] = useState<boolean>(false);
   const [referralReward, setReferralReward] = useState<number>(0);
   const [openMoreSetting, setOpenMoreSetting] = useState(false);
-  const [activeIndex, setActiveIndex] = React.useState(0);
-  const [isHovered, setHovered] = React.useState(false);
-  const { updateIndex, setUpdateIndex } = useContext(
-    UpdateIndexProviderContext
-  );
-
-  const style = {
-    backgroundColor: "#000",
-    color: "lightgrey",
-    padding: "2px 15px",
-    fontSize: "12px",
-  };
 
   return (
     <Flex col gridGap={"10px"}>
@@ -1194,6 +1182,9 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
   ...props
 }) => {
   const [visiblePortfolio, setVisiblePortfolio] = useState(false);
+  const [updateModalVisible, setUpdateModalVisible] = useState(false);
+  const [indexAllocationModalVisible, setIndexAllocationModalVisible] =
+    useState(false);
   const [allocationData, setAllocationData] = useState<IndexAllocation[]>([
     {
       name: "BTC",
@@ -1207,7 +1198,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
 
   return (
     <>
-      {visiblePortfolio ? (
+      {visiblePortfolio || updateModalVisible || indexAllocationModalVisible ? (
         <>
           <Flex
             background={"#0005"}
@@ -1215,16 +1206,39 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
             border={"1px solid #34383b"}
             borderRadius={"8px"}
             ml={"auto"}
-            mb={"-30px"}
             cursor="pointer"
             onClick={() => {
-              setVisiblePortfolio(false);
+              if(updateModalVisible || indexAllocationModalVisible) {
+                setVisiblePortfolio(true);
+              } else {
+                setVisiblePortfolio(false);
+              }
+              setUpdateModalVisible(false);
+              setIndexAllocationModalVisible(false);
             }}
             zIndex={"0"}
           >
             <ArrowIcon dir={"left"} />
           </Flex>
-          <ModifyModalBody flex={1} allocationData={allocationData} />
+          {
+            visiblePortfolio && 
+            <ModifyModalBody
+              flex={1}
+              setUpdateVisible={(bValue) => {setUpdateModalVisible(bValue); setVisiblePortfolio(false)}}
+              setAllocationVisible={(bValue) => {setIndexAllocationModalVisible(bValue); setVisiblePortfolio(false)}}
+              allocationData={allocationData}
+            />
+          }
+          {updateModalVisible && <UpdateModalBody />}
+          {
+            indexAllocationModalVisible && 
+            <IndexAllocationModalBody
+              flex={1}
+              type={"create"}
+              allocationData={allocationData}
+              setAllocationData={setAllocationData}
+            />
+          }
         </>
       ) : (
         <Flex col gridGap={"10px"}>

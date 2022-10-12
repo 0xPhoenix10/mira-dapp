@@ -99,6 +99,7 @@ const DashboardRecommended = () => {
         <ModalParent
           visible={modifyModalVisible}
           setVisible={setModifyModalVisible}
+          zIndex={"1001"}
         >
           <ModifyModalBody
             flex={1}
@@ -114,7 +115,10 @@ const DashboardRecommended = () => {
           visible={recommendedModalVisible}
           setVisible={setRecommendedModalVisible}
         >
-          <IndexListModalBody flex={1} title={"Recommended"} />
+          <IndexListModalBody
+            flex={1}
+            title={"Recommended"}
+          />
         </ModalParent>
       }
       {
@@ -122,7 +126,11 @@ const DashboardRecommended = () => {
           visible={myIndexesModalVisible}
           setVisible={setMyIndexesModalVisible}
         >
-          <IndexListModalBody flex={1} type={"create"} title={"My Indexes"} />
+          <IndexListModalBody
+            flex={1}
+            type={"create"}
+            title={"My Indexes"}
+          />
         </ModalParent>
       }
       {
