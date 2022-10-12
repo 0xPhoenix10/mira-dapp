@@ -7,6 +7,7 @@ type ModalParentProps = {
   width?: string;
   setVisible: (arg: boolean) => void;
   children?: React.ReactNode;
+  zIndex?: string;
 };
 
 export const ModalParent: React.FC<ModalParentProps> = ({
@@ -14,6 +15,7 @@ export const ModalParent: React.FC<ModalParentProps> = ({
   width='auto',
   setVisible,
   children,
+  zIndex="1000",
 }) => {
   const modalContainer = useRef<any>();
   return (
@@ -27,7 +29,7 @@ export const ModalParent: React.FC<ModalParentProps> = ({
           background={"#0008"}
           width={"100%"}
           height={"100%"}
-          zIndex={"1000"}
+          zIndex={zIndex}
           onClick={(e) => {
             if (modalContainer?.current && modalContainer?.current === e.target)
               setVisible(false);

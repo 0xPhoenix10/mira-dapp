@@ -4,7 +4,7 @@ import { Flex } from "components/base/container";
 import { CreateIcon, WarningIcon } from "components/icons";
 import { ModalParent } from "components/modal";
 import { useEffect, useRef, useState } from "react";
-import { ChartBox, IndexListModalBody, IndexModalBody } from "../components";
+import { ChartBox, IndexListModalBody, IndexModalBody, ModifyModalBody } from "../components";
 import { PortfolioModalBody } from "./portfolio.modal.body";
 import { IndexAllocationModalBody } from "../index.allocation.modal";
 import { IndexAllocation } from "../../utils/types";
@@ -70,6 +70,7 @@ const DashboardRecommended = () => {
         <ModalParent
           visible={indexAllocationModalVisible}
           setVisible={setIndexAllocationModalVisible}
+          zIndex={"1004"}
         >
           <IndexAllocationModalBody
             flex={1}
@@ -86,9 +87,8 @@ const DashboardRecommended = () => {
           visible={modifyModalVisible}
           setVisible={setModifyModalVisible}
         >
-          <IndexModalBody
+          <ModifyModalBody
             flex={1}
-            type={"modify"}
             setVisible={setModifyModalVisible}
             setAllocationVisible={setIndexAllocationModalVisible}
             allocationData={allocationData}
