@@ -4,7 +4,14 @@ import { Flex } from "components/base/container";
 import { CreateIcon, WarningIcon } from "components/icons";
 import { ModalParent } from "components/modal";
 import { useEffect, useRef, useState } from "react";
-import { ChartBox, IndexListModalBody, IndexModalBody, ModifyModalBody, UpdateModalBody } from "../components";
+import {
+  ChartBox,
+  IndexListModalBody,
+  IndexModalBody,
+  ModifyModalBody,
+  UpdateModalBody,
+  BlankCard,
+} from "../components";
 import { PortfolioModalBody } from "./portfolio.modal.body";
 import { IndexAllocationModalBody } from "../index.allocation.modal";
 import { IndexAllocation } from "../../utils/types";
@@ -19,11 +26,9 @@ const DashboardRecommended = () => {
   const [myIndexesModalVisible, setMyIndexesModalVisible] = useState(false);
   const [walletConnectAlertVisible, setWalletConnectAlertVisible] =
     useState(false);
-
   const [portfolioModalVisible, setPortfolioModalVisible] = useState(false);
-
   const [currentTab, setCurrentTab] = useState(0);
-
+  const [isInvest, setInvest] = useState(true);
   const [indexAllocationModalVisible, setIndexAllocationModalVisible] =
     useState(false);
   const [allocationData, setAllocationData] = useState<IndexAllocation[]>([
@@ -38,6 +43,7 @@ const DashboardRecommended = () => {
   ]);
   const Carousel3D1 = useRef(null);
   const Carousel3D2 = useRef(null);
+
   useEffect(() => {
     Carousel3D1?.current?.reset();
     Carousel3D2?.current?.reset();
@@ -73,10 +79,7 @@ const DashboardRecommended = () => {
           setVisible={setUpdateModalVisible}
           zIndex={"1002"}
         >
-          <UpdateModalBody
-            flex={1}
-            setVisible={setUpdateModalVisible}
-          />
+          <UpdateModalBody flex={1} setVisible={setUpdateModalVisible} />
         </ModalParent>
       }
       {
@@ -115,10 +118,7 @@ const DashboardRecommended = () => {
           visible={recommendedModalVisible}
           setVisible={setRecommendedModalVisible}
         >
-          <IndexListModalBody
-            flex={1}
-            title={"Recommended"}
-          />
+          <IndexListModalBody flex={1} title={"Recommended"} />
         </ModalParent>
       }
       {
@@ -126,11 +126,7 @@ const DashboardRecommended = () => {
           visible={myIndexesModalVisible}
           setVisible={setMyIndexesModalVisible}
         >
-          <IndexListModalBody
-            flex={1}
-            type={"create"}
-            title={"My Indexes"}
-          />
+          <IndexListModalBody flex={1} type={"create"} title={"My Indexes"} />
         </ModalParent>
       }
       {
@@ -233,8 +229,10 @@ const DashboardRecommended = () => {
                   fontWeight={"bold"}
                   cursor={"pointer"}
                   onClick={() => {
-                    if (currentTab !== 0) setCurrentTab(0);
-                    else setMyIndexesModalVisible(true);
+                    if (currentTab !== 0) {
+                      setCurrentTab(0);
+                      setInvest(true);
+                    } else setMyIndexesModalVisible(true);
                   }}
                   transition={"100ms"}
                 >
@@ -247,8 +245,10 @@ const DashboardRecommended = () => {
                   fontWeight={"bold"}
                   cursor={"pointer"}
                   onClick={() => {
-                    if (currentTab !== 1) setCurrentTab(1);
-                    else setMyIndexesModalVisible(true);
+                    if (currentTab !== 1) {
+                      setCurrentTab(1);
+                      setInvest(false);
+                    } else setMyIndexesModalVisible(true);
                   }}
                   transition={"100ms"}
                 >
@@ -276,15 +276,12 @@ const DashboardRecommended = () => {
                 ref={Carousel3D2}
                 stop={portfolioModalVisible || modifyModalVisible}
               >
-                <ChartBox
+                <BlankCard
                   flex={1}
                   width={"0px"}
                   maxWidth={"70%"}
-                  title={"Aptos Defi Pulse"}
-                  cursor={"pointer"}
-                  onClick={() => {
-                    setModifyModalVisible(true);
-                  }}
+                  minHeight={"245px"}
+                  type={isInvest ? "invest" : "index"}
                 />
                 <ChartBox
                   flex={1}
