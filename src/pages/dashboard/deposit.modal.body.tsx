@@ -7,6 +7,7 @@ import { useState } from "react";
 const DepositModalBody: React.FC<{ [index: string]: any }> = ({
   miraIndexInfo = {},
   setVisible = () => {},
+  setUpdateInvest = () => {},
   ...props
 }) => {
   const { walletConnected, signAndSubmitTransaction } = useWalletHook();
@@ -14,20 +15,23 @@ const DepositModalBody: React.FC<{ [index: string]: any }> = ({
 
   const deposit = async () => {
     if (!walletConnected) return;
-    const transaction = {
-      type: "entry_function_payload",
-      function: `${MODULE_ADDR}::mira::invest`,
-      type_arguments: [],
-      arguments: [
-        miraIndexInfo.poolName,
-        miraIndexInfo.poolOwner,
-        depositAmount,
-      ],
-    };
-    const result = await signAndSubmitTransaction(transaction);
-    if (result) {
-      setVisible(false);
+    try {
+      const transaction = {
+        type: "entry_function_payload",
+        function: `${MODULE_ADDR}::mira::invest`,
+        type_arguments: [],
+        arguments: [
+          miraIndexInfo.poolName,
+          miraIndexInfo.poolOwner,
+          depositAmount,
+        ],
+      };
+      const result = await signAndSubmitTransaction(transaction);
+    } catch (error) {
+      console.log("deposit error", error);
     }
+    setVisible(false);
+    setUpdateInvest((value) => value + 1);
   };
   return (
     <Flex col gridGap={"10px"}>

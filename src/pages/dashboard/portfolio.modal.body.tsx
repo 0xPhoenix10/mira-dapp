@@ -33,6 +33,8 @@ interface IData {
 }
 
 export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
+  setVisible = () => {},
+  setUpdateInvest = () => {},
   miraIndexInfo = {},
   ...props
 }) => {
@@ -211,7 +213,12 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
           >
             <ArrowIcon dir={"left"} />
           </Flex>
-          {visibleDeposit && <DepositModalBody />}
+          {visibleDeposit && (
+            <DepositModalBody
+              setVisible={setVisibleDeposit}
+              setUpdateInvest={setUpdateInvest}
+            />
+          )}
           {visibleWithdraw && <WithdrawModalBody />}
         </>
       ) : (

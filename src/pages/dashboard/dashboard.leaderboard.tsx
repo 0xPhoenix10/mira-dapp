@@ -2,9 +2,9 @@ import { useWalletHook } from "common/hooks/wallet";
 import { Box, Input, Table, Tbody, Td, Th, Thead, Tr } from "components/base";
 import { CustomTooltip } from "components/elements/tooptip";
 import { Flex } from "components/base/container";
-import { FilterIcon, SearchIcon, SortIcon } from "components/icons";
+import { FilterIcon, IconNarrow, SearchIcon } from "components/icons";
 import { ModalParent } from "components/modal";
-import { IndexListModalBody } from "pages/components";
+import { FilterItem, IndexListModalBody, SortBtn } from "pages/components";
 import { useEffect, useState, useContext } from "react";
 import { MODULE_ADDR, NODE_URL } from "config";
 import { AptosClient } from "aptos";
@@ -13,7 +13,6 @@ import DepositModalBody from "./deposit.modal.body";
 import WithdrawModalBody from "./withdraw.modal.body";
 import { UpdateIndexProviderContext } from "./index";
 import { PortfolioModalBody } from "./portfolio.modal.body";
-import { CustomSelect, SmOption } from "components/form";
 
 interface MiraIndex {
   poolName: string;
@@ -83,8 +82,48 @@ const DashboardLeaderBoard = () => {
   };
 
   const [searchValue, setSearchValue] = useState("");
-  const [filterValue, setFilterValue] = useState("all");
+  const [sortDir, setSortDir] = useState<boolean>(false);
   const [sortValue, setSortValue] = useState("");
+  const [activeFilter, setActiveFilter] = useState<boolean>(false);
+  const [managementFeeMin, setMmanagementFeeMin] = useState("");
+  const [managementFeeMax, setMmanagementFeeMax] = useState("");
+  const [foundedMin, setFoundedMin] = useState("");
+  const [foundedMax, setFoundedMax] = useState("");
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setSearchValue(window.localStorage.getItem("searchValue"));
+    setSortDir(window.localStorage.getItem("sortDir") === "true");
+    setSortValue(window.localStorage.getItem("sortValue"));
+    setActiveFilter(window.localStorage.getItem("activeFilter") === "true");
+    setMmanagementFeeMin(window.localStorage.getItem("managementFeeMin"));
+    setMmanagementFeeMax(window.localStorage.getItem("managementFeeMax"));
+    setFoundedMin(window.localStorage.getItem("foundedMin"));
+    setFoundedMax(window.localStorage.getItem("foundedMax"));
+    setMounted(true);
+  }, []);
+  useEffect(() => {
+    if (!mounted) return;
+    window.localStorage.setItem("searchValue", searchValue);
+    window.localStorage.setItem("sortDir", sortDir ? "true" : "false");
+    window.localStorage.setItem("sortValue", sortValue);
+    window.localStorage.setItem(
+      "activeFilter",
+      activeFilter ? "true" : "false"
+    );
+    window.localStorage.setItem("managementFeeMin", managementFeeMin);
+    window.localStorage.setItem("managementFeeMax", managementFeeMax);
+    window.localStorage.setItem("foundedMin", foundedMin);
+    window.localStorage.setItem("foundedMax", foundedMax);
+  }, [
+    searchValue,
+    sortDir,
+    sortValue,
+    activeFilter,
+    managementFeeMin,
+    managementFeeMax,
+    foundedMin,
+    foundedMax,
+  ]);
 
   return (
     <>
@@ -194,50 +233,39 @@ const DashboardLeaderBoard = () => {
           </Flex>
           <Flex
             alignCenter
-            gridGap={"4px"}
-            cursor={"pointer"}
+            gridGap={"8px"}
             background={"#302d38"}
+            px={"18px"}
+            py={"10px"}
             border={"1px solid #34383b"}
             borderRadius={"8px"}
-          >
-            <CustomSelect
-              before={
-                <>
-                  <FilterIcon /> Search in :{" "}
-                </>
-              }
-              onChange={setFilterValue}
-            >
-              <SmOption value={"all"} selected>
-                All
-              </SmOption>
-              <SmOption value={"poolName"}>Index Name</SmOption>
-              <SmOption value={"managementFee"}>Management Fee</SmOption>
-              <SmOption value={"founded"}>Founded</SmOption>
-            </CustomSelect>
-          </Flex>
-          <Flex
-            alignCenter
-            gridGap={"4px"}
             cursor={"pointer"}
-            background={"#302d38"}
-            border={"1px solid #34383b"}
-            borderRadius={"8px"}
+            onClick={() => setActiveFilter(!activeFilter)}
           >
-            <CustomSelect
-              before={
-                <>
-                  <SortIcon /> Sort by :{" "}
-                </>
-              }
-              onChange={setSortValue}
-            >
-              <SmOption value={"poolName"}>Index Name</SmOption>
-              <SmOption value={"managementFee"}>Management Fee</SmOption>
-              <SmOption value={"founded"}>Founded</SmOption>
-            </CustomSelect>
+            <FilterIcon />
+            filter
+            <IconNarrow dir={activeFilter ? "up" : "down"} />
           </Flex>
         </Flex>
+        {activeFilter && (
+          <Flex gridGap={"16px"} flexWrap={"wrap"}>
+            <FilterItem
+              title={"Management Fee"}
+              min={managementFeeMin}
+              setMin={setMmanagementFeeMin}
+              max={managementFeeMax}
+              setMax={setMmanagementFeeMax}
+            />
+            <FilterItem
+              title={"Founded"}
+              isDate
+              min={foundedMin}
+              setMin={setFoundedMin}
+              max={foundedMax}
+              setMax={setFoundedMax}
+            />
+          </Flex>
+        )}
         <Flex
           col
           gridGap={"16px"}
@@ -249,47 +277,99 @@ const DashboardLeaderBoard = () => {
           <Table width={"100%"} textAlign={"left"}>
             <Thead>
               <Tr>
-                <Th>Index Name</Th>
                 <Th>
-                  <CustomTooltip
-                    title="Total Value Locked measures the total amount of funds deposited"
-                    arrow
-                    disableInteractive
-                    placement="top"
+                  <SortBtn
+                    value={"poolName"}
+                    sortDir={sortDir}
+                    setSortValue={setSortValue}
+                    sortValue={sortValue}
+                    setSortDir={setSortDir}
                   >
-                    <span>TVL ⓘ</span>
-                  </CustomTooltip>
-                </Th>
-                <Th>YTD %</Th>
-                <Th>
-                  <CustomTooltip
-                    title="market performance from the beginning of the year -> today"
-                    arrow
-                    disableInteractive
-                    placement="top"
-                  >
-                    <span>Founded ⓘ</span>
-                  </CustomTooltip>
+                    Index Name
+                  </SortBtn>
                 </Th>
                 <Th>
-                  <CustomTooltip
-                    title="percentage of each deposit that the manager collects as a fee for managing the investments"
-                    arrow
-                    disableInteractive
-                    placement="top"
+                  <SortBtn
+                    value={"-"}
+                    sortDir={sortDir}
+                    setSortValue={setSortValue}
+                    sortValue={sortValue}
+                    setSortDir={setSortDir}
                   >
-                    <span>Management Fee ⓘ</span>
-                  </CustomTooltip>
+                    <CustomTooltip
+                      title="Total Value Locked measures the total amount of funds deposited"
+                      arrow
+                      disableInteractive
+                      placement="top"
+                    >
+                      <span>TVL ⓘ</span>
+                    </CustomTooltip>
+                  </SortBtn>
                 </Th>
                 <Th>
-                  <CustomTooltip
-                    title="The lockup period before a user can withdraw funds they have deposited"
-                    arrow
-                    disableInteractive
-                    placement="top"
+                  <SortBtn
+                    value={"-"}
+                    sortDir={sortDir}
+                    setSortValue={setSortValue}
+                    sortValue={sortValue}
+                    setSortDir={setSortDir}
                   >
-                    <span>Locked ⓘ</span>
-                  </CustomTooltip>
+                    YTD %
+                  </SortBtn>
+                </Th>
+                <Th>
+                  <SortBtn
+                    value={"founded"}
+                    sortDir={sortDir}
+                    setSortValue={setSortValue}
+                    sortValue={sortValue}
+                    setSortDir={setSortDir}
+                  >
+                    <CustomTooltip
+                      title="market performance from the beginning of the year -> today"
+                      arrow
+                      disableInteractive
+                      placement="top"
+                    >
+                      <span>Founded ⓘ</span>
+                    </CustomTooltip>
+                  </SortBtn>
+                </Th>
+                <Th>
+                  <SortBtn
+                    value={"managementFee"}
+                    sortDir={sortDir}
+                    setSortValue={setSortValue}
+                    sortValue={sortValue}
+                    setSortDir={setSortDir}
+                  >
+                    <CustomTooltip
+                      title="percentage of each deposit that the manager collects as a fee for managing the investments"
+                      arrow
+                      disableInteractive
+                      placement="top"
+                    >
+                      <span>Management Fee ⓘ</span>
+                    </CustomTooltip>
+                  </SortBtn>
+                </Th>
+                <Th>
+                  <SortBtn
+                    value={"No"}
+                    sortDir={sortDir}
+                    setSortValue={setSortValue}
+                    sortValue={sortValue}
+                    setSortDir={setSortDir}
+                  >
+                    <CustomTooltip
+                      title="The lockup period before a user can withdraw funds they have deposited"
+                      arrow
+                      disableInteractive
+                      placement="top"
+                    >
+                      <span>Locked ⓘ</span>
+                    </CustomTooltip>
+                  </SortBtn>
                 </Th>
                 {walletConnected && (
                   <>
@@ -302,35 +382,49 @@ const DashboardLeaderBoard = () => {
             </Thead>
             <Tbody>
               {miraIndexes
-                .sort((a: any, b: any) =>
-                  a[sortValue]?.toString().toUpperCase() >
-                  b[sortValue]?.toString().toUpperCase()
-                    ? 1
-                    : -1
+                .sort(
+                  (a: any, b: any) =>
+                    (a[sortValue]?.toString().toUpperCase() >
+                    b[sortValue]?.toString().toUpperCase()
+                      ? 1
+                      : -1) * (sortDir ? -1 : 1)
                 )
                 .map((miraIndex, index) => {
                   let flag = false;
-                  if (searchValue) {
-                    if (filterValue === "all") {
-                      for (const key in miraIndex) {
-                        if (
-                          miraIndex[key]
-                            .toUpperCase()
-                            .search(searchValue.toUpperCase()) != -1
-                        ) {
-                          flag = true;
-                          break;
-                        } else continue;
-                      }
-                    } else {
-                      if (
-                        miraIndex[filterValue]
-                          .toUpperCase()
-                          .search(searchValue.toUpperCase()) != -1
-                      ) {
-                        flag = true;
-                      }
-                    }
+                  for (const key in miraIndex) {
+                    if (
+                      miraIndex[key]
+                        .toString()
+                        .toUpperCase()
+                        .search(searchValue.toUpperCase()) != -1
+                    ) {
+                      flag = true;
+                      break;
+                    } else continue;
+                  }
+                  if (activeFilter) {
+                    if (
+                      managementFeeMin &&
+                      parseInt(managementFeeMin) >
+                        parseInt(miraIndex.managementFee)
+                    )
+                      return "";
+                    if (
+                      managementFeeMax &&
+                      parseInt(managementFeeMax) <
+                        parseInt(miraIndex.managementFee)
+                    )
+                      return "";
+                    if (
+                      foundedMin &&
+                      new Date(foundedMin) > new Date(miraIndex.founded)
+                    )
+                      return "";
+                    if (
+                      foundedMax &&
+                      new Date(foundedMax) < new Date(miraIndex.founded)
+                    )
+                      return "";
                   }
                   return searchValue && !flag ? (
                     ""
