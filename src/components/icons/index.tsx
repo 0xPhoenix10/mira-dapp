@@ -792,3 +792,34 @@ export const IconNarrow: React.FC<ArrowIconProps> = ({
 // export const Icon: React.FC<IconProps> = ({ size = "1em", color = "currentColor" }) => {
 //   return <></>;
 // };
+
+interface SortIconProps extends IconProps {
+  isInc?: boolean;
+  active?: boolean;
+}
+export const SortDirIcon: React.FC<SortIconProps> = ({
+  size = "1em",
+  color = "currentColor",
+  active,
+  isInc,
+}) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      opacity={active ? "1" : "0.5"}
+    >
+      <path
+        d="M17.7772 9.67532L12.5273 4.23088C12.379 4.07692 12.2033 4 12 4C11.7967 4 11.621 4.07692 11.4726 4.23088L6.22263 9.67532C6.07417 9.82915 6 10.0115 6 10.2221C6 10.4327 6.07417 10.6151 6.22263 10.769C6.37125 10.9229 6.54697 11 6.75006 11H17.2499C17.453 11 17.6289 10.9229 17.7772 10.769C17.9255 10.6152 18 10.4328 18 10.2221C18 10.0115 17.9255 9.82915 17.7772 9.67532Z"
+        fill={!active ? color : isInc ? color : "transparent"}
+      />
+      <path
+        d="M6.22275 15.3247L11.4727 20.7691C11.621 20.9231 11.7967 21 12 21C12.2033 21 12.379 20.9231 12.5274 20.7691L17.7774 15.3247C17.9258 15.1709 18 14.9885 18 14.7779C18 14.5673 17.9258 14.3849 17.7774 14.231C17.6287 14.0771 17.453 14 17.2499 14L6.7501 14C6.54697 14 6.37113 14.0771 6.22275 14.231C6.07446 14.3848 6 14.5672 6 14.7779C6 14.9885 6.07446 15.1709 6.22275 15.3247Z"
+        fill={!active ? color : !isInc ? color : "transparent"}
+      />
+    </svg>
+  );
+};

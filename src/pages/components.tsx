@@ -18,7 +18,10 @@ import {
   SearchIcon,
   TimesIcon,
   ExchangeIcon,
+  FilterIcon,
   WarningIcon,
+  IconNarrow,
+  SortDirIcon,
 } from "components/icons";
 import { CustomTooltip } from "components/elements/tooptip";
 import React, { useEffect, useContext, useState } from "react";
@@ -60,9 +63,9 @@ interface IData {
 export const ChartBox: React.FC<ChartBoxProps> = ({
   title = "Chart Box",
   cursor = "revert",
-  onClick = () => { },
+  onClick = () => {},
   cursorAll,
-  onClickAll = () => { },
+  onClickAll = () => {},
   ...props
 }) => {
   const [activeIndex, setActiveIndex] = React.useState(0);
@@ -306,23 +309,20 @@ export const BlankCard: React.FC<BlankCardProps> = ({
       gridGap={"12px"}
       {...props}
     >
-      <Flex
-        justifyCenter
-        pt={"50px"}
-        alignCenter
-        gridGap={"16px"}
-      >
+      <Flex justifyCenter pt={"50px"} alignCenter gridGap={"16px"}>
         <Flex aspectRatio={"1"} color={"lightgrey"}>
           <WarningIcon size="40px" />
         </Flex>
         <Flex col gridGap={"4px"} color={"lightgrey"}>
           <p
             style={{
-              fontSize: "16px"
+              fontSize: "16px",
             }}
           >
-            {type === "invest" && "You haven't invested in any portfolios yet. Check out Our Tokens or browse the Leaderboard to get started!"}
-            {type === "index" && "You haven't created an index yet. Click here to get started!"}
+            {type === "invest" &&
+              "You haven't invested in any portfolios yet. Check out Our Tokens or browse the Leaderboard to get started!"}
+            {type === "index" &&
+              "You haven't created an index yet. Click here to get started!"}
           </p>
         </Flex>
       </Flex>
@@ -336,8 +336,8 @@ interface IndexModalBodyProps {
 }
 export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   type = "modify",
-  setVisible = () => { },
-  setAllocationVisible = () => { },
+  setVisible = () => {},
+  setAllocationVisible = () => {},
   allocationData = [],
   ...props
 }) => {
@@ -909,7 +909,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
 };
 
 export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
-  setVisible = () => { },
+  setVisible = () => {},
   ...props
 }) => {
   const [nameValue, setNameValue] = useState<string>("");
@@ -1225,7 +1225,182 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
   title = "???",
   ...props
 }) => {
+  const miraIndexes = [
+    {
+      poolName: "ha",
+      poolAddress:
+        "0xecc36a4b515e44347d40333db3b8aab14971a65e41819159e1ad9182f6006c41",
+      poolOwner:
+        "0xb7273e97383c1c0d77c548b6d7ab903748c6a7fd8406ca8e3d6560294e9c8102",
+      managementFee: "1",
+      founded: "Sep 30, 2022",
+    },
+    {
+      poolName: "10",
+      poolAddress:
+        "0xe28c78edbc8ee93447f488618aab75e60767f05655fec16736d17ec8e9373b08",
+      poolOwner:
+        "0xa464f9110ebd5fb70bb56f16b9d863de6221c221c40c7d2ff147fd20e4af5d46",
+      managementFee: "10",
+      founded: "Oct 3, 2022",
+    },
+    {
+      poolName: "testttt",
+      poolAddress:
+        "0xe3cf662714c1524d0ed2f61e2e903508878fd9e418532814cd196eb28a7a44be",
+      poolOwner:
+        "0xb7273e97383c1c0d77c548b6d7ab903748c6a7fd8406ca8e3d6560294e9c8102",
+      managementFee: "1",
+      founded: "Oct 3, 2022",
+    },
+    {
+      poolName: "abcd",
+      poolAddress:
+        "0x78e1616a36923d36b9c0a5d8a41c51302fe45bd2a6bdbfb1a6f24d78385e8715",
+      poolOwner:
+        "0xb4793170e2a45111d813f39c3d746b9e77b5aab1b88c30047d759d9f351e1a26",
+      managementFee: "1",
+      founded: "Oct 3, 2022",
+    },
+    {
+      poolName: "newtest",
+      poolAddress:
+        "0xc8ff8558f31b7406af670e6117befabfd3473945f4a7c8a9e1652f1e1f51e196",
+      poolOwner:
+        "0xb4793170e2a45111d813f39c3d746b9e77b5aab1b88c30047d759d9f351e1a26",
+      managementFee: "1",
+      founded: "Oct 3, 2022",
+    },
+    {
+      poolName: "a",
+      poolAddress:
+        "0xc295f421b4c792144e569c389137d861e3cad0459256286696cd375771aef4b9",
+      poolOwner:
+        "0xc4603e82c3cf11b69c127b77252d874687e9f8e45094be73343f18b35d91f26e",
+      managementFee: "5",
+      founded: "Oct 4, 2022",
+    },
+    {
+      poolName: "test2",
+      poolAddress:
+        "0x3c1d1c2cae08702ed7b099fe6086da87353f932ae86399f4802b7a9dd1a6552e",
+      poolOwner:
+        "0xb4793170e2a45111d813f39c3d746b9e77b5aab1b88c30047d759d9f351e1a26",
+      managementFee: "0",
+      founded: "Oct 5, 2022",
+    },
+    {
+      poolName: "mira-test-1",
+      poolAddress:
+        "0xd59fba7334a7e79bba413ca4fa19264e24f90a2c0c2b5dbe179e8014215f50f8",
+      poolOwner:
+        "0xb5424c1606664d839e855aee375aaa0becbcdf908f374b09616b7f3df1b5f4d0",
+      managementFee: "1",
+      founded: "Oct 7, 2022",
+    },
+    {
+      poolName: "son",
+      poolAddress:
+        "0x3033e5036f7d68cf22abfc8ba4aa5ff2d53edfafefd1116d9f35e039f6eb376a",
+      poolOwner:
+        "0x1956d5ee9a7a0e9679ba9fd797f6846e0a7766d71ba8a8fdbb3fb6251d0f2dc7",
+      managementFee: "1",
+      founded: "Oct 7, 2022",
+    },
+    {
+      poolName: "test1",
+      poolAddress:
+        "0x9df806e12d20fc0afc6bcd9b455cb0b4b6bfab1a4137517f9367d6cd75973d46",
+      poolOwner:
+        "0x405bdfc954f3e04d7ba4abe80912ee7d323ec4d3757cba9dbfffc713083fd1cb",
+      managementFee: "1",
+      founded: "Oct 7, 2022",
+    },
+    {
+      poolName: "name1",
+      poolAddress:
+        "0xf008e478616d5550ed814d487868545342e5cf40028fdfa2ac89d52c4ddbe764",
+      poolOwner:
+        "0x5ed9883e2cbf957dd7525357df0e51f592d4210ac9000f5554b355243efe0b03",
+      managementFee: "3",
+      founded: "Oct 9, 2022",
+    },
+    {
+      poolName: "BestIndex",
+      poolAddress:
+        "0x33118fea32ff8a208eb704ff5d85b449ed239b1a848ffee57c477d3709e5c32",
+      poolOwner:
+        "0x598f9b869e6879d7daf0efcfff9c60f78ff7e772e94887885fb743121843e117",
+      managementFee: "1",
+      founded: "Oct 9, 2022",
+    },
+    {
+      poolName: "abc",
+      poolAddress:
+        "0xbea557fa971d797e122f7e253f235dc42a3af0a0d1d99829a07ffba3e68199c4",
+      poolOwner:
+        "0xb4793170e2a45111d813f39c3d746b9e77b5aab1b88c30047d759d9f351e1a26",
+      managementFee: "10",
+      founded: "Oct 10, 2022",
+    },
+    {
+      poolName: "ab",
+      poolAddress:
+        "0x2b652d569785137b5a1851d4c72b67ec2dc50ccefc7ddb23037113569811a302",
+      poolOwner:
+        "0xb4793170e2a45111d813f39c3d746b9e77b5aab1b88c30047d759d9f351e1a26",
+      managementFee: "1",
+      founded: "Oct 10, 2022",
+    },
+  ];
+
   const [visiblePortfolio, setVisiblePortfolio] = useState(false);
+
+  const [searchValue, setSearchValue] = useState("");
+  const [sortDir, setSortDir] = useState<boolean>(false);
+  const [sortValue, setSortValue] = useState("");
+  const [activeFilter, setActiveFilter] = useState<boolean>(false);
+  const [managementFeeMin, setMmanagementFeeMin] = useState("");
+  const [managementFeeMax, setMmanagementFeeMax] = useState("");
+  const [foundedMin, setFoundedMin] = useState("");
+  const [foundedMax, setFoundedMax] = useState("");
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setSearchValue(window.localStorage.getItem("modal_searchValue"));
+    setSortDir(window.localStorage.getItem("modal_sortDir") === "true");
+    setSortValue(window.localStorage.getItem("modal_sortValue"));
+    setActiveFilter(
+      window.localStorage.getItem("modal_activeFilter") === "true"
+    );
+    setMmanagementFeeMin(window.localStorage.getItem("modal_managementFeeMin"));
+    setMmanagementFeeMax(window.localStorage.getItem("modal_managementFeeMax"));
+    setFoundedMin(window.localStorage.getItem("modal_foundedMin"));
+    setFoundedMax(window.localStorage.getItem("modal_foundedMax"));
+    setMounted(true);
+  }, []);
+  useEffect(() => {
+    if (!mounted) return;
+    window.localStorage.setItem("modal_searchValue", searchValue);
+    window.localStorage.setItem("modal_sortDir", sortDir ? "true" : "false");
+    window.localStorage.setItem("modal_sortValue", sortValue);
+    window.localStorage.setItem(
+      "modal_activeFilter",
+      activeFilter ? "true" : "false"
+    );
+    window.localStorage.setItem("modal_managementFeeMin", managementFeeMin);
+    window.localStorage.setItem("modal_managementFeeMax", managementFeeMax);
+    window.localStorage.setItem("modal_foundedMin", foundedMin);
+    window.localStorage.setItem("modal_foundedMax", foundedMax);
+  }, [
+    searchValue,
+    sortDir,
+    sortValue,
+    activeFilter,
+    managementFeeMin,
+    managementFeeMax,
+    foundedMin,
+    foundedMax,
+  ]);
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [indexAllocationModalVisible, setIndexAllocationModalVisible] =
     useState(false);
@@ -1292,15 +1467,13 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
         <Flex col gridGap={"10px"}>
           <Flex
             alignCenter
+            gridGap={"8px"}
             py={"8px"}
             fontSize={"18px"}
             fontWeight={"500"}
             borderBottom={"1px solid #34383b"}
           >
             {title}
-            {/* Recommended */}
-            {/* Leaderboard */}
-            {/* My Indexes */}
             <Flex
               alignCenter
               gridGap={"4px"}
@@ -1311,15 +1484,55 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
               borderRadius={"8px"}
             >
               <Input
+                value={searchValue}
                 border={"none"}
                 background={"transparent"}
                 color={"white"}
                 placeholder={"Search"}
+                onChange={(e) => {
+                  setSearchValue(e.target.value);
+                }}
               />
               <SearchIcon />
             </Flex>
+            <Flex
+              alignCenter
+              gridGap={"8px"}
+              background={"#0005"}
+              p={"8px 16px"}
+              border={"1px solid #34383b"}
+              borderRadius={"8px"}
+              fontSize={"13.3px"}
+              cursor={"pointer"}
+              onClick={() => setActiveFilter(!activeFilter)}
+            >
+              <FilterIcon />
+              filter
+              <IconNarrow dir={activeFilter ? "up" : "down"} />
+            </Flex>
           </Flex>
+
+          {activeFilter && (
+            <Flex gridGap={"16px"} flexWrap={"wrap"}>
+              <FilterItem
+                title={"Management Fee"}
+                min={managementFeeMin}
+                setMin={setMmanagementFeeMin}
+                max={managementFeeMax}
+                setMax={setMmanagementFeeMax}
+              />
+              <FilterItem
+                title={"Founded"}
+                isDate
+                min={foundedMin}
+                setMin={setFoundedMin}
+                max={foundedMax}
+                setMax={setFoundedMax}
+              />
+            </Flex>
+          )}
           <Flex
+            col
             gridGap={"16px"}
             background={"#302d38"}
             p={"20px"}
@@ -1331,20 +1544,124 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
             <Table width={"100%"} textAlign={"left"}>
               <Thead>
                 <Tr>
-                  <Th></Th>
-                  <Th>TVL</Th>
-                  <Th>YTD %</Th>
-                  <Th>Founded</Th>
-                  <Th>Management Fee</Th>
-                  <Th>Locked</Th>
+                  <Th>
+                    <SortBtn
+                      value={"poolName"}
+                      sortDir={sortDir}
+                      setSortValue={setSortValue}
+                      sortValue={sortValue}
+                      setSortDir={setSortDir}
+                    >
+                      Index Name
+                    </SortBtn>
+                  </Th>
+                  <Th>
+                    <SortBtn
+                      value={"-"}
+                      sortDir={sortDir}
+                      setSortValue={setSortValue}
+                      sortValue={sortValue}
+                      setSortDir={setSortDir}
+                    >
+                      TVL
+                    </SortBtn>
+                  </Th>
+                  <Th>
+                    <SortBtn
+                      value={"-"}
+                      sortDir={sortDir}
+                      setSortValue={setSortValue}
+                      sortValue={sortValue}
+                      setSortDir={setSortDir}
+                    >
+                      YTD %
+                    </SortBtn>
+                  </Th>
+                  <Th>
+                    <SortBtn
+                      value={"founded"}
+                      sortDir={sortDir}
+                      setSortValue={setSortValue}
+                      sortValue={sortValue}
+                      setSortDir={setSortDir}
+                    >
+                      Founded
+                    </SortBtn>
+                  </Th>
+                  <Th>
+                    <SortBtn
+                      value={"managementFee"}
+                      sortDir={sortDir}
+                      setSortValue={setSortValue}
+                      sortValue={sortValue}
+                      setSortDir={setSortDir}
+                    >
+                      Management Fee
+                    </SortBtn>
+                  </Th>
+                  <Th>
+                    <SortBtn
+                      value={"No"}
+                      sortDir={sortDir}
+                      setSortValue={setSortValue}
+                      sortValue={sortValue}
+                      setSortDir={setSortDir}
+                    >
+                      Locked
+                    </SortBtn>
+                  </Th>
                   <Th></Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {Array(10)
-                  .fill(0)
-                  .map((_, index) => {
-                    return (
+                {miraIndexes
+                  .sort(
+                    (a: any, b: any) =>
+                      (a[sortValue]?.toString() > b[sortValue]?.toString()
+                        ? 1
+                        : -1) * (sortDir ? -1 : 1)
+                  )
+                  .map((miraIndex, index) => {
+                    let flag = false;
+                    for (const key in miraIndex) {
+                      if (
+                        miraIndex[key] &&
+                        searchValue &&
+                        miraIndex[key]
+                          .toUpperCase()
+                          .search(searchValue.toUpperCase()) != -1
+                      ) {
+                        flag = true;
+                        break;
+                      }
+                    }
+                    if (activeFilter) {
+                      if (
+                        managementFeeMin &&
+                        parseInt(managementFeeMin) >
+                          parseInt(miraIndex.managementFee)
+                      )
+                        return "";
+                      if (
+                        managementFeeMax &&
+                        parseInt(managementFeeMax) <
+                          parseInt(miraIndex.managementFee)
+                      )
+                        return "";
+                      if (
+                        foundedMin &&
+                        new Date(foundedMin) > new Date(miraIndex.founded)
+                      )
+                        return "";
+                      if (
+                        foundedMax &&
+                        new Date(foundedMax) < new Date(miraIndex.founded)
+                      )
+                        return "";
+                    }
+                    return searchValue && !flag ? (
+                      ""
+                    ) : (
                       <Tr key={index}>
                         <Td>
                           <Flex
@@ -1363,13 +1680,13 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
                               width={"25px"}
                               height={"25px"}
                             ></Box>
-                            Index 1
+                            {miraIndex.poolName}
                           </Flex>
                         </Td>
-                        <Td>2ook</Td>
-                        <Td>20.2%</Td>
-                        <Td>Dec 1, 2000</Td>
-                        <Td>0.75%</Td>
+                        <Td>-</Td>
+                        <Td>-%</Td>
+                        <Td>{miraIndex.founded}</Td>
+                        <Td>{miraIndex.managementFee}%</Td>
                         <Td>No</Td>
                         <Td>
                           <Flex
@@ -1395,11 +1712,103 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
   );
 };
 
+export const SortBtn: React.FC<{
+  value: string;
+  sortDir: any;
+  setSortValue?: (arg: any) => void;
+  sortValue: any;
+  setSortDir?: (arg: any) => void;
+  children: React.ReactNode;
+}> = ({ value, sortDir, setSortValue, sortValue, setSortDir, children }) => {
+  return (
+    <Flex
+      alignCenter
+      justifyContent={"flex-start"}
+      gridGap={"8px"}
+      onClick={() => {
+        setSortValue(value);
+        sortValue === value && setSortDir(!sortDir);
+      }}
+    >
+      {children}
+      <SortDirIcon active={sortValue === value} isInc={sortDir} />
+    </Flex>
+  );
+};
+
+export const FilterItem: React.FC<{
+  title: string;
+  isDate?: boolean;
+  min: any;
+  setMin: (arg: any) => void;
+  max: any;
+  setMax: (arg: any) => void;
+}> = ({ title, isDate, min, setMin, max, setMax }) => {
+  return (
+    <Flex
+      col
+      gridGap={"4px"}
+      p={"6px 12px"}
+      bg={"#302d38"}
+      border={"1px solid #34383b"}
+      borderRadius={"8px"}
+    >
+      <Flex alignCenter justifyContent={"space-between"}>
+        {title}
+        <Link
+          p={"2px 6px"}
+          bg={"#0005"}
+          border={"1px solid #34383b"}
+          borderRadius={"8px"}
+          visibility={min || max ? "visible" : "hidden"}
+          onClick={() => {
+            setMax("");
+            setMin("");
+          }}
+        >
+          &times;
+        </Link>
+      </Flex>
+      <Flex alignCenter gridGap={"8px"}>
+        <Flex>
+          <Input
+            type={isDate ? "date" : "number"}
+            placeholder="min"
+            value={min}
+            bg={"#0005"}
+            border={"1px solid #34383b"}
+            borderRadius={"8px"}
+            color={"white"}
+            p={"6px 12px"}
+            width={"100px"}
+            onChange={(e) => setMin(e.target.value)}
+          />
+        </Flex>
+        <Flex>to</Flex>
+        <Flex>
+          <Input
+            type={isDate ? "date" : "number"}
+            placeholder="max"
+            value={max}
+            bg={"#0005"}
+            border={"1px solid #34383b"}
+            borderRadius={"8px"}
+            color={"white"}
+            p={"6px 12px"}
+            width={"100px"}
+            onChange={(e) => setMax(e.target.value)}
+          />
+        </Flex>
+      </Flex>
+    </Flex>
+  );
+};
+
 export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
   miraIndexInfo = {},
-  setVisible = () => { },
-  setUpdateVisible = () => { },
-  setAllocationVisible = () => { },
+  setVisible = () => {},
+  setUpdateVisible = () => {},
+  setAllocationVisible = () => {},
   allocationData = [],
   ...props
 }) => {

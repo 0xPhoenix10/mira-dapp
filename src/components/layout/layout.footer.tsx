@@ -515,9 +515,7 @@ const LayoutFooter = () => {
           disableElevation
           onClick={handleMoreMenuClick}
           endIcon={<KeyboardArrowUpIcon />}
-        >
-          More
-        </StyledButton>
+        ></StyledButton>
         <StyledMenu
           id="demo-customized-menu"
           MenuListProps={{

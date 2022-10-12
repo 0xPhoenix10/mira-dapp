@@ -111,7 +111,7 @@ export const CustomSelect: React.FC<CustomSelectSelectProps> = ({
         {after}
       </Box>
       <Box
-        visible={isOpened ? "visible" : "hidden"}
+        visibility={isOpened ? "visible" : "hidden"}
         opacity={isOpened ? "1" : "0"}
         position={"absolute"}
         top={"105%"}

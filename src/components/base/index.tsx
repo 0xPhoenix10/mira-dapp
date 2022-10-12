@@ -47,7 +47,7 @@ export interface AllProps
     | "pre-wrap"
     | "reverse"
     | "normal";
-  visible?: "visible" | "hidden";
+  visibility?: string;
   backClip?: string | "reverse";
   textOverflow?: any;
   filter?: any;

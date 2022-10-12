@@ -2,6 +2,9 @@
   font-family: art;
   src: url("assets/font/cardinalphoto-medium.otf");
 }
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
 body {
   user-select: none;
 }
