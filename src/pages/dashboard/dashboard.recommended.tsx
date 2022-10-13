@@ -336,6 +336,8 @@ const DashboardRecommended = () => {
                 padding={"8px 16px"}
                 background={"#302D38"}
                 p={"8px 16px"}
+                mt={"6px"}
+                mb={"6px"}
                 border={"1px solid #34383b"}
                 borderRadius={"8px"}
                 cursor="pointer"
