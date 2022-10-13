@@ -39,6 +39,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useNavigate } from "react-router-dom";
 import { FEE_DECIMAL, MODULE_ADDR } from "../config";
 import { useWalletHook } from "../common/hooks/wallet";
 import { UpdateIndexProviderContext } from "./dashboard";
@@ -1227,6 +1228,8 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
   title = "???",
   ...props
 }) => {
+  const navigate = useNavigate();
+
   const miraIndexes = [
     {
       poolName: "ha",
@@ -1671,7 +1674,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
                             gridGap={"10px"}
                             cursor={"pointer"}
                             onClick={() => {
-                              setVisiblePortfolio(true);
+                              navigate("/otherprofile");
                             }}
                           >
                             <Box
@@ -1685,11 +1688,36 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
                             {miraIndex.poolName}
                           </Flex>
                         </Td>
-                        <Td>-</Td>
-                        <Td>-%</Td>
-                        <Td>{miraIndex.founded}</Td>
-                        <Td>{miraIndex.managementFee}%</Td>
-                        <Td>No</Td>
+                        <Td
+                          cursor={"pointer"}
+                          onClick={() => {
+                            setVisiblePortfolio(true);
+                          }}
+                        >-</Td>
+                        <Td
+                          cursor={"pointer"}
+                          onClick={() => {
+                            setVisiblePortfolio(true);
+                          }}
+                        >-%</Td>
+                        <Td
+                          cursor={"pointer"}
+                          onClick={() => {
+                            setVisiblePortfolio(true);
+                          }}
+                        >{miraIndex.founded}</Td>
+                        <Td
+                          cursor={"pointer"}
+                          onClick={() => {
+                            setVisiblePortfolio(true);
+                          }}
+                        >{miraIndex.managementFee}%</Td>
+                        <Td
+                          cursor={"pointer"}
+                          onClick={() => {
+                            setVisiblePortfolio(true);
+                          }}
+                        >No</Td>
                         <Td>
                           <Flex
                             justifyCenter

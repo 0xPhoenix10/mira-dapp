@@ -5,6 +5,7 @@ import { useRef } from "react";
 type ModalParentProps = {
   visible: boolean;
   width?: string;
+  minWidth?: string;
   setVisible: (arg: boolean) => void;
   children?: React.ReactNode;
   zIndex?: string;
@@ -13,6 +14,7 @@ type ModalParentProps = {
 export const ModalParent: React.FC<ModalParentProps> = ({
   visible,
   width = "auto",
+  minWidth = "80vw",
   setVisible,
   children,
   zIndex = "1000",
@@ -45,6 +47,7 @@ export const ModalParent: React.FC<ModalParentProps> = ({
             borderRadius={"20px"}
             boxSizing={"border-box"}
             width={width}
+            minWidth={minWidth}
           >
             <Flex
               ml={"auto"}

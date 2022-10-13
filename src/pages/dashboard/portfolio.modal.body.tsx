@@ -62,7 +62,7 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
 
       getFetchFriend();
     }
-  }, [walletConnected, miraIndexInfo.poolOwner, walletAddress]);
+  }, [walletConnected, walletAddress]);
 
   const data = [
     { name: "WORM", value: 350 },
