@@ -70,6 +70,7 @@ const DashboardRecommended = () => {
   );
   const [miraMyIndexes, setMiraMyIndexes] = useState<MiraIndex[]>([]);
   const [miraMyInvests, setMiraMyInvests] = useState<MiraIndex[]>([]);
+  const [carouselStop, setCarouselStop] = useState(false);
 
   useEffect(() => {
     Carousel3D1?.current?.reset();
@@ -191,6 +192,7 @@ const DashboardRecommended = () => {
         <ModalParent
           visible={recommendedModalVisible}
           setVisible={setRecommendedModalVisible}
+          width={"1210px"}
         >
           <IndexListModalBody flex={1} title={"Recommended"} />
         </ModalParent>
@@ -199,6 +201,7 @@ const DashboardRecommended = () => {
         <ModalParent
           visible={myIndexesModalVisible}
           setVisible={setMyIndexesModalVisible}
+          width={"1210px"}
         >
           <IndexListModalBody flex={1} type={"create"} title={"My Indexes"} />
         </ModalParent>
@@ -254,9 +257,16 @@ const DashboardRecommended = () => {
             alignCenter
             position={"relative"}
           >
+
             <Carousel3D
               ref={Carousel3D1}
-              stop={portfolioModalVisible || modifyModalVisible}
+              stop={portfolioModalVisible || modifyModalVisible || carouselStop}
+              onMouseEnter={() => {
+                setCarouselStop(true);
+              }}
+              onMouseLeave={() => {
+                setCarouselStop(false);
+              }}
             >
               <ChartBox
                 width={"100%"}
@@ -352,7 +362,13 @@ const DashboardRecommended = () => {
                 miraMyInvests.length > 0 ? (
                   <Carousel3D
                     ref={Carousel3D2}
-                    stop={portfolioModalVisible || modifyModalVisible}
+                    stop={portfolioModalVisible || modifyModalVisible || carouselStop}
+                    onMouseEnter={() => {
+                      setCarouselStop(true);
+                    }}
+                    onMouseLeave={() => {
+                      setCarouselStop(false);
+                    }}
                   >
                     {miraMyInvests.map((item, index) => {
                       return (
