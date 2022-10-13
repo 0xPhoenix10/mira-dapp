@@ -20,6 +20,7 @@ import { ArrowIcon, ExchangeIcon } from "components/icons";
 import { ArtButton, NormalBtn } from "components/elements/buttons";
 import { useWalletHook } from "common/hooks/wallet";
 import { renderActiveShape } from "../../common/recharts/piechart";
+import { ModalParent } from "components/modal";
 
 interface IData {
   name: string;
@@ -27,6 +28,96 @@ interface IData {
 }
 
 const OurTokenPage: React.FC = () => {
+  const [showPortfolio, setPortfolioModal] = useState<boolean>(false);
+  const [portfolioTitle, setTitle] = useState("???");
+
+  return (
+    <>
+      <Box
+        py={"20px"}
+        display={"grid"}
+        gridTemplateColumns={"auto auto auto"}
+        justifyItems={"center"}
+        alignItems={"center"}
+        gridGap={"18px"}
+        width={"100%"}
+      >
+        <ChartBox
+          width={"100%"}
+          title={"xHack Startup Index"}
+          cursorAll={"pointer"}
+          onClickAll={() => {
+            setPortfolioModal(true);
+            setTitle("xHack Startup Index");
+          }}
+        />
+        <ChartBox
+          width={"100%"}
+          title={"L1 Exposure Index"}
+          cursorAll={"pointer"}
+          onClickAll={() => {
+            setPortfolioModal(true);
+            setTitle("L1 Exposure Index");
+          }}
+        />
+        <ChartBox
+          width={"100%"}
+          title={"Broad DeFi Index"}
+          cursorAll={"pointer"}
+          onClickAll={() => {
+            setPortfolioModal(true);
+            setTitle("Broad DeFi Index");
+          }}
+        />
+        <ChartBox
+          width={"100%"}
+          title={"Broad Wireless Index"}
+          cursorAll={"pointer"}
+          onClickAll={() => {
+            setPortfolioModal(true);
+            setTitle("Broad Wireless Index");
+          }}
+        />
+        <ChartBox
+          width={"100%"}
+          title={"Broad Web3 Index"}
+          cursorAll={"pointer"}
+          onClickAll={() => {
+            setPortfolioModal(true);
+            setTitle("Broad Web3 Index");
+          }}
+        />
+        <ChartBox
+          width={"100%"}
+          title={"Broad Gaming Index"}
+          cursorAll={"pointer"}
+          onClickAll={() => {
+            setPortfolioModal(true);
+            setTitle("Broad Gaming Index");
+          }}
+        />
+      </Box>
+      {
+        <ModalParent
+          visible={showPortfolio}
+          setVisible={setPortfolioModal}
+        >
+          <PortfolioModalBody
+            flex={1}
+            title={portfolioTitle}
+            setVisible={showPortfolio}
+          />
+        </ModalParent>
+      }
+    </>
+  );
+};
+
+const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
+  title = "???",
+  setVisible = () => {},
+  ...props
+}) => {
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [isHovered, setHovered] = React.useState(false);
   const data1 = [
@@ -146,216 +237,146 @@ const OurTokenPage: React.FC = () => {
       amt: 21.0,
     },
   ];
-  const [currentTab, setCurrentTab] = useState(0);
+
   return (
-    <>
-      {currentTab === 1 ? (
-        <Flex py={"20px"} width={"100%"} gridGap={"16px"}>
-          <Flex flex={1} col>
-            <NormalBtn onClick={() => setCurrentTab(0)}>
-              <ArrowIcon dir={"left"} />
-              back
-            </NormalBtn>
-            <Flex
-              mt={"4px"}
-              fontFamily={"art"}
-              fontSize={"20px"}
-              fontWeight={"bold"}
-              px={"10px"}
-              pb={"6px"}
-              borderBottom={"1px solid #34383b"}
-            >
-              xHack Startup Index (XSI)
-              <Flex
-                ml={"auto"}
-                mt={"auto"}
-                fontSize={"16px"}
-                fontWeight={"normal"}
-                gridGap={"16px"}
-              >
-                <Flex fontSize={"30px"} fontWeight={"bold"}>
-                  48.29
-                </Flex>
-                <Flex fontSize={"30px"} fontWeight={"bold"}>
-                  /
-                </Flex>
-                <Flex fontSize={"30px"} fontWeight={"bold"} color={"#70e094"}>
-                  4.1%
-                </Flex>
-              </Flex>
+    <Flex py={"20px"} width={"100%"} gridGap={"16px"} minWidth={"80vw"}>
+      <Flex flex={1} col>
+        <Flex
+          mt={"4px"}
+          fontFamily={"art"}
+          fontSize={"20px"}
+          fontWeight={"bold"}
+          px={"10px"}
+          pb={"6px"}
+          borderBottom={"1px solid #34383b"}
+        >
+          xHack Startup Index (XSI)
+          <Flex
+            ml={"auto"}
+            mt={"auto"}
+            fontSize={"16px"}
+            fontWeight={"normal"}
+            gridGap={"16px"}
+          >
+            <Flex fontSize={"30px"} fontWeight={"bold"}>
+              48.29
             </Flex>
-            <Flex p={"20px"}>
-              <Flex flex={3} width={"0px"} p={"20px"} aspectRatio={"2"}>
-                <ResponsiveContainer>
-                  <PieChart
-                    width={300}
-                    height={300}
-                    //style={{ cursor: cursor }}
-                  >
-                    <Tooltip content={<CustomizedTooltip />} />
-                    <Pie
-                      activeIndex={isHovered ? activeIndex : null}
-                      activeShape={renderActiveShape}
-                      data={data1}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={renderCustomizedLabel}
-                      outerRadius={"90%"}
-                      fill="#8884d8"
-                      stroke={"transparent"}
-                      dataKey="value"
-                      onMouseEnter={onPieEnter}
-                      onMouseLeave={onPieLeave}
-                    >
-                      {data1.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
-                      ))}
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
-              </Flex>
-              <Flex col flex={5} width={"0px"} aspectRatio={"2"}>
-                <Flex ml={"auto"} gridGap={"4px"}>
-                  <NormalBtn>1D</NormalBtn>
-                  <NormalBtn>1W</NormalBtn>
-                  <NormalBtn>1M</NormalBtn>
-                </Flex>
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    width={500}
-                    height={300}
-                    data={data2}
-                    margin={{
-                      top: 20,
-                      right: 0,
-                      left: 20,
-                      bottom: 5,
-                    }}
-                  >
-                    <CartesianGrid
-                      strokeDasharray="4 "
-                      floodColor={"#70e094"}
-                    />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    {/* <Tooltip /> */}
-                    {/* <Legend /> */}
-                    <Line
-                      type="monotone"
-                      dataKey="pv"
-                      stroke="#70e094"
-                      dot={false}
-                      activeDot={{ r: 8 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </Flex>
+            <Flex fontSize={"30px"} fontWeight={"bold"}>
+              /
             </Flex>
-            <Flex mt={"24px"} col>
-              <Flex
-                fontFamily={"art"}
-                fontSize={"18px"}
-                fontWeight={"600"}
-                letterSpacing={"0.1em"}
-                px={"10px"}
-                pb={"6px"}
-                borderBottom={"1px solid #34383b"}
-              >
-                Stats
-              </Flex>
-              <Flex justifyCenter>
-                <Table width={"90%"} textAlign={"center"}>
-                  <Thead>
-                    <Tr>
-                      <Th>Market Cap</Th>
-                      <Th>Total Volume</Th>
-                      <Th>Supply</Th>
-                      <Th>Fee1</Th>
-                      <Th>Fee2</Th>
-                      <Th>NAV</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    <Tr>
-                      <Td>10.5M</Td>
-                      <Td>220.1K</Td>
-                      <Td>8.2K</Td>
-                      <Td>1%</Td>
-                      <Td>2%</Td>
-                      <Td>$47.28</Td>
-                    </Tr>
-                  </Tbody>
-                </Table>
-              </Flex>
+            <Flex fontSize={"30px"} fontWeight={"bold"} color={"#70e094"}>
+              4.1%
             </Flex>
           </Flex>
-          <SwapSection />
         </Flex>
-      ) : (
-        <Box
-          py={"20px"}
-          display={"grid"}
-          gridTemplateColumns={"auto auto auto"}
-          justifyItems={"center"}
-          alignItems={"center"}
-          gridGap={"18px"}
-          width={"100%"}
-        >
-          <ChartBox
-            width={"100%"}
-            title={"xHack Startup Index"}
-            cursorAll={"pointer"}
-            onClickAll={() => {
-              setCurrentTab(1);
-            }}
-          />
-          <ChartBox
-            width={"100%"}
-            title={"L1 Exposure Index"}
-            cursorAll={"pointer"}
-            onClickAll={() => {
-              setCurrentTab(1);
-            }}
-          />
-          <ChartBox
-            width={"100%"}
-            title={"Broad DeFi Index"}
-            cursorAll={"pointer"}
-            onClickAll={() => {
-              setCurrentTab(1);
-            }}
-          />
-          <ChartBox
-            width={"100%"}
-            title={"Broad Wireless Index"}
-            cursorAll={"pointer"}
-            onClickAll={() => {
-              setCurrentTab(1);
-            }}
-          />
-          <ChartBox
-            width={"100%"}
-            title={"Broad Web3 Index"}
-            cursorAll={"pointer"}
-            onClickAll={() => {
-              setCurrentTab(1);
-            }}
-          />
-          <ChartBox
-            width={"100%"}
-            title={"Broad Gaming Index"}
-            cursorAll={"pointer"}
-            onClickAll={() => {
-              setCurrentTab(1);
-            }}
-          />
-        </Box>
-      )}
-    </>
+        <Flex p={"20px"}>
+          <Flex flex={3} width={"0px"} p={"20px"} aspectRatio={"2"}>
+            <ResponsiveContainer>
+              <PieChart
+                width={300}
+                height={300}
+                //style={{ cursor: cursor }}
+              >
+                <Tooltip content={<CustomizedTooltip />} />
+                <Pie
+                  activeIndex={isHovered ? activeIndex : null}
+                  activeShape={renderActiveShape}
+                  data={data1}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={renderCustomizedLabel}
+                  outerRadius={"90%"}
+                  fill="#8884d8"
+                  stroke={"transparent"}
+                  dataKey="value"
+                  onMouseEnter={onPieEnter}
+                  onMouseLeave={onPieLeave}
+                >
+                  {data1.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+          </Flex>
+          <Flex col flex={5} width={"0px"} aspectRatio={"2"}>
+            <Flex ml={"auto"} gridGap={"4px"}>
+              <NormalBtn>1D</NormalBtn>
+              <NormalBtn>1W</NormalBtn>
+              <NormalBtn>1M</NormalBtn>
+            </Flex>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                width={500}
+                height={300}
+                data={data2}
+                margin={{
+                  top: 20,
+                  right: 0,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="4 " floodColor={"#70e094"} />
+                <XAxis dataKey="name" />
+                <YAxis />
+                {/* <Tooltip /> */}
+                {/* <Legend /> */}
+                <Line
+                  type="monotone"
+                  dataKey="pv"
+                  stroke="#70e094"
+                  dot={false}
+                  activeDot={{ r: 8 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </Flex>
+        </Flex>
+        <Flex mt={"24px"} col>
+          <Flex
+            fontFamily={"art"}
+            fontSize={"18px"}
+            fontWeight={"600"}
+            letterSpacing={"0.1em"}
+            px={"10px"}
+            pb={"6px"}
+            borderBottom={"1px solid #34383b"}
+          >
+            Stats
+          </Flex>
+          <Flex justifyCenter>
+            <Table width={"90%"} textAlign={"center"}>
+              <Thead>
+                <Tr>
+                  <Th>Market Cap</Th>
+                  <Th>Total Volume</Th>
+                  <Th>Supply</Th>
+                  <Th>Fee1</Th>
+                  <Th>Fee2</Th>
+                  <Th>NAV</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                <Tr>
+                  <Td>10.5M</Td>
+                  <Td>220.1K</Td>
+                  <Td>8.2K</Td>
+                  <Td>1%</Td>
+                  <Td>2%</Td>
+                  <Td>$47.28</Td>
+                </Tr>
+              </Tbody>
+            </Table>
+          </Flex>
+        </Flex>
+      </Flex>
+      <SwapSection />
+    </Flex>
   );
 };
 
