@@ -186,7 +186,7 @@ const ProfilePage = () => {
           visible={myIndexesModalVisible}
           setVisible={setMyIndexesModalVisible}
         >
-          <IndexListModalBody flex={1} type={"create"} title={"My Indexes"} />
+          <IndexListModalBody flex={1} type={"create"} title={state.username + "'s Indexes"} />
         </ModalParent>
       }
       {
@@ -197,7 +197,7 @@ const ProfilePage = () => {
           <IndexListModalBody
             flex={1}
             type={"create"}
-            title={"My Investments"}
+            title={state.username + "'s Investments"}
           />
         </ModalParent>
       }
