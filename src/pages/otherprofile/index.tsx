@@ -5,7 +5,7 @@ import { ArrowIcon, PencilIcon } from "components/icons";
 import { ModalParent } from "components/modal";
 import { ChartBox, IndexListModalBody, BlankCard } from "pages/components";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AptosClient } from "aptos";
 import { Carousel3D } from "../common/comp.carousel";
 import { MODULE_ADDR, NODE_URL } from "../../config";
@@ -59,6 +59,7 @@ const ProfilePage = () => {
   const [miraMyIndexes, setMiraMyIndexes] = useState<MiraIndex[]>([]);
   const [miraMyInvests, setMiraMyInvests] = useState<MiraIndex[]>([]);
   const navigate = useNavigate();
+  const { state } = useLocation();
 
   useEffect(() => {
     !walletConnected && navigate("/");
@@ -210,7 +211,7 @@ const ProfilePage = () => {
         <Flex flex={1} col gridGap={"20px"}>
           <Flex height={"42px"}>
             <Flex fontFamily={"art"} fontSize={"24px"} fontWeight={"bold"}>
-              My Profile
+              {state.username}
             </Flex>
             <Flex
               alignCenter
@@ -243,14 +244,9 @@ const ProfilePage = () => {
                 background={"transparent"}
                 color={"white"}
                 placeholder={"user_name"}
-                value={inputNameValue}
-                onChange={(e) => {
-                  setInputNameValue(e.target.value);
-                }}
+                value={state.username}
+                readOnly={true}
               />
-              <Flex cursor={"pointer"} onClick={() => changeMiraAccountName()}>
-                <PencilIcon />
-              </Flex>
             </Flex>
             {walletConnected && (
               <Flex
@@ -438,7 +434,7 @@ const ProfilePage = () => {
                 cursor="pointer"
                 onClick={() => setMyIndexesModalVisible(true)}
               >
-                My Indexes
+                {state.username}'s Indexes
               </Box>
             </Flex>
             <Flex justifyCenter gridGap={"16px"}>
@@ -493,7 +489,7 @@ const ProfilePage = () => {
                 cursor="pointer"
                 onClick={() => setMyInvestmentsModalVisible(true)}
               >
-                My Investments
+                {state.username}'s Investments
               </Box>
             </Flex>
             <Flex justifyCenter gridGap={"16px"}>
@@ -546,7 +542,7 @@ const ProfilePage = () => {
           fontWeight={"bold"}
           borderBottom={"1px solid #34383b"}
         >
-          <Box> My Friends</Box>
+          <Box> {state.username}'s Friends</Box>
         </Flex>
 
         <Flex

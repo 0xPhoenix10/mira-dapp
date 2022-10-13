@@ -15,7 +15,7 @@ import {
 import { PortfolioModalBody } from "./portfolio.modal.body";
 import { IndexAllocationModalBody } from "../index.allocation.modal";
 import { IndexAllocation } from "../../utils/types";
-import { Carousel3D } from "./comp.dashboard";
+import { Carousel3D } from "../common/comp.carousel";
 import { UpdateIndexProviderContext } from "./index";
 import { AptosClient } from "aptos";
 import { MODULE_ADDR, NODE_URL } from "config";
@@ -192,7 +192,6 @@ const DashboardRecommended = () => {
         <ModalParent
           visible={recommendedModalVisible}
           setVisible={setRecommendedModalVisible}
-          width={"80vw"}
         >
           <IndexListModalBody flex={1} title={"Recommended"} />
         </ModalParent>
@@ -201,7 +200,6 @@ const DashboardRecommended = () => {
         <ModalParent
           visible={myIndexesModalVisible}
           setVisible={setMyIndexesModalVisible}
-          width={"80vw"}
         >
           <IndexListModalBody flex={1} type={"create"} title={"My Indexes"} />
         </ModalParent>
@@ -397,7 +395,7 @@ const DashboardRecommended = () => {
               ) : miraMyIndexes.length > 0 ? (
                 <Carousel3D
                   ref={Carousel3D3}
-                  stop={portfolioModalVisible || modifyModalVisible}
+                  stop={portfolioModalVisible || modifyModalVisible || carouselStop}
                 >
                   {miraMyIndexes.map((item, index) => {
                     return (

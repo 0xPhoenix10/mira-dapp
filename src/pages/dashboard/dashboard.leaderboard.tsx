@@ -4,6 +4,7 @@ import { CustomTooltip } from "components/elements/tooptip";
 import { Flex } from "components/base/container";
 import { FilterIcon, IconNarrow, SearchIcon } from "components/icons";
 import { ModalParent } from "components/modal";
+import { useNavigate } from "react-router-dom";
 import { FilterItem, IndexListModalBody, SortBtn } from "pages/components";
 import { useEffect, useState, useContext } from "react";
 import { MODULE_ADDR, NODE_URL } from "config";
@@ -33,6 +34,7 @@ interface CreatePoolEvent {
 
 const DashboardLeaderBoard = () => {
   const { walletConnected } = useWalletHook();
+  const navigate = useNavigate();
 
   const [portfolioModalVisible, setPortfolioModalVisible] = useState(false);
   const [leaderboardMmodalVisible, setLeaderboardModalVisible] =
@@ -441,8 +443,14 @@ const DashboardLeaderBoard = () => {
                           gridGap={"10px"}
                           cursor={"pointer"}
                           onClick={() => {
-                            setSelectIndexInfo(miraIndex);
-                            setPortfolioModalVisible(true);
+                            navigate(
+                              "/otherprofile",
+                              {
+                                state: {
+                                  username: miraIndex.poolName
+                                }
+                              }
+                            );
                           }}
                         >
                           <Box
@@ -456,12 +464,37 @@ const DashboardLeaderBoard = () => {
                           {miraIndex.poolName}
                         </Flex>
                       </Td>
-                      <Td>-</Td>
-                      <Td>-%</Td>
-                      <Td>{miraIndex.founded}</Td>
+                      <Td 
+                        cursor={"pointer"}
+                        onClick={() => {
+                          setPortfolioModalVisible(true);
+                        }}
+                      >-</Td>
+                      <Td
+                        cursor={"pointer"} 
+                        onClick={() => {
+                          setPortfolioModalVisible(true);
+                        }}
+                      >-%</Td>
+                      <Td 
+                        cursor={"pointer"}
+                        onClick={() => {
+                          setPortfolioModalVisible(true);
+                        }}
+                      >{miraIndex.founded}</Td>
                       {/*<Td>Dec 1, 2000</Td>*/}
-                      <Td>{miraIndex.managementFee}%</Td>
-                      <Td>No</Td>
+                      <Td 
+                        cursor={"pointer"}
+                        onClick={() => {
+                          setPortfolioModalVisible(true);
+                        }}
+                      >{miraIndex.managementFee}%</Td>
+                      <Td 
+                        cursor={"pointer"}
+                        onClick={() => {
+                          setPortfolioModalVisible(true);
+                        }}
+                      >No</Td>
                       {walletConnected && (
                         <Td>
                           <Flex
