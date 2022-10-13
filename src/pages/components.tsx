@@ -1818,6 +1818,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
   const [isFriend, setIsFriend] = useState(false);
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [isHovered, setHovered] = React.useState(false);
+  const [isReal, setRealAlloc] = React.useState(true);
 
   useEffect(() => {
     if (walletConnected) {
@@ -2015,7 +2016,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
               </Flex>
             </Flex>
             <Flex p={"20px"}>
-              <Flex flex={3} width={"0px"} p={"20px"} aspectRatio={"2"}>
+              <Flex col flex={3} width={"0px"} p={"20px"} aspectRatio={"2"}>
                 <ResponsiveContainer>
                   {allocationData && Array.isArray(allocationData) && (
                     <PieChart
@@ -2052,6 +2053,44 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
                     </PieChart>
                   )}
                 </ResponsiveContainer>
+                <div>
+                  <Flex
+                    mt={"1em"}
+                    fontSize={"15px"}
+                    alignCenter
+                    justifyContent={"space-around"}
+                  >
+                    <Flex
+                      cursor={"pointer"}
+                      onClick={() => setRealAlloc(true)}
+                      color={isReal ? "#d15151" : "#fafafa"}
+                    >
+                      Strategy Allocation
+                    </Flex>
+                    <Link m={"auto 0px"} fontSize={"2em"} transform={"rotate(90deg)"}>
+                      <ExchangeIcon />
+                    </Link>
+                    <Flex
+                      cursor={"pointer"}
+                      onClick={() => setRealAlloc(false)}
+                      color={!isReal ? "#d15151" : "#fafafa"}
+                    >
+                      Real Allocation
+                    </Flex>
+                    <Flex
+                      cursor={"pointer"}
+                    >
+                      <CustomTooltip
+                        title="changes the portfolio above from viewing the strategy to the current allocation"
+                        arrow
+                        disableInteractive
+                        placement="top"
+                      >
+                        <span>ⓘ</span>
+                      </CustomTooltip>
+                    </Flex>
+                  </Flex>
+                </div>
               </Flex>
               <Flex col flex={5} width={"0px"} aspectRatio={"2"}>
                 <Flex ml={"auto"} gridGap={"4px"}>
