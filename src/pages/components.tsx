@@ -99,23 +99,25 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
     percent,
     index,
   }: any) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.45;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.3;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN) + 5;
 
-    return (
-      <text
-        fontSize={"10px"}
-        x={x}
-        y={y}
-        fill="white"
-        textAnchor={x > cx ? "start" : "end"}
-        dominantBaseline="central"
-      >
-        {/* {`${(percent * 100).toFixed(0)}%`} */}
-        {`${data[index].name}`}
-      </text>
-    );
+    if(data.length < 5) {
+      return (
+        <text
+          fontSize={"10px"}
+          x={x}
+          y={y}
+          fill="white"
+          textAnchor={x > cx ? "start" : "end"}
+          dominantBaseline="center"
+        >
+          {/* {`${(percent * 100).toFixed(0)}%`} */}
+          {`${data[index].name}`}
+        </text>
+      );
+    }
   };
 
   const style = {
@@ -199,7 +201,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
             </PieChart>
           </ResponsiveContainer>
         </Flex>
-        <Flex col gridGap={"4px"} color={"lightgrey"} cursor={"pointer"}>
+        <Flex col gridGap={"4px"} color={"lightgrey"} cursor={"pointer"} alignItems={"end"}>
           <Flex
             mb={"8px"}
             fontSize={"18px"}
@@ -1538,7 +1540,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
             p={"20px"}
             border={"1px solid #34383b"}
             borderRadius={"10px"}
-            height={"300px"}
+            height={"480px"}
             overflow={"auto"}
           >
             <Table width={"100%"} textAlign={"left"}>
@@ -2067,7 +2069,11 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
                     >
                       Strategy Allocation
                     </Flex>
-                    <Link m={"auto 0px"} fontSize={"2em"} transform={"rotate(90deg)"}>
+                    <Link
+                      m={"auto 0px"}
+                      fontSize={"2em"}
+                      transform={"rotate(90deg)"}
+                    >
                       <ExchangeIcon />
                     </Link>
                     <Flex
@@ -2077,9 +2083,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
                     >
                       Real Allocation
                     </Flex>
-                    <Flex
-                      cursor={"pointer"}
-                    >
+                    <Flex cursor={"pointer"}>
                       <CustomTooltip
                         title="changes the portfolio above from viewing the strategy to the current allocation"
                         arrow

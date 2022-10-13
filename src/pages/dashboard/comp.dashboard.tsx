@@ -17,6 +17,8 @@ export const Carousel3D: React.FC<{
 }> = forwardRef(({ stop, children, ...props }, ref) => {
   const childNodes = Children.toArray(children);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isStop, setStop] = useState(false);
+
   useImperativeHandle(ref, () => ({
     reset() {
       setCurrentSlide(
@@ -25,7 +27,7 @@ export const Carousel3D: React.FC<{
     },
   }));
   useEffect(() => {
-    if (stop) return;
+    if (stop || isStop) return;
     const timeout = setTimeout(() => {
       setCurrentSlide(
         (currentSlide + childNodes.length - 1) % childNodes.length
@@ -33,6 +35,7 @@ export const Carousel3D: React.FC<{
     }, 5500);
     return () => clearTimeout(timeout);
   }, [currentSlide, stop]);
+
   return (
     <Carousel3dContainer {...props}>
       {childNodes.map((each, index) => {
@@ -60,6 +63,19 @@ export const Carousel3D: React.FC<{
         );
       })}
       <Flex mt={"8px"} gridGap={"8px"}>
+        <Link
+          p={"8px 16px"}
+          border={
+            isStop ? "1px solid #70E094" : "1px solid #fff4"
+          }
+          color={isStop ? "#70E094" : "#fff"}
+          borderRadius={"8px"}
+          onClick={() =>
+            isStop ? setStop(false) : setStop(true)
+          }
+        >
+          Pause
+        </Link>
         <Link
           p={"8px 16px"}
           border={"1px solid #fff4"}
