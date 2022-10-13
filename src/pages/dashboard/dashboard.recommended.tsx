@@ -192,7 +192,7 @@ const DashboardRecommended = () => {
         <ModalParent
           visible={recommendedModalVisible}
           setVisible={setRecommendedModalVisible}
-          width={"1210px"}
+          width={"80vw"}
         >
           <IndexListModalBody flex={1} title={"Recommended"} />
         </ModalParent>
@@ -201,7 +201,7 @@ const DashboardRecommended = () => {
         <ModalParent
           visible={myIndexesModalVisible}
           setVisible={setMyIndexesModalVisible}
-          width={"1210px"}
+          width={"80vw"}
         >
           <IndexListModalBody flex={1} type={"create"} title={"My Indexes"} />
         </ModalParent>
@@ -346,8 +346,8 @@ const DashboardRecommended = () => {
                 padding={"8px 16px"}
                 background={"#302D38"}
                 p={"8px 16px"}
-                mt={"6px"}
-                mb={"6px"}
+                mt={"10px"}
+                mb={"8px"}
                 border={"1px solid #34383b"}
                 borderRadius={"8px"}
                 cursor="pointer"
