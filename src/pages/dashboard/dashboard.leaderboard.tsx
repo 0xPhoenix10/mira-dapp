@@ -60,25 +60,30 @@ const DashboardLeaderBoard = () => {
 
   const fetchIndexes = async () => {
     const client = new AptosClient(NODE_URL);
-    let events = await client.getEventsByEventHandle(
-      MODULE_ADDR,
-      `${MODULE_ADDR}::mira::MiraStatus`,
-      "create_pool_events",
-      { limit: 1000 }
-    );
-    let create_pool_events: MiraIndex[] = [];
-    for (let ev of events) {
-      let e: CreatePoolEvent = ev.data;
-      if (e.private_allocation) continue;
-      create_pool_events.push({
-        poolName: e.pool_name,
-        poolAddress: e.pool_address,
-        poolOwner: e.pool_owner,
-        managementFee: getStringFee(e.management_fee),
-        founded: getFormatedDate(e.founded),
-      });
+    if (!walletConnected) return;
+    try {
+      let events = await client.getEventsByEventHandle(
+        MODULE_ADDR,
+        `${MODULE_ADDR}::mira::MiraStatus`,
+        "create_pool_events",
+        { limit: 1000 }
+      );
+      let create_pool_events: MiraIndex[] = [];
+      for (let ev of events) {
+        let e: CreatePoolEvent = ev.data;
+        if (e.private_allocation) continue;
+        create_pool_events.push({
+          poolName: e.pool_name,
+          poolAddress: e.pool_address,
+          poolOwner: e.pool_owner,
+          managementFee: getStringFee(e.management_fee),
+          founded: getFormatedDate(e.founded),
+        });
+      }
+      setMiraIndexes(create_pool_events);
+    } catch (error) {
+      console.log("set mira indexes error", error);
     }
-    setMiraIndexes(create_pool_events);
   };
 
   const [searchValue, setSearchValue] = useState("");
