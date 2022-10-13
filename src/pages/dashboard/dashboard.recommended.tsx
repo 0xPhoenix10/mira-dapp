@@ -38,6 +38,18 @@ interface CreatePoolEvent {
   founded: number;
 }
 
+interface MiraInvest {
+  poolName: string;
+  investor: string;
+  amount: number;
+}
+
+interface DepositPoolEvent {
+  pool_name: string;
+  investor: string;
+  amount: number;
+}
+
 const DashboardRecommended = () => {
   const { walletAddress, walletConnected } = useWalletHook();
   const [createMmodalVisible, setCreateModalVisible] = useState(false);
@@ -65,11 +77,11 @@ const DashboardRecommended = () => {
   const Carousel3D1 = useRef(null);
   const Carousel3D2 = useRef(null);
   const Carousel3D3 = useRef(null);
-  const { updateIndex, updateInvest, setUpdateInvest } = useContext(
+  const { setUpdateInvest } = useContext(
     UpdateIndexProviderContext
   );
   const [miraMyIndexes, setMiraMyIndexes] = useState<MiraIndex[]>([]);
-  const [miraMyInvests, setMiraMyInvests] = useState<MiraIndex[]>([]);
+  const [miraMyInvests, setMiraMyInvests] = useState<MiraInvest[]>([]);
   const [carouselStop, setCarouselStop] = useState(false);
 
   useEffect(() => {
@@ -81,21 +93,9 @@ const DashboardRecommended = () => {
   useEffect(() => {
     if (walletAddress) {
       fetchIndexes();
+      fetchInvests();
     }
-    if (updateInvest) {
-      var investList = [];
-      for (var i = 0; i < updateInvest; i++) {
-        investList.push({
-          poolName: `test invest ${i + 1}`,
-          poolAddress: "address",
-          poolOwner: "owner_address",
-          managementFee: "1",
-          founded: "1",
-        });
-      }
-      setMiraMyInvests(investList);
-    }
-  }, [updateIndex, walletAddress, updateInvest]);
+  }, [walletAddress]);
 
   const fetchIndexes = async () => {
     const client = new AptosClient(NODE_URL);
@@ -119,6 +119,28 @@ const DashboardRecommended = () => {
     }
     setMiraMyIndexes(create_pool_events);
   };
+
+  const fetchInvests = async () => {
+    const client = new AptosClient(NODE_URL);
+    let events = await client.getEventsByEventHandle(
+      MODULE_ADDR,
+      `${MODULE_ADDR}::mira::MiraStatus`,
+      "deposit_pool_events",
+      { limit: 1000 }
+    );
+    let deposit_pool_events: MiraInvest[] = [];
+    for (let ev of events) {
+      let e: DepositPoolEvent = ev.data;
+      if (walletAddress != e.investor) continue;
+      deposit_pool_events.push({
+        poolName: e.pool_name,
+        investor: e.investor,
+        amount: e.amount,
+      });
+    }
+    setMiraMyInvests(deposit_pool_events);
+  }
+
   return (
     <>
       {

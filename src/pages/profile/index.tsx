@@ -44,6 +44,18 @@ interface CreatePoolEvent {
   founded: number;
 }
 
+interface MiraInvest {
+  poolName: string;
+  investor: string;
+  amount: number;
+}
+
+interface DepositPoolEvent {
+  pool_name: string;
+  investor: string;
+  amount: number;
+}
+
 const ProfilePage = () => {
   const { walletConnected, walletAddress, signAndSubmitTransaction, wallet } =
     useWalletHook();
@@ -57,10 +69,15 @@ const ProfilePage = () => {
   const [modifyModalVisible, setModifyModalVisible] = useState(false);
   const [carouselStop, setCarouselStop] = useState(false);
   const [miraMyIndexes, setMiraMyIndexes] = useState<MiraIndex[]>([]);
-  const [miraMyInvests, setMiraMyInvests] = useState<MiraIndex[]>([]);
+  const [miraMyInvests, setMiraMyInvests] = useState<MiraInvest[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (walletAddress) {
+      fetchIndexes();
+      fetchInvests();
+    }
+
     !walletConnected && navigate("/");
     const initMiraAccountProps = async () => {
       const client = new AptosClient(NODE_URL);
@@ -171,6 +188,27 @@ const ProfilePage = () => {
     }
     setMiraMyIndexes(create_pool_events);
   };
+
+  const fetchInvests = async () => {
+    const client = new AptosClient(NODE_URL);
+    let events = await client.getEventsByEventHandle(
+      MODULE_ADDR,
+      `${MODULE_ADDR}::mira::MiraStatus`,
+      "deposit_pool_events",
+      { limit: 1000 }
+    );
+    let deposit_pool_events: MiraInvest[] = [];
+    for (let ev of events) {
+      let e: DepositPoolEvent = ev.data;
+      if (walletAddress != e.investor) continue;
+      deposit_pool_events.push({
+        poolName: e.pool_name,
+        investor: e.investor,
+        amount: e.amount,
+      });
+    }
+    setMiraMyInvests(deposit_pool_events);
+  }
 
   return (
     <>
@@ -497,46 +535,43 @@ const ProfilePage = () => {
               </Box>
             </Flex>
             <Flex justifyCenter gridGap={"16px"}>
-              <Carousel3D
-                ref={Carousel3D1}
-                stop={
-                  portfolioModalVisible || modifyModalVisible || carouselStop
-                }
-                onMouseEnter={() => {
-                  setCarouselStop(true);
-                }}
-                onMouseLeave={() => {
-                  setCarouselStop(false);
-                }}
-              >
-                <ChartBox
-                  width={"100%"}
-                  maxWidth={"70%"}
-                  title={"Aptos Defi Pulse"}
-                  cursorAll={"pointer"}
-                  onClickAll={() => {
-                    setPortfolioModalVisible(true);
+              {miraMyInvests.length > 0 ? (
+                <Carousel3D
+                  ref={Carousel3D2}
+                  stop={
+                    portfolioModalVisible || modifyModalVisible || carouselStop
+                  }
+                  onMouseEnter={() => {
+                    setCarouselStop(true);
                   }}
-                />
-                <ChartBox
-                  width={"100%"}
-                  maxWidth={"70%"}
-                  title={"Aptos Gaming Pulse"}
-                  cursorAll={"pointer"}
-                  onClickAll={() => {
-                    setPortfolioModalVisible(true);
+                  onMouseLeave={() => {
+                    setCarouselStop(false);
                   }}
-                />
-                <ChartBox
-                  width={"100%"}
+                >
+                  {miraMyInvests.map((item, index) => {
+                    return (
+                      <ChartBox
+                        key={index}
+                        flex={1}
+                        width={"0px"}
+                        maxWidth={"70%"}
+                        title={item.poolName}
+                        cursor={"pointer"}
+                        onClick={() => {
+                          setModifyModalVisible(true);
+                        }}
+                      />
+                    );
+                  })}
+                </Carousel3D>
+              ) : (
+                <BlankCard
+                  flex={1}
                   maxWidth={"70%"}
-                  title={"Broad Crypto"}
-                  cursorAll={"pointer"}
-                  onClickAll={() => {
-                    setPortfolioModalVisible(true);
-                  }}
+                  minHeight={"245px"}
+                  type={"index"}
                 />
-              </Carousel3D>
+              )}
             </Flex>
           </Flex>
         </Flex>

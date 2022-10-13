@@ -1674,7 +1674,14 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
                             gridGap={"10px"}
                             cursor={"pointer"}
                             onClick={() => {
-                              navigate("/otherprofile");
+                              navigate(
+                                "/otherprofile",
+                                {
+                                  state: {
+                                    username: miraIndex.poolName
+                                  }
+                                }
+                              );
                             }}
                           >
                             <Box
