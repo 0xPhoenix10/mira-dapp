@@ -398,7 +398,6 @@ const BuySellSection: React.FC<BuySellSectionProps> = ({
   return (
     <Flex
       col
-      my={"auto"}
       justifyContent={"space-around"}
       gridGap={"10px"}
       background={"#302D38"}
