@@ -13,8 +13,8 @@ import {
   CartesianGrid,
   Cell,
   Legend,
-  Line,
-  LineChart,
+  Area,
+  AreaChart,
   Pie,
   PieChart,
   ResponsiveContainer,
@@ -24,7 +24,7 @@ import {
 } from "recharts";
 import { renderActiveShape } from "../../common/recharts/piechart";
 import { CustomSelect, SmOption } from "components/form";
-import { ArtButton, NormalBtn } from "components/elements/buttons";
+import { ArtButton, NormalBtn, AddBtn } from "components/elements/buttons";
 import { ArrowIcon, ExchangeIcon } from "components/icons";
 
 interface IData {
@@ -33,8 +33,8 @@ interface IData {
 }
 
 export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
-  setVisible = () => {},
-  setUpdateInvest = () => {},
+  setVisible = () => { },
+  setUpdateInvest = () => { },
   miraIndexInfo = {},
   ...props
 }) => {
@@ -42,8 +42,9 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   const [visibleDeposit, setVisibleDeposit] = useState(false);
   const [visibleWithdraw, setVisibleWithdraw] = useState(false);
   const [isFriend, setIsFriend] = useState(false);
-  const [activeIndex, setActiveIndex] = React.useState(0);
-  const [isHovered, setHovered] = React.useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isHovered, setHovered] = useState(false);
+  const [isMore, setMoreBtn] = useState(false);
 
   useEffect(() => {
     if (walletConnected) {
@@ -70,49 +71,17 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
     { name: "CLOCK", value: 200 },
     { name: "OTTER", value: 400 },
   ];
+
   const data2 = [
-    {
-      name: "9/26",
-      uv: 40.0,
-      pv: 24.0,
-      amt: 24.0,
-    },
-    {
-      name: "9/28",
-      uv: 30.0,
-      pv: 13.98,
-      amt: 22.1,
-    },
-    {
-      name: "9/30",
-      uv: 20.0,
-      pv: 98.0,
-      amt: 22.9,
-    },
-    {
-      name: "10/2",
-      uv: 27.8,
-      pv: 39.08,
-      amt: 20.0,
-    },
-    {
-      name: "10/2",
-      uv: 18.9,
-      pv: 48.0,
-      amt: 2181,
-    },
-    {
-      name: "10/4",
-      uv: 23.9,
-      pv: 38.0,
-      amt: 25.0,
-    },
-    {
-      name: "10/6",
-      uv: 34.9,
-      pv: 43.0,
-      amt: 21.0,
-    },
+    { month: "9/24", value: 394 },
+    { month: "9/25", value: 205 },
+    { month: "9/26", value: 542 },
+    { month: "9/27", value: 123 },
+    { month: "9/28", value: 486 },
+    { month: "9/29", value: 432 },
+    { month: "9/30", value: 543 },
+    { month: "10/01", value: 552 },
+    { month: "10/02", value: 234 },
   ];
 
   const COLORS = [
@@ -194,6 +163,32 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
 
   const onPieLeave = () => setHovered(false);
 
+  const CustomizedTick2 = ({ x, y, payload }) => {
+    return <text style={{ fontSize: "12px", float: "right", textAlign: "right", fill: "#fff" }} x={x - 24} y={y} textAnchor="top" dominantBaseline="hanging">
+      {payload.value}
+    </text>
+  }
+
+  const renderTooltip = (props) => {
+    if (props && props.payload[0]) {
+      return (
+        <div style={{ padding: "12px", background: "#222129", color: "#ffffff", fontSize: "12px" }}>
+          <div>Value: {props.payload[0].payload.value}</div>
+        </div>
+      )
+    }
+  }
+
+  const args = {
+    chartData: data2,
+    gradientColor: "green",
+    areaStrokeColor: "cyan",
+    customizedTick: CustomizedTick2,
+    tickFormatter: null,
+    renderTooltip: renderTooltip,
+    uniqueId: 2,
+  }
+
   return (
     <>
       {visibleDeposit || visibleWithdraw ? (
@@ -258,7 +253,7 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
                   <PieChart
                     width={300}
                     height={300}
-                    //style={{ cursor: cursor }}
+                  //style={{ cursor: cursor }}
                   >
                     <Tooltip content={<CustomizedTooltip />} />
                     <Pie
@@ -288,38 +283,57 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
               </Flex>
               <Flex col flex={5} width={"0px"} aspectRatio={"2"}>
                 <Flex ml={"auto"} gridGap={"4px"}>
-                  <NormalBtn>1D</NormalBtn>
-                  <NormalBtn>1W</NormalBtn>
-                  <NormalBtn>1M</NormalBtn>
+                  {isMore && (
+                    <>
+                      <NormalBtn>1D</NormalBtn>
+                      <NormalBtn>3D</NormalBtn>
+                      <NormalBtn>1W</NormalBtn>
+                      <NormalBtn>2W</NormalBtn>
+                      <NormalBtn>1M</NormalBtn>
+                      <NormalBtn>3M</NormalBtn>
+                      <NormalBtn>6M</NormalBtn>
+                      <NormalBtn>1Y</NormalBtn>
+                      <NormalBtn>YTD</NormalBtn>
+                    </>
+                  )}
+                  {!isMore && (
+                    <>
+                      <NormalBtn>1D</NormalBtn>
+                      <NormalBtn>1W</NormalBtn>
+                      <NormalBtn>1M</NormalBtn>
+                      <NormalBtn>YTD</NormalBtn>
+                    </>
+                  )}
+                  <AddBtn
+                    onClick={() => isMore ? setMoreBtn(false) : setMoreBtn(true)}
+                  >
+                    {isMore ? "-" : "+"}
+                  </AddBtn>
                 </Flex>
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    width={500}
-                    height={300}
-                    data={data2}
-                    margin={{
-                      top: 20,
-                      right: 0,
-                      left: 20,
-                      bottom: 5,
-                    }}
-                  >
-                    <CartesianGrid
-                      strokeDasharray="4 "
-                      floodColor={"#70e094"}
+                  <AreaChart data={args.chartData}
+                    margin={{ top: 20, right: 10, left: -30, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id={"colorUv" + args.uniqueId} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="100%" stopColor={args.gradientColor} />
+                      </linearGradient>
+                    </defs>
+                    <XAxis
+                      dataKey="month"
+                      tick={args.customizedTick}
                     />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    {/* <Tooltip /> */}
-                    {/* <Legend /> */}
-                    <Line
-                      type="monotone"
-                      dataKey="pv"
-                      stroke="#70e094"
-                      dot={false}
-                      activeDot={{ r: 8 }}
+                    <YAxis
+                      width={80}
+                      tick={args.customizedTick}
+                      // ticks={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+                      interval={0}
+                      domain={[1, 15]}
+                      tickFormatter={args.tickFormatter}
                     />
-                  </LineChart>
+                    <CartesianGrid strokeDasharray="5 5" fill="#222129" horizontal={false} vertical={false} />
+                    <Tooltip content={args.renderTooltip} />
+                    <Area dot={{ fill: args.gradientColor, fillOpacity: 1 }} type="monotone" dataKey="value" stroke={args.gradientColor} fillOpacity={0.1} fill={"url(#colorUv" + args.uniqueId + ")"} />
+                  </AreaChart>
                 </ResponsiveContainer>
               </Flex>
             </Flex>
@@ -366,187 +380,6 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
             setVisibleWithdraw={setVisibleWithdraw}
           />
         </Flex>
-        // <Flex col gridGap={"10px"}>
-        //   <Flex
-        //     py={"8px"}
-        //     fontSize={"18px"}
-        //     fontWeight={"500"}
-        //     borderBottom={"1px solid #34383b"}
-        //   >
-        //     Portfolio
-        //   </Flex>
-        //   <Flex justifyCenter gridGap={"16px"}>
-        //     <Flex
-        //       col
-        //       background={"#302D38"}
-        //       p={"20px"}
-        //       border={"1px solid #34383b"}
-        //       borderRadius={"20px"}
-        //       gridGap={"12px"}
-        //       {...props}
-        //     >
-        //       <Flex justifyCenter alignCenter gridGap={"16px"}>
-        //         <Flex col>
-        //           <Flex width={"150px"} aspectRatio={"1"}>
-        //             <ResponsiveContainer>
-        //               <PieChart width={300} height={300}>
-        //                 <Tooltip content={<CustomizedTooltip />} />
-        //                 <Pie
-        //                   activeIndex={isHovered ? activeIndex : null}
-        //                   activeShape={renderActiveShape}
-        //                   data={data}
-        //                   cx="50%"
-        //                   cy="50%"
-        //                   labelLine={false}
-        //                   label={renderCustomizedLabel}
-        //                   outerRadius={"90%"}
-        //                   fill="#8884d8"
-        //                   stroke={"transparent"}
-        //                   dataKey="value"
-        //                   onMouseEnter={onPieEnter}
-        //                   onMouseLeave={onPieLeave}
-        //                 >
-        //                   {data.map((entry, index) => (
-        //                     <Cell
-        //                       key={`cell-${index}`}
-        //                       fill={COLORS[index % COLORS.length]}
-        //                     />
-        //                   ))}
-        //                 </Pie>
-        //               </PieChart>
-        //             </ResponsiveContainer>
-        //           </Flex>
-        //           <Flex justifyCenter gridGap={"8px"}>
-        //             <Flex
-        //               alignCenter
-        //               gridGap={"4px"}
-        //               padding={"8px 16px"}
-        //               background={"#0002"}
-        //               p={"8px 16px"}
-        //               border={"1px solid #34383b"}
-        //               borderRadius={"8px"}
-        //               cursor="pointer"
-        //               onClick={() => {
-        //                 setVisibleDeposit(true);
-        //               }}
-        //             >
-        //               Invest
-        //             </Flex>
-        //             <Flex
-        //               alignCenter
-        //               gridGap={"4px"}
-        //               padding={"8px 16px"}
-        //               background={"#0002"}
-        //               p={"8px 16px"}
-        //               border={"1px solid #34383b"}
-        //               borderRadius={"8px"}
-        //               cursor="pointer"
-        //               onClick={() => {
-        //                 setVisibleWithdraw(true);
-        //               }}
-        //             >
-        //               Withdraw
-        //             </Flex>
-        //           </Flex>
-        //         </Flex>
-        //         <Flex col gridGap={"4px"}>
-        //           <Flex col gridGap={"10px"}>
-        //             <Flex col justifyCenter gridGap={"16px"}>
-        //               <Table cellSpacing={"2px"}>
-        //                 <Tbody>
-        //                   <Tr>
-        //                     <Td px={"4px"} py={"8px"} borderBottom={"none"}>
-        //                       Pool Name:
-        //                     </Td>
-        //                     <Td
-        //                       px={"4px"}
-        //                       py={"8px"}
-        //                       borderBottom={"none"}
-        //                       color={"#888"}
-        //                     >
-        //                       {miraIndexInfo.poolName}
-        //                     </Td>
-        //                   </Tr>
-        //                   <Tr>
-        //                     <Td px={"4px"} py={"8px"} borderBottom={"none"}>
-        //                       Pool owner:
-        //                     </Td>
-        //                     <Td
-        //                       px={"4px"}
-        //                       py={"8px"}
-        //                       borderBottom={"none"}
-        //                       color={"#888"}
-        //                     >
-        //                       <Flex justifyCenter alignCenter gridGap={"8px"}>
-        //                         {miraIndexInfo.poolOwner}
-        //                         {walletConnected &&
-        //                           miraIndexInfo.poolOwner !== walletAddress &&
-        //                           !isFriend && (
-        //                             <Flex
-        //                               alignCenter
-        //                               gridGap={"4px"}
-        //                               padding={"8px 16px"}
-        //                               background={"#0005"}
-        //                               p={"8px 16px"}
-        //                               border={"1px solid #34383b"}
-        //                               borderRadius={"8px"}
-        //                               cursor="pointer"
-        //                               onClick={() => request_friend()}
-        //                             >
-        //                               Request friend
-        //                             </Flex>
-        //                           )}
-        //                       </Flex>
-        //                     </Td>
-        //                   </Tr>
-        //                   <Tr>
-        //                     <Td px={"4px"} py={"8px"} borderBottom={"none"}>
-        //                       Pool address:
-        //                     </Td>
-        //                     <Td
-        //                       px={"4px"}
-        //                       py={"8px"}
-        //                       borderBottom={"none"}
-        //                       color={"#888"}
-        //                     >
-        //                       {miraIndexInfo.poolAddress}
-        //                     </Td>
-        //                   </Tr>
-        //                   <Tr>
-        //                     <Td px={"4px"} py={"8px"} borderBottom={"none"}>
-        //                       Management Fee:
-        //                     </Td>
-        //                     <Td
-        //                       px={"4px"}
-        //                       py={"8px"}
-        //                       borderBottom={"none"}
-        //                       color={"#888"}
-        //                     >
-        //                       {miraIndexInfo.managementFee} %
-        //                     </Td>
-        //                   </Tr>
-        //                   <Tr>
-        //                     <Td px={"4px"} py={"8px"} borderBottom={"none"}>
-        //                       Founded:
-        //                     </Td>
-        //                     <Td
-        //                       px={"4px"}
-        //                       py={"8px"}
-        //                       borderBottom={"none"}
-        //                       color={"#888"}
-        //                     >
-        //                       {miraIndexInfo.founded}
-        //                     </Td>
-        //                   </Tr>
-        //                 </Tbody>
-        //               </Table>
-        //             </Flex>
-        //           </Flex>
-        //         </Flex>
-        //       </Flex>
-        //     </Flex>
-        //   </Flex>
-        // </Flex>
       )}
     </>
   );
@@ -560,7 +393,7 @@ const BuySellSection: React.FC<BuySellSectionProps> = ({
   setVisibleDeposit,
   setVisibleWithdraw,
 }) => {
-  const { walletConnected } = useWalletHook();
+  const { walletConnected, openConnectModal } = useWalletHook();
   const [isInvest, setInvest] = React.useState(true);
   return (
     <Flex
@@ -594,7 +427,12 @@ const BuySellSection: React.FC<BuySellSectionProps> = ({
         >
           Invest
         </Flex>
-        <Link m={"auto 0px"} fontSize={"2em"} transform={"rotate(90deg)"}>
+        <Link
+          m={"auto 0px"}
+          fontSize={"2em"}
+          transform={"rotate(90deg)"}
+          onClick={() => isInvest ? setInvest(false) : setInvest(true)}
+        >
           <ExchangeIcon />
         </Link>
         <Flex
@@ -627,6 +465,7 @@ const BuySellSection: React.FC<BuySellSectionProps> = ({
           minWidth={"150px"}
           padding={"12px 24px"}
           textAlign={"center"}
+          onClick={() => openConnectModal()}
         >
           Connect Wallet
         </ArtButton>
@@ -655,7 +494,7 @@ const BuySellBox = () => {
         </Flex>
         <Flex bg={"#302d38"} borderRadius={"8px"}>
           <CustomSelect>
-            <SmOption value={"APTOS"}>APTOS</SmOption>
+            <SmOption value={"APTOS"} selected>APTOS</SmOption>
             <SmOption value={"XSI"}>XSI</SmOption>
           </CustomSelect>
         </Flex>
