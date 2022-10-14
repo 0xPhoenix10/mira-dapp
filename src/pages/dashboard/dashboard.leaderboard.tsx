@@ -447,7 +447,8 @@ const DashboardLeaderBoard = () => {
                               "/otherprofile",
                               {
                                 state: {
-                                  username: miraIndex.poolName
+                                  username: miraIndex.poolName,
+                                  owner: miraIndex.poolOwner
                                 }
                               }
                             );

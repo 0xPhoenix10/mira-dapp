@@ -44,6 +44,18 @@ interface CreatePoolEvent {
   founded: number;
 }
 
+interface MiraInvest {
+  poolName: string;
+  investor: string;
+  amount: number;
+}
+
+interface DepositPoolEvent {
+  pool_name: string;
+  investor: string;
+  amount: number;
+}
+
 const ProfilePage = () => {
   const { walletConnected, walletAddress, signAndSubmitTransaction, wallet } =
     useWalletHook();
@@ -57,38 +69,43 @@ const ProfilePage = () => {
   const [modifyModalVisible, setModifyModalVisible] = useState(false);
   const [carouselStop, setCarouselStop] = useState(false);
   const [miraMyIndexes, setMiraMyIndexes] = useState<MiraIndex[]>([]);
-  const [miraMyInvests, setMiraMyInvests] = useState<MiraIndex[]>([]);
+  const [miraMyInvests, setMiraMyInvests] = useState<MiraInvest[]>([]);
   const navigate = useNavigate();
   const { state } = useLocation();
 
   useEffect(() => {
-    !walletConnected && navigate("/");
-    const initMiraAccountProps = async () => {
-      const client = new AptosClient(NODE_URL);
-      try {
-        let resource = await client.getAccountResource(
-          walletAddress,
-          `${MODULE_ADDR}::mira::MiraAccount`
-        );
-        if (!resource) {
-          navigate("/");
-          return;
-        }
+    // if (walletAddress) {
+    //   fetchIndexes();
+    //   fetchInvests();
+    // }
 
-        const data = resource?.data as {
-          account_name: string;
-          created: number;
-        };
-        setInputNameValue(data?.account_name);
-        setMiraAccountProps({
-          name: data?.account_name,
-          created: getFormatedDate(data?.created),
-        });
-      } catch (error) {
-        navigate("/");
-        return;
-      }
-    };
+    !walletConnected && navigate("/");
+    // const initMiraAccountProps = async () => {
+    //   const client = new AptosClient(NODE_URL);
+    //   try {
+    //     let resource = await client.getAccountResource(
+    //       walletAddress,
+    //       `${MODULE_ADDR}::mira::MiraAccount`
+    //     );
+    //     if (!resource) {
+    //       navigate("/");
+    //       return;
+    //     }
+
+    //     const data = resource?.data as {
+    //       account_name: string;
+    //       created: number;
+    //     };
+    //     setInputNameValue(data?.account_name);
+    //     setMiraAccountProps({
+    //       name: data?.account_name,
+    //       created: getFormatedDate(data?.created),
+    //     });
+    //   } catch (error) {
+    //     navigate("/");
+    //     return;
+    //   }
+    // };
 
     const getFriendInfo = async (owner_addr: string) => {
       const aptos_client = new AptosClient(NODE_URL);
@@ -116,7 +133,7 @@ const ProfilePage = () => {
       });
     };
 
-    initMiraAccountProps();
+    // initMiraAccountProps();
     getFriendList();
   }, [walletConnected, friendDataList, navigate, walletAddress]);
 
@@ -161,7 +178,7 @@ const ProfilePage = () => {
     let create_pool_events: MiraIndex[] = [];
     for (let ev of events) {
       let e: CreatePoolEvent = ev.data;
-      if (e.private_allocation || walletAddress != e.pool_owner) continue;
+      if (e.private_allocation || state.owner != e.pool_owner) continue;
       create_pool_events.push({
         poolName: e.pool_name,
         poolAddress: e.pool_address,
@@ -171,6 +188,27 @@ const ProfilePage = () => {
       });
     }
     setMiraMyIndexes(create_pool_events);
+  };
+
+  const fetchInvests = async () => {
+    const client = new AptosClient(NODE_URL);
+    let events = await client.getEventsByEventHandle(
+      MODULE_ADDR,
+      `${MODULE_ADDR}::mira::MiraStatus`,
+      "deposit_pool_events",
+      { limit: 1000 }
+    );
+    let deposit_pool_events: MiraInvest[] = [];
+    for (let ev of events) {
+      let e: DepositPoolEvent = ev.data;
+      if (state.owner != e.investor) continue;
+      deposit_pool_events.push({
+        poolName: e.pool_name,
+        investor: e.investor,
+        amount: e.amount,
+      });
+    }
+    setMiraMyInvests(deposit_pool_events);
   };
 
   return (
@@ -186,7 +224,11 @@ const ProfilePage = () => {
           visible={myIndexesModalVisible}
           setVisible={setMyIndexesModalVisible}
         >
-          <IndexListModalBody flex={1} type={"create"} title={state.username + "'s Indexes"} />
+          <IndexListModalBody
+            flex={1}
+            type={"create"}
+            title={state.username + "'s Indexes"}
+          />
         </ModalParent>
       }
       {
@@ -493,46 +535,43 @@ const ProfilePage = () => {
               </Box>
             </Flex>
             <Flex justifyCenter gridGap={"16px"}>
-              <Carousel3D
-                ref={Carousel3D1}
-                stop={
-                  portfolioModalVisible || modifyModalVisible || carouselStop
-                }
-                onMouseEnter={() => {
-                  setCarouselStop(true);
-                }}
-                onMouseLeave={() => {
-                  setCarouselStop(false);
-                }}
-              >
-                <ChartBox
-                  width={"100%"}
-                  maxWidth={"70%"}
-                  title={"Aptos Defi Pulse"}
-                  cursorAll={"pointer"}
-                  onClickAll={() => {
-                    setPortfolioModalVisible(true);
+              {miraMyInvests.length > 0 ? (
+                <Carousel3D
+                  ref={Carousel3D2}
+                  stop={
+                    portfolioModalVisible || modifyModalVisible || carouselStop
+                  }
+                  onMouseEnter={() => {
+                    setCarouselStop(true);
                   }}
-                />
-                <ChartBox
-                  width={"100%"}
-                  maxWidth={"70%"}
-                  title={"Aptos Gaming Pulse"}
-                  cursorAll={"pointer"}
-                  onClickAll={() => {
-                    setPortfolioModalVisible(true);
+                  onMouseLeave={() => {
+                    setCarouselStop(false);
                   }}
-                />
-                <ChartBox
-                  width={"100%"}
+                >
+                  {miraMyInvests.map((item, index) => {
+                    return (
+                      <ChartBox
+                        key={index}
+                        flex={1}
+                        width={"0px"}
+                        maxWidth={"70%"}
+                        title={item.poolName}
+                        cursor={"pointer"}
+                        onClick={() => {
+                          setModifyModalVisible(true);
+                        }}
+                      />
+                    );
+                  })}
+                </Carousel3D>
+              ) : (
+                <BlankCard
+                  flex={1}
                   maxWidth={"70%"}
-                  title={"Broad Crypto"}
-                  cursorAll={"pointer"}
-                  onClickAll={() => {
-                    setPortfolioModalVisible(true);
-                  }}
+                  minHeight={"245px"}
+                  type={"index"}
                 />
-              </Carousel3D>
+              )}
             </Flex>
           </Flex>
         </Flex>

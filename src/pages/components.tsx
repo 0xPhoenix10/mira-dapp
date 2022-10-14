@@ -1678,7 +1678,8 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
                                 "/otherprofile",
                                 {
                                   state: {
-                                    username: miraIndex.poolName
+                                    username: miraIndex.poolName,
+                                    owner: miraIndex.poolOwner
                                   }
                                 }
                               );
