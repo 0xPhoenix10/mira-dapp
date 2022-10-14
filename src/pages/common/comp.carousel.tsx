@@ -1,6 +1,7 @@
 import { Link } from "components/base";
 import { Flex } from "components/base/container";
 import { ArrowIcon } from "components/icons";
+import { BsPause } from "react-icons/bs";
 import {
   Children,
   forwardRef,
@@ -65,6 +66,16 @@ export const Carousel3D: React.FC<{
       <Flex mt={"8px"} gridGap={"8px"}>
         <Link
           p={"8px 16px"}
+          border={"1px solid #fff4"}
+          borderRadius={"8px"}
+          onClick={() =>
+            setCurrentSlide((currentSlide + 1) % childNodes.length)
+          }
+        >
+          <ArrowIcon dir="left" />
+        </Link>
+        <Link
+          p={"8px 16px"}
           border={
             isStop ? "1px solid #70E094" : "1px solid #fff4"
           }
@@ -74,17 +85,7 @@ export const Carousel3D: React.FC<{
             isStop ? setStop(false) : setStop(true)
           }
         >
-          Pause
-        </Link>
-        <Link
-          p={"8px 16px"}
-          border={"1px solid #fff4"}
-          borderRadius={"8px"}
-          onClick={() =>
-            setCurrentSlide((currentSlide + 1) % childNodes.length)
-          }
-        >
-          <ArrowIcon dir="left" />
+          <BsPause />
         </Link>
         <Link
           p={"8px 16px"}
