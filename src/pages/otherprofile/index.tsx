@@ -466,7 +466,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
                         maxWidth={"70%"}
                         title={item.poolName}
                         cursor={"pointer"}
-                        onClick={() => {
+                        onClickPieChart={() => {
                           setModifyModalVisible(true);
                         }}
                       />
@@ -521,7 +521,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
                         maxWidth={"70%"}
                         title={item.poolName}
                         cursor={"pointer"}
-                        onClick={() => {
+                        onClickPieChart={() => {
                           setModifyModalVisible(true);
                         }}
                       />
