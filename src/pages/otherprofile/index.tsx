@@ -56,7 +56,11 @@ interface DepositPoolEvent {
   amount: number;
 }
 
-const ProfilePage = () => {
+export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
+  setVisible = () => {},
+  profile = {},
+  ...props
+}) => {
   const { walletConnected, walletAddress, signAndSubmitTransaction, wallet } =
     useWalletHook();
 
@@ -71,7 +75,7 @@ const ProfilePage = () => {
   const [miraMyIndexes, setMiraMyIndexes] = useState<MiraIndex[]>([]);
   const [miraMyInvests, setMiraMyInvests] = useState<MiraInvest[]>([]);
   const navigate = useNavigate();
-  const { state } = useLocation();
+  // const { state } = useLocation();
 
   useEffect(() => {
     // if (walletAddress) {
@@ -141,31 +145,8 @@ const ProfilePage = () => {
   const [myInvestmentsModalVisible, setMyInvestmentsModalVisible] =
     useState(false);
 
-  const Carousel3D1 = useRef(null);
   const Carousel3D2 = useRef(null);
   const Carousel3D3 = useRef(null);
-
-  const changeMiraAccountName = async () => {
-    if (
-      inputNameValue === miraAccountProps?.name ||
-      inputNameValue.trim() === ""
-    ) {
-      return;
-    }
-    let name = inputNameValue.trim();
-
-    if (wallet && wallet.adapter.name === "Pontem") {
-      name = "0x" + stringToHex(name);
-    }
-
-    const transaction = {
-      type: "entry_function_payload",
-      function: `${MODULE_ADDR}::mira::change_account_name`,
-      arguments: [name as string],
-      type_arguments: [],
-    };
-    await signAndSubmitTransaction(transaction);
-  };
 
   const fetchIndexes = async () => {
     const client = new AptosClient(NODE_URL);
@@ -178,7 +159,7 @@ const ProfilePage = () => {
     let create_pool_events: MiraIndex[] = [];
     for (let ev of events) {
       let e: CreatePoolEvent = ev.data;
-      if (e.private_allocation || state.owner != e.pool_owner) continue;
+      if (e.private_allocation || profile.owner != e.pool_owner) continue;
       create_pool_events.push({
         poolName: e.pool_name,
         poolAddress: e.pool_address,
@@ -201,7 +182,7 @@ const ProfilePage = () => {
     let deposit_pool_events: MiraInvest[] = [];
     for (let ev of events) {
       let e: DepositPoolEvent = ev.data;
-      if (state.owner != e.investor) continue;
+      if (profile.owner != e.investor) continue;
       deposit_pool_events.push({
         poolName: e.pool_name,
         investor: e.investor,
@@ -227,7 +208,7 @@ const ProfilePage = () => {
           <IndexListModalBody
             flex={1}
             type={"create"}
-            title={state.username + "'s Indexes"}
+            title={profile.username + "'s Indexes"}
           />
         </ModalParent>
       }
@@ -239,36 +220,21 @@ const ProfilePage = () => {
           <IndexListModalBody
             flex={1}
             type={"create"}
-            title={state.username + "'s Investments"}
+            title={profile.username + "'s Investments"}
           />
         </ModalParent>
       }
       <Flex
         col
-        width={"100%"}
-        height={"max-content"}
         py={"20px"}
         gridGap={"20px"}
+        height={"70vh"}
+        overflow={"auto"}
       >
         <Flex flex={1} col gridGap={"20px"}>
           <Flex height={"42px"}>
             <Flex fontFamily={"art"} fontSize={"24px"} fontWeight={"bold"}>
-              {state.username}
-            </Flex>
-            <Flex
-              alignCenter
-              gridGap={"4px"}
-              ml={"auto"}
-              padding={"8px 16px"}
-              background={"#0005"}
-              p={"8px 16px"}
-              border={"1px solid #34383b"}
-              borderRadius={"8px"}
-              cursor="pointer"
-              onClick={() => navigate("/")}
-            >
-              <ArrowIcon dir={"left"} size={"1.2em"} />
-              Back to Home
+              {profile.username}
             </Flex>
           </Flex>
           <Flex alignCenter gridGap={"16px"}>
@@ -286,7 +252,7 @@ const ProfilePage = () => {
                 background={"transparent"}
                 color={"white"}
                 placeholder={"user_name"}
-                value={state.username}
+                value={profile.username}
                 readOnly={true}
               />
             </Flex>
@@ -294,8 +260,8 @@ const ProfilePage = () => {
               <Flex
                 center
                 background={"linear-gradient(90deg, #131313, #2b2b2b)"}
-                borderRadius={"100%"}
-                width={"40px"}
+                borderRadius={"50%"}
+                width={"100px"}
                 height={"40px"}
                 border={"3px solid #272c2e"}
                 boxShadow={"-5px -3px 10px 0px #fff2, 5px 3px 10px 0px #0006"}
@@ -313,154 +279,152 @@ const ProfilePage = () => {
             <Flex fontWeight={"bold"}>{miraAccountProps?.created}</Flex>
           </Flex>
         </Flex>
-        <Flex flex={1} col gridGap={"20px"}>
-          <Flex
-            height={"42px"}
-            fontFamily={"art"}
-            fontSize={"20px"}
-            fontWeight={"bold"}
-            borderBottom={"1px solid #34383b"}
-          >
-            Stats
-          </Flex>
-          <Flex gridGap={"16px"}>
-            <Flex gridGap={"20px"}>
-              <Flex col gridGap={"16px"}>
-                <Flex gridGap={"16px"}>
-                  <Flex
-                    col
-                    flex={1}
-                    background={"#302d38"}
-                    p={"20px 40px"}
-                    border={"1px solid #34383b"}
-                    borderRadius={"10px 40px"}
-                    gridGap={"12px"}
-                  >
-                    <Flex width={"100%"}>something</Flex>
-                    <Flex
-                      width={"100%"}
-                      fontSize={"48px"}
-                      fontWeight={"500"}
-                      alignItems={"center"}
-                      gridGap={"8px"}
-                      color={"#70e094"}
-                    >
-                      20
-                      <Box fontSize={"0.7em"} opacity={"0.8"} color={"#70e094"}>
-                        %
-                      </Box>
-                    </Flex>
-                  </Flex>
-                  <Flex
-                    col
-                    flex={1}
-                    background={"#302d38"}
-                    p={"20px 40px"}
-                    border={"1px solid #34383b"}
-                    borderRadius={"10px 40px"}
-                    gridGap={"12px"}
-                  >
-                    <Flex width={"100%"}>something</Flex>
-                    <Flex
-                      width={"100%"}
-                      fontSize={"48px"}
-                      fontWeight={"500"}
-                      alignItems={"center"}
-                      gridGap={"8px"}
-                      color={"#70e094"}
-                    >
-                      20
-                      <Box fontSize={"0.7em"} opacity={"0.8"} color={"#70e094"}>
-                        %
-                      </Box>
-                    </Flex>
-                  </Flex>
-                </Flex>
-                <Flex gridGap={"16px"}>
-                  <Flex
-                    col
-                    flex={1}
-                    background={"#302d38"}
-                    p={"20px 40px"}
-                    border={"1px solid #34383b"}
-                    borderRadius={"10px 40px"}
-                    gridGap={"12px"}
-                  >
-                    <Flex width={"100%"}>something</Flex>
-                    <Flex
-                      width={"100%"}
-                      fontSize={"48px"}
-                      fontWeight={"500"}
-                      alignItems={"center"}
-                      gridGap={"8px"}
-                      color={"#70e094"}
-                    >
-                      20
-                      <Box fontSize={"0.7em"} opacity={"0.8"} color={"#70e094"}>
-                        %
-                      </Box>
-                    </Flex>
-                  </Flex>
-                  <Flex
-                    col
-                    flex={1}
-                    background={"#302d38"}
-                    p={"20px 40px"}
-                    border={"1px solid #34383b"}
-                    borderRadius={"10px 40px"}
-                    gridGap={"12px"}
-                  >
-                    <Flex width={"100%"}>something</Flex>
-                    <Flex
-                      width={"100%"}
-                      fontSize={"48px"}
-                      fontWeight={"500"}
-                      alignItems={"center"}
-                      gridGap={"8px"}
-                      color={"#70e094"}
-                    >
-                      20
-                      <Box fontSize={"0.7em"} opacity={"0.8"} color={"#70e094"}>
-                        %
-                      </Box>
-                    </Flex>
-                  </Flex>
-                </Flex>
-              </Flex>
+        <Flex p={"20px"}>
+          <Flex flex={3} width={"0px"} p={"20px"} aspectRatio={"3"}>
+            <Flex flex={1} col gridGap={"20px"}>
               <Flex
-                flexFull
-                col
-                background={"#302d38"}
-                p={"20px"}
-                border={"1px solid #34383b"}
-                borderRadius={"40px 10px"}
-                gridGap={"12px"}
+                height={"42px"}
+                fontFamily={"art"}
+                fontSize={"20px"}
+                fontWeight={"bold"}
+                borderBottom={"1px solid #34383b"}
               >
-                <Flex
-                  p={"10px"}
-                  fontSize={"18px"}
-                  fontWeight={"500"}
-                  borderBottom={"1px solid #34383b"}
-                >
-                  More Data
+                Stats
+              </Flex>
+              <Flex gridGap={"16px"}>
+                <Flex col gridGap={"16px"} flex={1}>
+                  <Flex gridGap={"16px"}>
+                    <Flex
+                      col
+                      flex={1}
+                      background={"#302d38"}
+                      p={"20px 40px"}
+                      border={"1px solid #34383b"}
+                      borderRadius={"10px 40px"}
+                      gridGap={"12px"}
+                    >
+                      <Flex width={"100%"}>something</Flex>
+                      <Flex
+                        width={"100%"}
+                        fontSize={"48px"}
+                        fontWeight={"500"}
+                        alignItems={"center"}
+                        gridGap={"8px"}
+                        color={"#70e094"}
+                      >
+                        20
+                        <Box fontSize={"0.7em"} opacity={"0.8"} color={"#70e094"}>
+                          %
+                        </Box>
+                      </Flex>
+                    </Flex>
+                    <Flex
+                      col
+                      flex={1}
+                      background={"#302d38"}
+                      p={"20px 40px"}
+                      border={"1px solid #34383b"}
+                      borderRadius={"10px 40px"}
+                      gridGap={"12px"}
+                    >
+                      <Flex width={"100%"}>something</Flex>
+                      <Flex
+                        width={"100%"}
+                        fontSize={"48px"}
+                        fontWeight={"500"}
+                        alignItems={"center"}
+                        gridGap={"8px"}
+                        color={"#70e094"}
+                      >
+                        20
+                        <Box fontSize={"0.7em"} opacity={"0.8"} color={"#70e094"}>
+                          %
+                        </Box>
+                      </Flex>
+                    </Flex>
+                  </Flex>
+                  <Flex gridGap={"16px"}>
+                    <Flex
+                      col
+                      flex={1}
+                      background={"#302d38"}
+                      p={"20px 40px"}
+                      border={"1px solid #34383b"}
+                      borderRadius={"10px 40px"}
+                      gridGap={"12px"}
+                    >
+                      <Flex width={"100%"}>something</Flex>
+                      <Flex
+                        width={"100%"}
+                        fontSize={"48px"}
+                        fontWeight={"500"}
+                        alignItems={"center"}
+                        gridGap={"8px"}
+                        color={"#70e094"}
+                      >
+                        20
+                        <Box fontSize={"0.7em"} opacity={"0.8"} color={"#70e094"}>
+                          %
+                        </Box>
+                      </Flex>
+                    </Flex>
+                    <Flex
+                      col
+                      flex={1}
+                      background={"#302d38"}
+                      p={"20px 40px"}
+                      border={"1px solid #34383b"}
+                      borderRadius={"10px 40px"}
+                      gridGap={"12px"}
+                    >
+                      <Flex width={"100%"}>something</Flex>
+                      <Flex
+                        width={"100%"}
+                        fontSize={"48px"}
+                        fontWeight={"500"}
+                        alignItems={"center"}
+                        gridGap={"8px"}
+                        color={"#70e094"}
+                      >
+                        20
+                        <Box fontSize={"0.7em"} opacity={"0.8"} color={"#70e094"}>
+                          %
+                        </Box>
+                      </Flex>
+                    </Flex>
+                  </Flex>
                 </Flex>
-                <Flex flexFull>
-                  Instead of sidebar, we can also downsize to About, Discord,
-                  and Twitter, adding all icons to the left of Connect Wallet
-                  Instead of sidebar, we can also downsize to About, Discord,
-                  and Twitter, adding all icons to the left of Connect Wallet
-                  Instead of sidebar, we can also downsize to About, Discord,
-                  and Twitter, adding all icons to the left of Connect Wallet
-                  Instead of sidebar, we can also downsize to About, Discord,
-                  and Twitter, adding all icons to the left of Connect Wallet
-                  Instead of sidebar, we can also downsize to About, Discord,
-                  and Twitter, adding all icons to the left of Connect Wallet
-                  Instead of sidebar, we can also downsize to About, Discord,
-                  and Twitter, adding all icons to the left of Connect Wallet
+                <Flex
+                  flex={1}
+                  col
+                  background={"#302d38"}
+                  p={"20px"}
+                  border={"1px solid #34383b"}
+                  borderRadius={"40px 10px"}
+                  gridGap={"12px"}
+                >
+                  <Flex
+                    p={"10px"}
+                    fontSize={"18px"}
+                    fontWeight={"500"}
+                    borderBottom={"1px solid #34383b"}
+                  >
+                    More Data
+                  </Flex>
+                  <Flex flexFull>
+                    Instead of sidebar, we can also downsize to About, Discord,
+                    Instead of sidebar, we can also downsize to About, Discord,
+                    Instead of sidebar, we can also downsize to About, Discord,
+                    Instead of sidebar, we can also downsize to About, Discord,
+                    Instead of sidebar, we can also downsize to About, Discord,
+                    Instead of sidebar, we can also downsize to About, Discord,
+                    Instead of sidebar, we can also downsize to About, Discord,
+                    Instead of sidebar, we can also downsize to About, Discord,
+                    Instead of sidebar, we can also downsize to About, Discord,
+                  </Flex>
                 </Flex>
               </Flex>
             </Flex>
-            <Flex></Flex>
           </Flex>
         </Flex>
         <Flex gridGap={"16px"}>
@@ -476,7 +440,7 @@ const ProfilePage = () => {
                 cursor="pointer"
                 onClick={() => setMyIndexesModalVisible(true)}
               >
-                {state.username}'s Indexes
+                {profile.username}'s Indexes
               </Box>
             </Flex>
             <Flex justifyCenter gridGap={"16px"}>
@@ -531,7 +495,7 @@ const ProfilePage = () => {
                 cursor="pointer"
                 onClick={() => setMyInvestmentsModalVisible(true)}
               >
-                {state.username}'s Investments
+                {profile.username}'s Investments
               </Box>
             </Flex>
             <Flex justifyCenter gridGap={"16px"}>
@@ -581,7 +545,7 @@ const ProfilePage = () => {
           fontWeight={"bold"}
           borderBottom={"1px solid #34383b"}
         >
-          <Box> {state.username}'s Friends</Box>
+          <Box> {profile.username}'s Friends</Box>
         </Flex>
 
         <Flex
@@ -631,5 +595,3 @@ const ProfilePage = () => {
     </>
   );
 };
-
-export default ProfilePage;
