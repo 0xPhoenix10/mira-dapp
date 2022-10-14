@@ -23,6 +23,7 @@ import {
   IconNarrow,
   SortDirIcon,
 } from "components/icons";
+
 import { CustomTooltip } from "components/elements/tooptip";
 import React, { useEffect, useContext, useState } from "react";
 import { FriendStatus, getFriendData, requestFriend } from "../utils/graphql";
@@ -50,6 +51,7 @@ import { renderActiveShape } from "../common/recharts/piechart";
 import { ArtButton, NormalBtn } from "components/elements/buttons";
 import { IndexAllocation } from "../utils/types";
 import { IndexAllocationModalBody } from "./index.allocation.modal";
+import { ProfileModalBody } from "./otherprofile";
 
 interface ChartBoxProps {
   title?: string;
@@ -1360,6 +1362,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
   ];
 
   const [visiblePortfolio, setVisiblePortfolio] = useState(false);
+  const [visibleProfile, setVisibleProfile] = useState(false);
 
   const [searchValue, setSearchValue] = useState("");
   const [sortDir, setSortDir] = useState<boolean>(false);
@@ -1369,6 +1372,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
   const [managementFeeMax, setMmanagementFeeMax] = useState("");
   const [foundedMin, setFoundedMin] = useState("");
   const [foundedMax, setFoundedMax] = useState("");
+  const [profile, setProfile] = useState({});
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setSearchValue(window.localStorage.getItem("modal_searchValue"));
@@ -1422,7 +1426,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
 
   return (
     <>
-      {visiblePortfolio || updateModalVisible || indexAllocationModalVisible ? (
+      {visibleProfile || visiblePortfolio || updateModalVisible || indexAllocationModalVisible ? (
         <>
           <Flex
             background={"#0005"}
@@ -1434,8 +1438,10 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
             onClick={() => {
               if (updateModalVisible || indexAllocationModalVisible) {
                 setVisiblePortfolio(true);
+                setVisibleProfile(true);
               } else {
                 setVisiblePortfolio(false);
+                setVisibleProfile(false);
               }
               setUpdateModalVisible(false);
               setIndexAllocationModalVisible(false);
@@ -1458,6 +1464,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
               allocationData={allocationData}
             />
           )}
+          {visibleProfile && <ProfileModalBody profile={profile} />}
           {updateModalVisible && <UpdateModalBody />}
           {indexAllocationModalVisible && (
             <IndexAllocationModalBody
@@ -1674,15 +1681,11 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
                             gridGap={"10px"}
                             cursor={"pointer"}
                             onClick={() => {
-                              navigate(
-                                "/otherprofile",
-                                {
-                                  state: {
-                                    username: miraIndex.poolName,
-                                    owner: miraIndex.poolOwner
-                                  }
-                                }
-                              );
+                              setProfile({
+                                username: miraIndex.poolName,
+                                owner: miraIndex.poolOwner
+                              });
+                              setVisibleProfile(true);
                             }}
                           >
                             <Box
