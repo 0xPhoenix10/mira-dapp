@@ -6,8 +6,8 @@ import {
   CartesianGrid,
   Cell,
   Legend,
-  Line,
-  LineChart,
+  Area,
+  AreaChart,
   Pie,
   PieChart,
   ResponsiveContainer,
@@ -17,7 +17,7 @@ import {
 } from "recharts";
 import { CustomSelect, SmOption } from "components/form";
 import { ArrowIcon, ExchangeIcon } from "components/icons";
-import { ArtButton, NormalBtn } from "components/elements/buttons";
+import { ArtButton, NormalBtn, AddBtn } from "components/elements/buttons";
 import { useWalletHook } from "common/hooks/wallet";
 import { renderActiveShape } from "../../common/recharts/piechart";
 import { ModalParent } from "components/modal";
@@ -115,11 +115,12 @@ const OurTokenPage: React.FC = () => {
 
 const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   title = "???",
-  setVisible = () => {},
+  setVisible = () => { },
   ...props
 }) => {
-  const [activeIndex, setActiveIndex] = React.useState(0);
-  const [isHovered, setHovered] = React.useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isHovered, setHovered] = useState(false);
+  const [isMore, setMoreBtn] = useState(false)
   const data1 = [
     { name: "WORM", value: 350 },
     { name: "PYTH", value: 300 },
@@ -194,49 +195,42 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   const onPieLeave = () => setHovered(false);
 
   const data2 = [
-    {
-      name: "9/26",
-      uv: 40.0,
-      pv: 24.0,
-      amt: 24.0,
-    },
-    {
-      name: "9/28",
-      uv: 30.0,
-      pv: 13.98,
-      amt: 22.1,
-    },
-    {
-      name: "9/30",
-      uv: 20.0,
-      pv: 98.0,
-      amt: 22.9,
-    },
-    {
-      name: "10/2",
-      uv: 27.8,
-      pv: 39.08,
-      amt: 20.0,
-    },
-    {
-      name: "10/2",
-      uv: 18.9,
-      pv: 48.0,
-      amt: 2181,
-    },
-    {
-      name: "10/4",
-      uv: 23.9,
-      pv: 38.0,
-      amt: 25.0,
-    },
-    {
-      name: "10/6",
-      uv: 34.9,
-      pv: 43.0,
-      amt: 21.0,
-    },
+    { month: "9/24", value: 394 },
+    { month: "9/25", value: 205 },
+    { month: "9/26", value: 542 },
+    { month: "9/27", value: 123 },
+    { month: "9/28", value: 486 },
+    { month: "9/29", value: 432 },
+    { month: "9/30", value: 543 },
+    { month: "10/01", value: 552 },
+    { month: "10/02", value: 234 },
   ];
+
+  const CustomizedTick2 = ({ x, y, payload }) => {
+    return <text style={{ fontSize: "12px", float: "right", textAlign: "right", fill: "#fff" }} x={x - 24} y={y} textAnchor="top" dominantBaseline="hanging">
+      {payload.value}
+    </text>
+  }
+
+  const renderTooltip = (props) => {
+    if (props && props.payload[0]) {
+      return (
+        <div style={{ padding: "12px", background: "#222129", color: "#ffffff", fontSize: "12px" }}>
+          <div>Value: {props.payload[0].payload.value}</div>
+        </div>
+      )
+    }
+  }
+
+  const args = {
+    chartData: data2,
+    gradientColor: "green",
+    areaStrokeColor: "cyan",
+    customizedTick: CustomizedTick2,
+    tickFormatter: null,
+    renderTooltip: renderTooltip,
+    uniqueId: 2,
+  }
 
   return (
     <Flex py={"20px"} width={"100%"} gridGap={"16px"} minWidth={"80vw"}>
@@ -275,7 +269,7 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
               <PieChart
                 width={300}
                 height={300}
-                //style={{ cursor: cursor }}
+              //style={{ cursor: cursor }}
               >
                 <Tooltip content={<CustomizedTooltip />} />
                 <Pie
@@ -305,35 +299,57 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
           </Flex>
           <Flex col flex={5} width={"0px"} aspectRatio={"2"}>
             <Flex ml={"auto"} gridGap={"4px"}>
-              <NormalBtn>1D</NormalBtn>
-              <NormalBtn>1W</NormalBtn>
-              <NormalBtn>1M</NormalBtn>
+              {isMore && (
+                <>
+                  <NormalBtn>1D</NormalBtn>
+                  <NormalBtn>3D</NormalBtn>
+                  <NormalBtn>1W</NormalBtn>
+                  <NormalBtn>2W</NormalBtn>
+                  <NormalBtn>1M</NormalBtn>
+                  <NormalBtn>3M</NormalBtn>
+                  <NormalBtn>6M</NormalBtn>
+                  <NormalBtn>1Y</NormalBtn>
+                  <NormalBtn>YTD</NormalBtn>
+                </>
+              )}
+              {!isMore && (
+                <>
+                  <NormalBtn>1D</NormalBtn>
+                  <NormalBtn>1W</NormalBtn>
+                  <NormalBtn>1M</NormalBtn>
+                  <NormalBtn>YTD</NormalBtn>
+                </>
+              )}
+              <AddBtn
+                onClick={() => isMore ? setMoreBtn(false) : setMoreBtn(true)}
+              >
+                {isMore ? "-" : "+"}
+              </AddBtn>
             </Flex>
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                width={500}
-                height={300}
-                data={data2}
-                margin={{
-                  top: 20,
-                  right: 0,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="4 " floodColor={"#70e094"} />
-                <XAxis dataKey="name" />
-                <YAxis />
-                {/* <Tooltip /> */}
-                {/* <Legend /> */}
-                <Line
-                  type="monotone"
-                  dataKey="pv"
-                  stroke="#70e094"
-                  dot={false}
-                  activeDot={{ r: 8 }}
+              <AreaChart data={args.chartData}
+                margin={{ top: 20, right: 10, left: -30, bottom: 0 }}>
+                <defs>
+                  <linearGradient id={"colorUv" + args.uniqueId} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="100%" stopColor={args.gradientColor} />
+                  </linearGradient>
+                </defs>
+                <XAxis
+                  dataKey="month"
+                  tick={args.customizedTick}
                 />
-              </LineChart>
+                <YAxis
+                  width={80}
+                  tick={args.customizedTick}
+                  // ticks={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+                  interval={0}
+                  domain={[1, 15]}
+                  tickFormatter={args.tickFormatter}
+                />
+                <CartesianGrid strokeDasharray="5 5" fill="#222129" horizontal={false} vertical={false} />
+                <Tooltip content={args.renderTooltip} />
+                <Area dot={{ fill: args.gradientColor, fillOpacity: 1 }} type="monotone" dataKey="value" stroke={args.gradientColor} fillOpacity={0.1} fill={"url(#colorUv" + args.uniqueId + ")"} />
+              </AreaChart>
             </ResponsiveContainer>
           </Flex>
         </Flex>
@@ -381,7 +397,7 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
 };
 
 const SwapSection = () => {
-  const { walletConnected } = useWalletHook();
+  const { walletConnected, openConnectModal } = useWalletHook();
   return (
     <Flex
       col
@@ -435,6 +451,7 @@ const SwapSection = () => {
           minWidth={"150px"}
           padding={"12px 24px"}
           textAlign={"center"}
+          onClick={() => openConnectModal()}
         >
           Connect Wallet
         </ArtButton>
@@ -463,7 +480,7 @@ const SwapBox = () => {
         </Flex>
         <Flex bg={"#302d38"} borderRadius={"8px"}>
           <CustomSelect>
-            <SmOption value={"APTOS"}>APTOS</SmOption>
+            <SmOption value={"APTOS"} selected>APTOS</SmOption>
             <SmOption value={"XSI"}>XSI</SmOption>
           </CustomSelect>
         </Flex>

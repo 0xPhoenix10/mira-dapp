@@ -30,8 +30,8 @@ import {
   CartesianGrid,
   Cell,
   Legend,
-  Line,
-  LineChart,
+  Area,
+  AreaChart,
   Pie,
   PieChart,
   ResponsiveContainer,
@@ -47,7 +47,7 @@ import { PortfolioModalBody } from "./dashboard/portfolio.modal.body";
 import DepositModalBody from "./dashboard/deposit.modal.body";
 import WithdrawModalBody from "./dashboard/withdraw.modal.body";
 import { renderActiveShape } from "../common/recharts/piechart";
-import { ArtButton, NormalBtn } from "components/elements/buttons";
+import { ArtButton, NormalBtn, AddBtn } from "components/elements/buttons";
 import { IndexAllocation } from "../utils/types";
 import { IndexAllocationModalBody } from "./index.allocation.modal";
 
@@ -64,9 +64,9 @@ interface IData {
 export const ChartBox: React.FC<ChartBoxProps> = ({
   title = "Chart Box",
   cursor = "revert",
-  onClick = () => {},
+  onClick = () => { },
   cursorAll,
-  onClickAll = () => {},
+  onClickAll = () => { },
   ...props
 }) => {
   const [activeIndex, setActiveIndex] = React.useState(0);
@@ -104,7 +104,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN) + 5;
 
-    if(data.length < 5) {
+    if (data.length < 5) {
       return (
         <text
           fontSize={"10px"}
@@ -339,8 +339,8 @@ interface IndexModalBodyProps {
 }
 export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   type = "modify",
-  setVisible = () => {},
-  setAllocationVisible = () => {},
+  setVisible = () => { },
+  setAllocationVisible = () => { },
   allocationData = [],
   ...props
 }) => {
@@ -912,7 +912,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
 };
 
 export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
-  setVisible = () => {},
+  setVisible = () => { },
   ...props
 }) => {
   const [nameValue, setNameValue] = useState<string>("");
@@ -1644,13 +1644,13 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
                       if (
                         managementFeeMin &&
                         parseInt(managementFeeMin) >
-                          parseInt(miraIndex.managementFee)
+                        parseInt(miraIndex.managementFee)
                       )
                         return "";
                       if (
                         managementFeeMax &&
                         parseInt(managementFeeMax) <
-                          parseInt(miraIndex.managementFee)
+                        parseInt(miraIndex.managementFee)
                       )
                         return "";
                       if (
@@ -1844,9 +1844,9 @@ export const FilterItem: React.FC<{
 
 export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
   miraIndexInfo = {},
-  setVisible = () => {},
-  setUpdateVisible = () => {},
-  setAllocationVisible = () => {},
+  setVisible = () => { },
+  setUpdateVisible = () => { },
+  setAllocationVisible = () => { },
   allocationData = [],
   ...props
 }) => {
@@ -1854,9 +1854,10 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
   const [visibleDeposit, setVisibleDeposit] = useState(false);
   const [visibleWithdraw, setVisibleWithdraw] = useState(false);
   const [isFriend, setIsFriend] = useState(false);
-  const [activeIndex, setActiveIndex] = React.useState(0);
-  const [isHovered, setHovered] = React.useState(false);
-  const [isReal, setRealAlloc] = React.useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isHovered, setHovered] = useState(false);
+  const [isReal, setRealAlloc] = useState(true);
+  const [isMore, setMoreBtn] = useState(false)
 
   useEffect(() => {
     if (walletConnected) {
@@ -1878,48 +1879,15 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
   }, [walletConnected, miraIndexInfo.poolOwner, walletAddress]);
 
   const data2 = [
-    {
-      name: "9/26",
-      uv: 40.0,
-      pv: 24.0,
-      amt: 24.0,
-    },
-    {
-      name: "9/28",
-      uv: 30.0,
-      pv: 13.98,
-      amt: 22.1,
-    },
-    {
-      name: "9/30",
-      uv: 20.0,
-      pv: 98.0,
-      amt: 22.9,
-    },
-    {
-      name: "10/2",
-      uv: 27.8,
-      pv: 39.08,
-      amt: 20.0,
-    },
-    {
-      name: "10/2",
-      uv: 18.9,
-      pv: 48.0,
-      amt: 2181,
-    },
-    {
-      name: "10/4",
-      uv: 23.9,
-      pv: 38.0,
-      amt: 25.0,
-    },
-    {
-      name: "10/6",
-      uv: 34.9,
-      pv: 43.0,
-      amt: 21.0,
-    },
+    { month: "9/24", value: 394 },
+    { month: "9/25", value: 205 },
+    { month: "9/26", value: 542 },
+    { month: "9/27", value: 123 },
+    { month: "9/28", value: 486 },
+    { month: "9/29", value: 432 },
+    { month: "9/30", value: 543 },
+    { month: "10/01", value: 552 },
+    { month: "10/02", value: 234 },
   ];
 
   const COLORS = [
@@ -1999,6 +1967,32 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
   };
 
   const onPieLeave = () => setHovered(false);
+
+  const CustomizedTick2 = ({ x, y, payload }) => {
+    return <text style={{ fontSize: "12px", float: "right", textAlign: "right", fill: "#fff" }} x={x - 24} y={y} textAnchor="top" dominantBaseline="hanging">
+      {payload.value}
+    </text>
+  }
+
+  const renderTooltip = (props) => {
+    if (props && props.payload[0]) {
+      return (
+        <div style={{ padding: "12px", background: "#222129", color: "#ffffff", fontSize: "12px" }}>
+          <div>Value: {props.payload[0].payload.value}</div>
+        </div>
+      )
+    }
+  }
+
+  const args = {
+    chartData: data2,
+    gradientColor: "green",
+    areaStrokeColor: "cyan",
+    customizedTick: CustomizedTick2,
+    tickFormatter: null,
+    renderTooltip: renderTooltip,
+    uniqueId: 2,
+  }
 
   return (
     <>
@@ -2109,6 +2103,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
                       m={"auto 0px"}
                       fontSize={"2em"}
                       transform={"rotate(90deg)"}
+                      onClick={() => isReal ? setRealAlloc(false) : setRealAlloc(true)}
                     >
                       <ExchangeIcon />
                     </Link>
@@ -2134,38 +2129,57 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
               </Flex>
               <Flex col flex={5} width={"0px"} aspectRatio={"2"}>
                 <Flex ml={"auto"} gridGap={"4px"}>
-                  <NormalBtn>1D</NormalBtn>
-                  <NormalBtn>1W</NormalBtn>
-                  <NormalBtn>1M</NormalBtn>
+                  {isMore && (
+                    <>
+                      <NormalBtn>1D</NormalBtn>
+                      <NormalBtn>3D</NormalBtn>
+                      <NormalBtn>1W</NormalBtn>
+                      <NormalBtn>2W</NormalBtn>
+                      <NormalBtn>1M</NormalBtn>
+                      <NormalBtn>3M</NormalBtn>
+                      <NormalBtn>6M</NormalBtn>
+                      <NormalBtn>1Y</NormalBtn>
+                      <NormalBtn>YTD</NormalBtn>
+                    </>
+                  )}
+                  {!isMore && (
+                    <>
+                      <NormalBtn>1D</NormalBtn>
+                      <NormalBtn>1W</NormalBtn>
+                      <NormalBtn>1M</NormalBtn>
+                      <NormalBtn>YTD</NormalBtn>
+                    </>
+                  )}
+                  <AddBtn
+                    onClick={() => isMore ? setMoreBtn(false) : setMoreBtn(true)}
+                  >
+                    {isMore ? "-" : "+"}
+                  </AddBtn>
                 </Flex>
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    width={500}
-                    height={300}
-                    data={data2}
-                    margin={{
-                      top: 20,
-                      right: 0,
-                      left: 20,
-                      bottom: 5,
-                    }}
-                  >
-                    <CartesianGrid
-                      strokeDasharray="4 "
-                      floodColor={"#70e094"}
+                  <AreaChart data={args.chartData}
+                    margin={{ top: 20, right: 10, left: -30, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id={"colorUv" + args.uniqueId} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="100%" stopColor={args.gradientColor} />
+                      </linearGradient>
+                    </defs>
+                    <XAxis
+                      dataKey="month"
+                      tick={args.customizedTick}
                     />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    {/* <Tooltip /> */}
-                    {/* <Legend /> */}
-                    <Line
-                      type="monotone"
-                      dataKey="pv"
-                      stroke="#70e094"
-                      dot={false}
-                      activeDot={{ r: 8 }}
+                    <YAxis
+                      width={80}
+                      tick={args.customizedTick}
+                      // ticks={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+                      interval={0}
+                      domain={[1, 15]}
+                      tickFormatter={args.tickFormatter}
                     />
-                  </LineChart>
+                    <CartesianGrid strokeDasharray="5 5" fill="#222129" horizontal={false} vertical={false} />
+                    <Tooltip content={args.renderTooltip} />
+                    <Area dot={{ fill: args.gradientColor, fillOpacity: 1 }} type="monotone" dataKey="value" stroke={args.gradientColor} fillOpacity={0.1} fill={"url(#colorUv" + args.uniqueId + ")"} />
+                  </AreaChart>
                 </ResponsiveContainer>
               </Flex>
             </Flex>
@@ -2228,7 +2242,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
   setVisibleWithdraw,
   setUpdateVisible,
 }) => {
-  const { walletConnected } = useWalletHook();
+  const { walletConnected, openConnectModal } = useWalletHook();
   const [isInvest, setInvest] = React.useState(true);
   return (
     <Flex
@@ -2292,7 +2306,12 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
         >
           Add Funds
         </Flex>
-        <Link m={"auto 0px"} fontSize={"2em"} transform={"rotate(90deg)"}>
+        <Link
+          m={"auto 0px"}
+          fontSize={"2em"}
+          transform={"rotate(90deg)"}
+          onClick={() => isInvest ? setInvest(false) : setInvest(true)}
+        >
           <ExchangeIcon />
         </Link>
         <Flex
@@ -2325,6 +2344,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
           minWidth={"150px"}
           padding={"12px 24px"}
           textAlign={"center"}
+          onClick={() => openConnectModal()}
         >
           Connect Wallet
         </ArtButton>
@@ -2353,7 +2373,7 @@ const AddRemoveBox = () => {
         </Flex>
         <Flex bg={"#302d38"} borderRadius={"8px"}>
           <CustomSelect>
-            <SmOption value={"APTOS"}>APTOS</SmOption>
+            <SmOption value={"APTOS"} selected>APTOS</SmOption>
             <SmOption value={"XSI"}>XSI</SmOption>
           </CustomSelect>
         </Flex>

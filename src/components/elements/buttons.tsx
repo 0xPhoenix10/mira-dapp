@@ -14,7 +14,7 @@ export const ArtButton: React.FC<ArtButtonProps> = ({
   borderRadius = "100px",
   padding = "8px 24px",
   btnColor = "#302d38",
-  onClick = () => {},
+  onClick = () => { },
   children,
   ...props
 }) => {
@@ -39,7 +39,7 @@ export const ArtButton: React.FC<ArtButtonProps> = ({
   );
 };
 
-const ArtButtonBase = styled(Box)<ArtButtonProps>`
+const ArtButtonBase = styled(Box) <ArtButtonProps>`
   box-shadow: -5px -3px 10px 0px #fff2, 5px 3px 10px 0px #0006;
   cursor: pointer;
   & > div {
@@ -68,10 +68,22 @@ NormalBtn.defaultProps = {
   alignItems: "center",
   gridGap: "4px",
   ml: "auto",
-  padding: "8px 16px",
+  padding: "6px 12px",
   background: "#302d38",
-  p: "8px 16px",
   border: "1px solid #34383b",
   borderRadius: "8px",
   cursor: "pointer",
+  fontSize: "10px"
+};
+
+export const AddBtn = styled(Link)``;
+AddBtn.defaultProps = {
+  alignItems: "center",
+  gridGap: "4px",
+  ml: "auto",
+  padding: "2px 6px",
+  background: "#302d38",
+  border: "1px solid #34383b",
+  cursor: "pointer",
+  fontSize: "14px"
 };
