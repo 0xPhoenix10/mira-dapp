@@ -6,7 +6,6 @@ import LaunchpadPage from "pages/launchpad";
 import MinePage from "pages/mine";
 import OurTokenPage from "pages/ourtoken";
 import ProfilePage from "pages/profile";
-import OtherProfilePage from "pages/otherprofile";
 import StakePage from "pages/stake";
 import SwapPage from "pages/swap";
 import React from "react";
@@ -21,7 +20,6 @@ function App() {
         <Routes>
           <Route path={""} element={<OurTokenPage />} />
           <Route path={"profile"} element={<ProfilePage />} />
-          <Route path={"otherprofile"} element={<OtherProfilePage />} />
           <Route path={"invest"} element={<DashboardPage />} />
           <Route path={"explorer"} element={<ExplorerPage />} />
           <Route path={"launchpad"} element={<LaunchpadPage />} />
