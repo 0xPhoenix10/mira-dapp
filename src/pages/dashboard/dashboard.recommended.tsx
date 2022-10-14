@@ -13,6 +13,7 @@ import {
   BlankCard,
 } from "../components";
 import { PortfolioModalBody } from "./portfolio.modal.body";
+import { ProfileModalBody } from "../otherprofile";
 import { IndexAllocationModalBody } from "../index.allocation.modal";
 import { IndexAllocation } from "../../utils/types";
 import { Carousel3D } from "../common/comp.carousel";
@@ -60,6 +61,8 @@ const DashboardRecommended = () => {
   const [walletConnectAlertVisible, setWalletConnectAlertVisible] =
     useState(false);
   const [portfolioModalVisible, setPortfolioModalVisible] = useState(false);
+  const [profileModalVisible, setProfileModalVisible] = useState(false);
+  const [profile, setProfile] = useState({});
   const [currentTab, setCurrentTab] = useState(0);
   const [isInvest, setInvest] = useState(true);
   const [indexAllocationModalVisible, setIndexAllocationModalVisible] =
@@ -152,6 +155,18 @@ const DashboardRecommended = () => {
             flex={1}
             setVisible={setPortfolioModalVisible}
             setUpdateInvest={setUpdateInvest}
+          />
+        </ModalParent>
+      }
+      {
+        <ModalParent
+          visible={profileModalVisible}
+          setVisible={setProfileModalVisible}
+        >
+          <ProfileModalBody
+            flex={1}
+            setVisible={setProfileModalVisible}
+            profile={profile}
           />
         </ModalParent>
       }
@@ -293,8 +308,15 @@ const DashboardRecommended = () => {
                 maxWidth={"70%"}
                 title={"Aptos Defi Pulse"}
                 cursorAll={"pointer"}
-                onClickAll={() => {
+                onClickPieChart={() => {
                   setPortfolioModalVisible(true);
+                }}
+                onClickTitle={() => {
+                  setProfile({
+                    username: 'Mira',
+                    owner: 'Aptos Defi Pulse',
+                  });
+                  setProfileModalVisible(true);
                 }}
               />
               <ChartBox
@@ -302,8 +324,15 @@ const DashboardRecommended = () => {
                 maxWidth={"70%"}
                 title={"Aptos Gaming Pulse"}
                 cursorAll={"pointer"}
-                onClickAll={() => {
+                onClickPieChart={() => {
                   setPortfolioModalVisible(true);
+                }}
+                onClickTitle={() => {
+                  setProfile({
+                    username: 'Mira',
+                    owner: 'Aptos Gaming Pulse',
+                  });
+                  setProfileModalVisible(true);
                 }}
               />
               <ChartBox
@@ -311,8 +340,15 @@ const DashboardRecommended = () => {
                 maxWidth={"70%"}
                 title={"Broad Crypto"}
                 cursorAll={"pointer"}
-                onClickAll={() => {
+                onClickPieChart={() => {
                   setPortfolioModalVisible(true);
+                }}
+                onClickTitle={() => {
+                  setProfile({
+                    username: 'Mira',
+                    owner: 'Broad Crypto',
+                  });
+                  setProfileModalVisible(true);
                 }}
               />
             </Carousel3D>
@@ -399,8 +435,15 @@ const DashboardRecommended = () => {
                           maxWidth={"70%"}
                           title={item.poolName}
                           cursor={"pointer"}
-                          onClick={() => {
+                          onClickPieChart={() => {
                             setModifyModalVisible(true);
+                          }}
+                          onClickTitle={() => {
+                            setProfile({
+                              username: item.poolName,
+                              owner: item.poolName,
+                            });
+                            setProfileModalVisible(true);
                           }}
                         />
                       );
@@ -428,8 +471,15 @@ const DashboardRecommended = () => {
                         maxWidth={"70%"}
                         title={item.poolName}
                         cursor={"pointer"}
-                        onClick={() => {
+                        onClickPieChart={() => {
                           setModifyModalVisible(true);
+                        }}
+                        onClickTitle={() => {
+                          setProfile({
+                            username: item.poolName,
+                            owner: item.poolName,
+                          });
+                          setProfileModalVisible(true);
                         }}
                       />
                     );

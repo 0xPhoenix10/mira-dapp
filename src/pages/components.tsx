@@ -66,7 +66,8 @@ interface IData {
 export const ChartBox: React.FC<ChartBoxProps> = ({
   title = "Chart Box",
   cursor = "revert",
-  onClick = () => { },
+  onClickPieChart = () => { },
+  onClickTitle = () => { },
   cursorAll,
   onClickAll = () => { },
   ...props
@@ -175,7 +176,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
             <PieChart
               width={300}
               height={300}
-              onClick={onClick}
+              onClick={onClickPieChart}
               style={{ cursor: cursor }}
             >
               <Tooltip content={<CustomizedTooltip />} />
@@ -211,6 +212,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
             fontWeight={"bold"}
             color={"#70e094"}
             mx={"auto"}
+            onClick={onClickTitle}
           >
             Mira
           </Flex>
