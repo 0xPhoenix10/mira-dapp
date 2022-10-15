@@ -21,6 +21,7 @@ import { ArtButton, NormalBtn, AddBtn } from "components/elements/buttons";
 import { useWalletHook } from "common/hooks/wallet";
 import { renderActiveShape } from "../../common/recharts/piechart";
 import { ModalParent } from "components/modal";
+import { ProfileModalBody } from "../otherprofile";
 
 interface IData {
   name: string;
@@ -30,6 +31,8 @@ interface IData {
 const OurTokenPage: React.FC = () => {
   const [showPortfolio, setPortfolioModal] = useState<boolean>(false);
   const [portfolioTitle, setTitle] = useState("???");
+  const [profile, setProfile] = useState({});
+  const [profileModalVisible, setProfileModalVisible] = useState(false);
 
   return (
     <>
@@ -46,54 +49,96 @@ const OurTokenPage: React.FC = () => {
           width={"100%"}
           title={"xHack Startup Index"}
           cursorAll={"pointer"}
-          onClickAll={() => {
+          onClickPieChart={() => {
             setPortfolioModal(true);
             setTitle("xHack Startup Index");
+          }}
+          onClickTitle={() => {
+            setProfile({
+              username: 'Mira',
+              owner: '0x',
+            });
+            setProfileModalVisible(true);
           }}
         />
         <ChartBox
           width={"100%"}
           title={"L1 Exposure Index"}
           cursorAll={"pointer"}
-          onClickAll={() => {
+          onClickPieChart={() => {
             setPortfolioModal(true);
             setTitle("L1 Exposure Index");
+          }}
+          onClickTitle={() => {
+            setProfile({
+              username: 'Mira',
+              owner: '0x',
+            });
+            setProfileModalVisible(true);
           }}
         />
         <ChartBox
           width={"100%"}
           title={"Broad DeFi Index"}
           cursorAll={"pointer"}
-          onClickAll={() => {
+          onClickPieChart={() => {
             setPortfolioModal(true);
             setTitle("Broad DeFi Index");
+          }}
+          onClickTitle={() => {
+            setProfile({
+              username: 'Mira',
+              owner: '0x',
+            });
+            setProfileModalVisible(true);
           }}
         />
         <ChartBox
           width={"100%"}
           title={"Broad Wireless Index"}
           cursorAll={"pointer"}
-          onClickAll={() => {
+          onClickPieChart={() => {
             setPortfolioModal(true);
             setTitle("Broad Wireless Index");
+          }}
+          onClickTitle={() => {
+            setProfile({
+              username: 'Mira',
+              owner: '0x',
+            });
+            setProfileModalVisible(true);
           }}
         />
         <ChartBox
           width={"100%"}
           title={"Broad Web3 Index"}
           cursorAll={"pointer"}
-          onClickAll={() => {
+          onClickPieChart={() => {
             setPortfolioModal(true);
             setTitle("Broad Web3 Index");
+          }}
+          onClickTitle={() => {
+            setProfile({
+              username: 'Mira',
+              owner: '0x',
+            });
+            setProfileModalVisible(true);
           }}
         />
         <ChartBox
           width={"100%"}
           title={"Broad Gaming Index"}
           cursorAll={"pointer"}
-          onClickAll={() => {
+          onClickPieChart={() => {
             setPortfolioModal(true);
             setTitle("Broad Gaming Index");
+          }}
+          onClickTitle={() => {
+            setProfile({
+              username: 'Mira',
+              owner: '0x',
+            });
+            setProfileModalVisible(true);
           }}
         />
       </Box>
@@ -106,6 +151,18 @@ const OurTokenPage: React.FC = () => {
             flex={1}
             title={portfolioTitle}
             setVisible={showPortfolio}
+          />
+        </ModalParent>
+      }
+      {
+        <ModalParent
+          visible={profileModalVisible}
+          setVisible={setProfileModalVisible}
+        >
+          <ProfileModalBody
+            flex={1}
+            setVisible={setProfileModalVisible}
+            profile={profile}
           />
         </ModalParent>
       }

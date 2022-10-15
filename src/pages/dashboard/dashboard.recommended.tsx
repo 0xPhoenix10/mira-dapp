@@ -314,7 +314,7 @@ const DashboardRecommended = () => {
                 onClickTitle={() => {
                   setProfile({
                     username: 'Mira',
-                    owner: 'Aptos Defi Pulse',
+                    owner: '0x',
                   });
                   setProfileModalVisible(true);
                 }}
@@ -330,7 +330,7 @@ const DashboardRecommended = () => {
                 onClickTitle={() => {
                   setProfile({
                     username: 'Mira',
-                    owner: 'Aptos Gaming Pulse',
+                    owner: '0x',
                   });
                   setProfileModalVisible(true);
                 }}
@@ -346,7 +346,7 @@ const DashboardRecommended = () => {
                 onClickTitle={() => {
                   setProfile({
                     username: 'Mira',
-                    owner: 'Broad Crypto',
+                    owner: '0x',
                   });
                   setProfileModalVisible(true);
                 }}
