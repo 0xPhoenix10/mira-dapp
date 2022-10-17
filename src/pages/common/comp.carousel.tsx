@@ -19,6 +19,7 @@ export const Carousel3D: React.FC<{
   const childNodes = Children.toArray(children);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isStop, setStop] = useState(false);
+  const [isHover, setHover] = useState(false);
 
   useImperativeHandle(ref, () => ({
     reset() {
@@ -28,17 +29,26 @@ export const Carousel3D: React.FC<{
     },
   }));
   useEffect(() => {
+    if (isHover) return;
     if (stop || isStop) return;
     const timeout = setTimeout(() => {
       setCurrentSlide(
         (currentSlide + childNodes.length - 1) % childNodes.length
       );
-    }, 5500);
+    }, 1500);
     return () => clearTimeout(timeout);
-  }, [currentSlide, stop]);
+  }, [currentSlide, stop, isHover]);
 
   return (
-    <Carousel3dContainer {...props}>
+    <Carousel3dContainer
+      onMouseEnter={() => {
+        setHover(true);
+      }}
+      onMouseLeave={() => {
+        setHover(false);
+      }}
+      {...props}
+    >
       {childNodes.map((each, index) => {
         return (
           <Flex
@@ -74,7 +84,7 @@ export const Carousel3D: React.FC<{
         >
           <ArrowIcon dir="left" />
         </Link>
-        <Link
+        {/* <Link
           p={"8px 16px"}
           border={
             isStop ? "1px solid #70E094" : "1px solid #fff4"
@@ -86,7 +96,7 @@ export const Carousel3D: React.FC<{
           }
         >
           <BsPause />
-        </Link>
+        </Link> */}
         <Link
           p={"8px 16px"}
           border={"1px solid #fff4"}
