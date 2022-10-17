@@ -192,7 +192,7 @@ const ProfilePage = () => {
   const fetchInvests = async () => {
     const client = new AptosClient(NODE_URL);
     let events = await client.getEventsByEventHandle(
-      MODULE_ADDR,
+      walletAddress,
       `${MODULE_ADDR}::mira::MiraStatus`,
       "deposit_pool_events",
       { limit: 1000 }
