@@ -1,7 +1,10 @@
 import React, { useContext, useState } from "react";
 import { Box, Link, Table, Tbody, Td, Th, Thead, Tr } from "components/base";
-import { ChartBox } from "pages/components";
+import { ChartBox, BuySellSection } from "pages/components";
 import { Flex } from "components/base/container";
+import DepositModalBody from "../dashboard/deposit.modal.body";
+import WithdrawModalBody from "../dashboard/withdraw.modal.body";
+
 import {
   CartesianGrid,
   Cell,
@@ -178,6 +181,9 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setHovered] = useState(false);
   const [isMore, setMoreBtn] = useState(false)
+  const [visibleDeposit, setVisibleDeposit] = useState(false);
+  const [visibleWithdraw, setVisibleWithdraw] = useState(false);
+
   const data1 = [
     { name: "WORM", value: 350 },
     { name: "PYTH", value: 300 },
@@ -290,166 +296,198 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   }
 
   return (
-    <Flex py={"20px"} width={"100%"} gridGap={"16px"} minWidth={"80vw"}>
-      <Flex flex={1} col>
-        <Flex
-          mt={"4px"}
-          fontFamily={"art"}
-          fontSize={"20px"}
-          fontWeight={"bold"}
-          px={"10px"}
-          pb={"6px"}
-          borderBottom={"1px solid #34383b"}
-        >
-          xHack Startup Index (XSI)
+    <>
+      {visibleDeposit || visibleWithdraw ? (
+        <>
           <Flex
+            background={"#0005"}
+            p={"8px 16px"}
+            border={"1px solid #34383b"}
+            borderRadius={"8px"}
             ml={"auto"}
-            mt={"auto"}
-            fontSize={"16px"}
-            fontWeight={"normal"}
-            gridGap={"16px"}
+            cursor="pointer"
+            onClick={() => {
+              setVisibleDeposit(false);
+              setVisibleWithdraw(false);
+            }}
+            zIndex={"0"}
           >
-            <Flex fontSize={"30px"} fontWeight={"bold"}>
-              48.29
-            </Flex>
-            <Flex fontSize={"30px"} fontWeight={"bold"}>
-              /
-            </Flex>
-            <Flex fontSize={"30px"} fontWeight={"bold"} color={"#70e094"}>
-              4.1%
-            </Flex>
+            <ArrowIcon dir={"left"} />
           </Flex>
-        </Flex>
-        <Flex p={"20px"}>
-          <Flex flex={3} width={"0px"} p={"20px"} aspectRatio={"2"}>
-            <ResponsiveContainer>
-              <PieChart
-                width={300}
-                height={300}
-              //style={{ cursor: cursor }}
+          {visibleDeposit && (
+            <DepositModalBody
+              setVisible={setVisibleDeposit}
+            />
+          )}
+          {visibleWithdraw && <WithdrawModalBody />}
+        </>
+      ) : (
+        <Flex py={"20px"} width={"100%"} gridGap={"16px"} minWidth={"80vw"}>
+          <Flex flex={1} col>
+            <Flex
+              mt={"4px"}
+              fontFamily={"art"}
+              fontSize={"20px"}
+              fontWeight={"bold"}
+              px={"10px"}
+              pb={"6px"}
+              borderBottom={"1px solid #34383b"}
+            >
+              xHack Startup Index (XSI)
+              <Flex
+                ml={"auto"}
+                mt={"auto"}
+                fontSize={"16px"}
+                fontWeight={"normal"}
+                gridGap={"16px"}
               >
-                <Tooltip content={<CustomizedTooltip />} />
-                <Pie
-                  activeIndex={isHovered ? activeIndex : null}
-                  activeShape={renderActiveShape}
-                  data={data1}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={renderCustomizedLabel}
-                  outerRadius={"90%"}
-                  fill="#8884d8"
-                  stroke={"transparent"}
-                  dataKey="value"
-                  onMouseEnter={onPieEnter}
-                  onMouseLeave={onPieLeave}
-                >
-                  {data1.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
+                <Flex fontSize={"30px"} fontWeight={"bold"}>
+                  48.29
+                </Flex>
+                <Flex fontSize={"30px"} fontWeight={"bold"}>
+                  /
+                </Flex>
+                <Flex fontSize={"30px"} fontWeight={"bold"} color={"#70e094"}>
+                  4.1%
+                </Flex>
+              </Flex>
+            </Flex>
+            <Flex p={"20px"}>
+              <Flex flex={3} width={"0px"} p={"20px"} aspectRatio={"2"}>
+                <ResponsiveContainer>
+                  <PieChart
+                    width={300}
+                    height={300}
+                  //style={{ cursor: cursor }}
+                  >
+                    <Tooltip content={<CustomizedTooltip />} />
+                    <Pie
+                      activeIndex={isHovered ? activeIndex : null}
+                      activeShape={renderActiveShape}
+                      data={data1}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={renderCustomizedLabel}
+                      outerRadius={"90%"}
+                      fill="#8884d8"
+                      stroke={"transparent"}
+                      dataKey="value"
+                      onMouseEnter={onPieEnter}
+                      onMouseLeave={onPieLeave}
+                    >
+                      {data1.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </Flex>
+              <Flex col flex={5} width={"0px"} aspectRatio={"2"}>
+                <Flex ml={"auto"} gridGap={"4px"}>
+                  {isMore && (
+                    <>
+                      <NormalBtn>1D</NormalBtn>
+                      <NormalBtn>3D</NormalBtn>
+                      <NormalBtn>1W</NormalBtn>
+                      <NormalBtn>2W</NormalBtn>
+                      <NormalBtn>1M</NormalBtn>
+                      <NormalBtn>3M</NormalBtn>
+                      <NormalBtn>6M</NormalBtn>
+                      <NormalBtn>1Y</NormalBtn>
+                      <NormalBtn>YTD</NormalBtn>
+                    </>
+                  )}
+                  {!isMore && (
+                    <>
+                      <NormalBtn>1D</NormalBtn>
+                      <NormalBtn>1W</NormalBtn>
+                      <NormalBtn>1M</NormalBtn>
+                      <NormalBtn>YTD</NormalBtn>
+                    </>
+                  )}
+                  <AddBtn
+                    onClick={() => isMore ? setMoreBtn(false) : setMoreBtn(true)}
+                  >
+                    {isMore ? "-" : "+"}
+                  </AddBtn>
+                </Flex>
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={args.chartData}
+                    margin={{ top: 20, right: 10, left: -30, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id={"colorUv" + args.uniqueId} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="100%" stopColor={args.gradientColor} />
+                      </linearGradient>
+                    </defs>
+                    <XAxis
+                      dataKey="month"
+                      tick={args.customizedTick}
                     />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-          </Flex>
-          <Flex col flex={5} width={"0px"} aspectRatio={"2"}>
-            <Flex ml={"auto"} gridGap={"4px"}>
-              {isMore && (
-                <>
-                  <NormalBtn>1D</NormalBtn>
-                  <NormalBtn>3D</NormalBtn>
-                  <NormalBtn>1W</NormalBtn>
-                  <NormalBtn>2W</NormalBtn>
-                  <NormalBtn>1M</NormalBtn>
-                  <NormalBtn>3M</NormalBtn>
-                  <NormalBtn>6M</NormalBtn>
-                  <NormalBtn>1Y</NormalBtn>
-                  <NormalBtn>YTD</NormalBtn>
-                </>
-              )}
-              {!isMore && (
-                <>
-                  <NormalBtn>1D</NormalBtn>
-                  <NormalBtn>1W</NormalBtn>
-                  <NormalBtn>1M</NormalBtn>
-                  <NormalBtn>YTD</NormalBtn>
-                </>
-              )}
-              <AddBtn
-                onClick={() => isMore ? setMoreBtn(false) : setMoreBtn(true)}
-              >
-                {isMore ? "-" : "+"}
-              </AddBtn>
+                    <YAxis
+                      width={80}
+                      tick={args.customizedTick}
+                      // ticks={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+                      interval={0}
+                      domain={[1, 15]}
+                      tickFormatter={args.tickFormatter}
+                    />
+                    <CartesianGrid strokeDasharray="5 5" fill="#222129" horizontal={false} vertical={false} />
+                    <Tooltip content={args.renderTooltip} />
+                    <Area dot={{ fill: args.gradientColor, fillOpacity: 1 }} type="monotone" dataKey="value" stroke={args.gradientColor} fillOpacity={0.1} fill={"url(#colorUv" + args.uniqueId + ")"} />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </Flex>
             </Flex>
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={args.chartData}
-                margin={{ top: 20, right: 10, left: -30, bottom: 0 }}>
-                <defs>
-                  <linearGradient id={"colorUv" + args.uniqueId} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="100%" stopColor={args.gradientColor} />
-                  </linearGradient>
-                </defs>
-                <XAxis
-                  dataKey="month"
-                  tick={args.customizedTick}
-                />
-                <YAxis
-                  width={80}
-                  tick={args.customizedTick}
-                  // ticks={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-                  interval={0}
-                  domain={[1, 15]}
-                  tickFormatter={args.tickFormatter}
-                />
-                <CartesianGrid strokeDasharray="5 5" fill="#222129" horizontal={false} vertical={false} />
-                <Tooltip content={args.renderTooltip} />
-                <Area dot={{ fill: args.gradientColor, fillOpacity: 1 }} type="monotone" dataKey="value" stroke={args.gradientColor} fillOpacity={0.1} fill={"url(#colorUv" + args.uniqueId + ")"} />
-              </AreaChart>
-            </ResponsiveContainer>
+            <Flex mt={"24px"} col>
+              <Flex
+                fontFamily={"art"}
+                fontSize={"18px"}
+                fontWeight={"600"}
+                letterSpacing={"0.1em"}
+                px={"10px"}
+                pb={"6px"}
+                borderBottom={"1px solid #34383b"}
+              >
+                Stats
+              </Flex>
+              <Flex justifyCenter>
+                <Table width={"90%"} textAlign={"center"}>
+                  <Thead>
+                    <Tr>
+                      <Th>Market Cap</Th>
+                      <Th>Total Volume</Th>
+                      <Th>Supply</Th>
+                      <Th>Fee1</Th>
+                      <Th>Fee2</Th>
+                      <Th>NAV</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    <Tr>
+                      <Td>10.5M</Td>
+                      <Td>220.1K</Td>
+                      <Td>8.2K</Td>
+                      <Td>1%</Td>
+                      <Td>2%</Td>
+                      <Td>$47.28</Td>
+                    </Tr>
+                  </Tbody>
+                </Table>
+              </Flex>
+            </Flex>
           </Flex>
+          <BuySellSection
+            setVisibleDeposit={setVisibleDeposit}
+            setVisibleWithdraw={setVisibleWithdraw}
+          />
+          {/* <SwapSection /> */}
         </Flex>
-        <Flex mt={"24px"} col>
-          <Flex
-            fontFamily={"art"}
-            fontSize={"18px"}
-            fontWeight={"600"}
-            letterSpacing={"0.1em"}
-            px={"10px"}
-            pb={"6px"}
-            borderBottom={"1px solid #34383b"}
-          >
-            Stats
-          </Flex>
-          <Flex justifyCenter>
-            <Table width={"90%"} textAlign={"center"}>
-              <Thead>
-                <Tr>
-                  <Th>Market Cap</Th>
-                  <Th>Total Volume</Th>
-                  <Th>Supply</Th>
-                  <Th>Fee1</Th>
-                  <Th>Fee2</Th>
-                  <Th>NAV</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                <Tr>
-                  <Td>10.5M</Td>
-                  <Td>220.1K</Td>
-                  <Td>8.2K</Td>
-                  <Td>1%</Td>
-                  <Td>2%</Td>
-                  <Td>$47.28</Td>
-                </Tr>
-              </Tbody>
-            </Table>
-          </Flex>
-        </Flex>
-      </Flex>
-      <SwapSection />
-    </Flex>
+      )}
+    </>
   );
 };
 
