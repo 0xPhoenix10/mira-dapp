@@ -21,6 +21,9 @@ import { UpdateIndexProviderContext } from "./index";
 import { AptosClient } from "aptos";
 import { MODULE_ADDR, NODE_URL } from "config";
 import { getFormatedDate, getStringFee } from "../../utils";
+import { BsPause } from "react-icons/bs";
+import { VscDebugStart } from "react-icons/vsc";
+import { Link } from "components/base";
 
 interface MiraIndex {
   poolName: string;
@@ -298,15 +301,29 @@ const DashboardRecommended = () => {
             alignCenter
             position={"relative"}
           >
+            <Link
+              p={"8px 16px"}
+              border={
+                carouselStop ? "1px solid #70E094" : "1px solid #fff4"
+              }
+              color={carouselStop ? "#70E094" : "#fff"}
+              borderRadius={"8px"}
+              onClick={() =>
+                carouselStop ? setCarouselStop(false) : setCarouselStop(true)
+              }
+              position={"absolute"}
+              left={"-10px"}
+              zIndex={1}
+            >
+              { carouselStop ? <VscDebugStart /> : <BsPause/> }
+            </Link>
             <Carousel3D
               ref={Carousel3D1}
-              stop={portfolioModalVisible || modifyModalVisible || carouselStop}
-              onMouseEnter={() => {
-                setCarouselStop(true);
-              }}
-              onMouseLeave={() => {
-                setCarouselStop(false);
-              }}
+              stop={
+                portfolioModalVisible ||
+                modifyModalVisible ||
+                createMmodalVisible ||
+                carouselStop}
             >
               <ChartBox
                 width={"100%"}
@@ -426,14 +443,9 @@ const DashboardRecommended = () => {
                     stop={
                       portfolioModalVisible ||
                       modifyModalVisible ||
+                      createMmodalVisible ||
                       carouselStop
                     }
-                    onMouseEnter={() => {
-                      setCarouselStop(true);
-                    }}
-                    onMouseLeave={() => {
-                      setCarouselStop(false);
-                    }}
                   >
                     {miraMyInvests.map((item, index) => {
                       return (
@@ -470,7 +482,10 @@ const DashboardRecommended = () => {
                 <Carousel3D
                   ref={Carousel3D3}
                   stop={
-                    portfolioModalVisible || modifyModalVisible || carouselStop
+                    portfolioModalVisible ||
+                    modifyModalVisible ||
+                    createMmodalVisible ||
+                    carouselStop
                   }
                 >
                   {miraMyIndexes.map((item, index) => {
@@ -502,6 +517,9 @@ const DashboardRecommended = () => {
                   maxWidth={"70%"}
                   minHeight={"245px"}
                   type={"index"}
+                  onClick={() => {
+                    setCreateModalVisible(true)
+                  }}
                 />
               )}
             </Flex>
