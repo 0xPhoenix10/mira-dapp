@@ -1,6 +1,6 @@
-export const NODE_URL = "https://fullnode.devnet.aptoslabs.com/v1";
+export const NODE_URL = "https://fullnode.testnet.aptoslabs.com/v1";
 export const MODULE_ADDR =
-  "0x9594b96fc64654988f42ce5543db5cdb28fddc938608bcd3da0112bf276d04cc";
+  "0x9ea8c139765f307da16de9f2d43d58c7b606648d0e0c123ba92fce7c89562e64";
 export const THE_GRAPH_URL = "http://localhost:8080";
 export const FEE_DECIMAL = 100; // 1: 0.01%,  100: 1%, 10000: 100%
 export const CHAIN_LIST = [

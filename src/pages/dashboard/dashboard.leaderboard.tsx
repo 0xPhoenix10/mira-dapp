@@ -53,8 +53,8 @@ const DashboardLeaderBoard = () => {
   const { updateIndex } = useContext(UpdateIndexProviderContext);
 
   useEffect(() => {
-    fetchIndexes();
-  }, [updateIndex]);
+    // fetchIndexes();
+  }, []);
 
   useEffect(() => {
     !walletConnected && setCurrentTab(0);
