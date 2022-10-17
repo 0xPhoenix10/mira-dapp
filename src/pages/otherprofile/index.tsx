@@ -75,41 +75,40 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
   const [miraMyIndexes, setMiraMyIndexes] = useState<MiraIndex[]>([]);
   const [miraMyInvests, setMiraMyInvests] = useState<MiraInvest[]>([]);
   const navigate = useNavigate();
-  // const { state } = useLocation();
 
   useEffect(() => {
-    // if (walletAddress) {
-    //   fetchIndexes();
-    //   fetchInvests();
-    // }
+    if (walletAddress) {
+      fetchIndexes();
+      fetchInvests();
+    }
 
     !walletConnected && navigate("/");
-    // const initMiraAccountProps = async () => {
-    //   const client = new AptosClient(NODE_URL);
-    //   try {
-    //     let resource = await client.getAccountResource(
-    //       walletAddress,
-    //       `${MODULE_ADDR}::mira::MiraAccount`
-    //     );
-    //     if (!resource) {
-    //       navigate("/");
-    //       return;
-    //     }
+    const initMiraAccountProps = async () => {
+      const client = new AptosClient(NODE_URL);
+      try {
+        let resource = await client.getAccountResource(
+          walletAddress,
+          `${MODULE_ADDR}::mira::MiraAccount`
+        );
+        if (!resource) {
+          navigate("/");
+          return;
+        }
 
-    //     const data = resource?.data as {
-    //       account_name: string;
-    //       created: number;
-    //     };
-    //     setInputNameValue(data?.account_name);
-    //     setMiraAccountProps({
-    //       name: data?.account_name,
-    //       created: getFormatedDate(data?.created),
-    //     });
-    //   } catch (error) {
-    //     navigate("/");
-    //     return;
-    //   }
-    // };
+        const data = resource?.data as {
+          account_name: string;
+          created: number;
+        };
+        setInputNameValue(data?.account_name);
+        setMiraAccountProps({
+          name: data?.account_name,
+          created: getFormatedDate(data?.created),
+        });
+      } catch (error) {
+        navigate("/");
+        return;
+      }
+    };
 
     const getFriendInfo = async (owner_addr: string) => {
       const aptos_client = new AptosClient(NODE_URL);
@@ -137,7 +136,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
       });
     };
 
-    // initMiraAccountProps();
+    initMiraAccountProps();
     getFriendList();
   }, [walletConnected, friendDataList, navigate, walletAddress]);
 

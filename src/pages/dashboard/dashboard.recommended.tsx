@@ -80,9 +80,7 @@ const DashboardRecommended = () => {
   const Carousel3D1 = useRef(null);
   const Carousel3D2 = useRef(null);
   const Carousel3D3 = useRef(null);
-  const { setUpdateInvest } = useContext(
-    UpdateIndexProviderContext
-  );
+  const { setUpdateInvest } = useContext(UpdateIndexProviderContext);
   const [miraMyIndexes, setMiraMyIndexes] = useState<MiraIndex[]>([]);
   const [miraMyInvests, setMiraMyInvests] = useState<MiraInvest[]>([]);
   const [carouselStop, setCarouselStop] = useState(false);
@@ -95,54 +93,62 @@ const DashboardRecommended = () => {
 
   useEffect(() => {
     if (walletAddress) {
-      fetchIndexes();
-      fetchInvests();
+      // fetchIndexes();
+      // fetchInvests();
     }
   }, [walletAddress]);
 
   const fetchIndexes = async () => {
     const client = new AptosClient(NODE_URL);
-    let events = await client.getEventsByEventHandle(
-      MODULE_ADDR,
-      `${MODULE_ADDR}::mira::MiraStatus`,
-      "create_pool_events",
-      { limit: 1000 }
-    );
-    let create_pool_events: MiraIndex[] = [];
-    for (let ev of events) {
-      let e: CreatePoolEvent = ev.data;
-      if (e.private_allocation || walletAddress != e.pool_owner) continue;
-      create_pool_events.push({
-        poolName: e.pool_name,
-        poolAddress: e.pool_address,
-        poolOwner: e.pool_owner,
-        managementFee: getStringFee(e.management_fee),
-        founded: getFormatedDate(e.founded),
-      });
+    try {
+      let events = await client.getEventsByEventHandle(
+        MODULE_ADDR,
+        `${MODULE_ADDR}::mira::MiraStatus`,
+        "create_pool_events",
+        { limit: 1000 }
+      );
+      let create_pool_events: MiraIndex[] = [];
+      for (let ev of events) {
+        let e: CreatePoolEvent = ev.data;
+        if (e.private_allocation || walletAddress != e.pool_owner) continue;
+        create_pool_events.push({
+          poolName: e.pool_name,
+          poolAddress: e.pool_address,
+          poolOwner: e.pool_owner,
+          managementFee: getStringFee(e.management_fee),
+          founded: getFormatedDate(e.founded),
+        });
+      }
+      setMiraMyIndexes(create_pool_events);
+    } catch (error) {
+      console.log("set mira indexes error", error);
     }
-    setMiraMyIndexes(create_pool_events);
   };
 
   const fetchInvests = async () => {
     const client = new AptosClient(NODE_URL);
-    let events = await client.getEventsByEventHandle(
-      MODULE_ADDR,
-      `${MODULE_ADDR}::mira::MiraStatus`,
-      "deposit_pool_events",
-      { limit: 1000 }
-    );
-    let deposit_pool_events: MiraInvest[] = [];
-    for (let ev of events) {
-      let e: DepositPoolEvent = ev.data;
-      if (walletAddress != e.investor) continue;
-      deposit_pool_events.push({
-        poolName: e.pool_name,
-        investor: e.investor,
-        amount: e.amount,
-      });
+    try {
+      let events = await client.getEventsByEventHandle(
+        MODULE_ADDR,
+        `${MODULE_ADDR}::mira::MiraStatus`,
+        "deposit_pool_events",
+        { limit: 1000 }
+      );
+      let deposit_pool_events: MiraInvest[] = [];
+      for (let ev of events) {
+        let e: DepositPoolEvent = ev.data;
+        if (walletAddress != e.investor) continue;
+        deposit_pool_events.push({
+          poolName: e.pool_name,
+          investor: e.investor,
+          amount: e.amount,
+        });
+      }
+      setMiraMyInvests(deposit_pool_events);
+    } catch (error) {
+      console.log("set mira invests error", error);
     }
-    setMiraMyInvests(deposit_pool_events);
-  }
+  };
 
   return (
     <>
@@ -292,7 +298,6 @@ const DashboardRecommended = () => {
             alignCenter
             position={"relative"}
           >
-
             <Carousel3D
               ref={Carousel3D1}
               stop={portfolioModalVisible || modifyModalVisible || carouselStop}
@@ -313,8 +318,8 @@ const DashboardRecommended = () => {
                 }}
                 onClickTitle={() => {
                   setProfile({
-                    username: 'Mira',
-                    owner: '0x',
+                    username: "Mira",
+                    owner: "0x",
                   });
                   setProfileModalVisible(true);
                 }}
@@ -329,8 +334,8 @@ const DashboardRecommended = () => {
                 }}
                 onClickTitle={() => {
                   setProfile({
-                    username: 'Mira',
-                    owner: '0x',
+                    username: "Mira",
+                    owner: "0x",
                   });
                   setProfileModalVisible(true);
                 }}
@@ -345,8 +350,8 @@ const DashboardRecommended = () => {
                 }}
                 onClickTitle={() => {
                   setProfile({
-                    username: 'Mira',
-                    owner: '0x',
+                    username: "Mira",
+                    owner: "0x",
                   });
                   setProfileModalVisible(true);
                 }}
@@ -418,7 +423,11 @@ const DashboardRecommended = () => {
                 miraMyInvests.length > 0 ? (
                   <Carousel3D
                     ref={Carousel3D2}
-                    stop={portfolioModalVisible || modifyModalVisible || carouselStop}
+                    stop={
+                      portfolioModalVisible ||
+                      modifyModalVisible ||
+                      carouselStop
+                    }
                     onMouseEnter={() => {
                       setCarouselStop(true);
                     }}
@@ -460,7 +469,9 @@ const DashboardRecommended = () => {
               ) : miraMyIndexes.length > 0 ? (
                 <Carousel3D
                   ref={Carousel3D3}
-                  stop={portfolioModalVisible || modifyModalVisible || carouselStop}
+                  stop={
+                    portfolioModalVisible || modifyModalVisible || carouselStop
+                  }
                 >
                   {miraMyIndexes.map((item, index) => {
                     return (
