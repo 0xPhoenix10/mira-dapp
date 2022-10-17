@@ -23,9 +23,9 @@ import {
   YAxis,
 } from "recharts";
 import { renderActiveShape } from "../../common/recharts/piechart";
-import { CustomSelect, SmOption } from "components/form";
-import { ArtButton, NormalBtn, AddBtn } from "components/elements/buttons";
-import { ArrowIcon, ExchangeIcon } from "components/icons";
+import { NormalBtn, AddBtn } from "components/elements/buttons";
+import { ArrowIcon } from "components/icons";
+import { BuySellSection } from "pages/components";
 
 interface IData {
   name: string;
@@ -382,129 +382,5 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
         </Flex>
       )}
     </>
-  );
-};
-
-type BuySellSectionProps = {
-  setVisibleDeposit: (arg: boolean) => void;
-  setVisibleWithdraw: (arg: boolean) => void;
-};
-const BuySellSection: React.FC<BuySellSectionProps> = ({
-  setVisibleDeposit,
-  setVisibleWithdraw,
-}) => {
-  const { walletConnected, openConnectModal } = useWalletHook();
-  const [isInvest, setInvest] = React.useState(true);
-  return (
-    <Flex
-      col
-      justifyContent={"space-around"}
-      gridGap={"10px"}
-      background={"#302D38"}
-      padding={"20px"}
-      border={"1px solid #34383b"}
-      borderRadius={"20px"}
-    >
-      <Flex
-        mx={"auto"}
-        fontFamily={"art"}
-        fontSize={"20px"}
-        fontWeight={"bold"}
-      >
-        Buy / Sell
-      </Flex>
-      <Flex
-        mt={"1em"}
-        fontSize={"16px"}
-        alignCenter
-        justifyContent={"space-around"}
-      >
-        <Flex
-          cursor={"pointer"}
-          onClick={() => setInvest(true)}
-          color={isInvest ? "#d15151" : "#fafafa"}
-        >
-          Invest
-        </Flex>
-        <Link
-          m={"auto 0px"}
-          fontSize={"2em"}
-          transform={"rotate(90deg)"}
-          onClick={() => isInvest ? setInvest(false) : setInvest(true)}
-        >
-          <ExchangeIcon />
-        </Link>
-        <Flex
-          cursor={"pointer"}
-          onClick={() => setInvest(false)}
-          color={!isInvest ? "#d15151" : "#fafafa"}
-        >
-          Withdraw
-        </Flex>
-      </Flex>
-      <BuySellBox />
-
-      {walletConnected ? (
-        <ArtButton
-          mt={"24px"}
-          mx={"auto"}
-          minWidth={"150px"}
-          padding={"12px 24px"}
-          textAlign={"center"}
-          onClick={() =>
-            isInvest ? setVisibleDeposit(true) : setVisibleWithdraw(true)
-          }
-        >
-          {isInvest ? "INVEST" : "WITHDRAW"}
-        </ArtButton>
-      ) : (
-        <ArtButton
-          mt={"24px"}
-          mx={"auto"}
-          minWidth={"150px"}
-          padding={"12px 24px"}
-          textAlign={"center"}
-          onClick={() => openConnectModal()}
-        >
-          Connect Wallet
-        </ArtButton>
-      )}
-    </Flex>
-  );
-};
-
-const BuySellBox = () => {
-  return (
-    <Flex
-      col
-      gridGap={"12px"}
-      background={"#3c3a45"}
-      width={"300px"}
-      p={"12px 24px"}
-      border={"1px solid #fff3"}
-      borderRadius={"20px"}
-    >
-      <Flex alignCenter justifyContent={"space-between"}>
-        <Flex col>
-          <Flex color={"#70e094"} fontSize={"1.4em"} fontWeight={"bold"}>
-            0.0
-          </Flex>
-          <Flex>$0.0</Flex>
-        </Flex>
-        <Flex bg={"#302d38"} borderRadius={"8px"}>
-          <CustomSelect>
-            <SmOption value={"APTOS"} selected>APTOS</SmOption>
-            <SmOption value={"XSI"}>XSI</SmOption>
-          </CustomSelect>
-        </Flex>
-      </Flex>
-      <Flex alignCenter justifyContent={"flex-end"} gridGap={"8px"}>
-        <Flex>Balance :</Flex>
-        <Flex>10</Flex>
-        <Link ml={"8px"} p={"4px 8px"} bg={"#26242f"} borderRadius={"4px"}>
-          Max
-        </Link>
-      </Flex>
-    </Flex>
   );
 };
