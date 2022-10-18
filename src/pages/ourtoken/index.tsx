@@ -26,6 +26,8 @@ import { renderActiveShape } from "../../common/recharts/piechart";
 import { ModalParent } from "components/modal";
 import { ProfileModalBody } from "../otherprofile";
 
+import { BsInfoCircle } from "react-icons/bs";
+import "./ourtoken.css";
 interface IData {
   name: string;
   value: string | number;
@@ -36,11 +38,13 @@ const OurTokenPage: React.FC = () => {
   const [portfolioTitle, setTitle] = useState("???");
   const [profile, setProfile] = useState({});
   const [profileModalVisible, setProfileModalVisible] = useState(false);
+  const [showStartup, setStartupModalVisible] = useState(true);
 
   return (
     <>
       <Box
         py={"20px"}
+        px={"32px"}
         display={"grid"}
         gridTemplateColumns={"auto auto auto"}
         justifyItems={"center"}
@@ -166,6 +170,17 @@ const OurTokenPage: React.FC = () => {
             flex={1}
             setVisible={setProfileModalVisible}
             profile={profile}
+          />
+        </ModalParent>
+      }
+      {
+        <ModalParent
+          visible={showStartup}
+          setVisible={setStartupModalVisible}
+        >
+          <StartupModalBody
+            flex={1}
+            setVisible={setStartupModalVisible}
           />
         </ModalParent>
       }
@@ -488,6 +503,56 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
         </Flex>
       )}
     </>
+  );
+};
+
+const StartupModalBody: React.FC<{ [index: string]: any }> = ({
+  title = "???",
+  setVisible = () => { },
+  ...props
+}) => {
+
+  return (
+    <Flex py={"20px"} width={"100%"} gridGap={"16px"} className={"ourTokenContainer"}>
+      <Flex flex={1} col>
+        {/* <Flex
+          mt={"4px"}
+          fontFamily={"art"}
+          fontSize={"20px"}
+          fontWeight={"bold"}
+          px={"10px"}
+          pb={"6px"}
+          borderBottom={"1px solid #34383b"}
+        >
+          xHack Startup Index (XSI)
+        </Flex> */}
+        <Flex p={"20px"} className={"tokenBody"}>
+          <Flex
+            flex={5}
+            p={"20px"}
+            fontFamily={"art"}
+            fontSize={"18px"}
+            fontWeight={"600"}
+            letterSpacing={"0.1em"}
+            aspectRatio={"8"}
+            width={"0px"}
+            alignCenter
+            className={"tokenContent"}
+          >
+            <Flex
+              flex={5}
+              p={"20px"}
+              fontFamily={"art"}
+              fontSize={"60px"}
+              fontWeight={"600"}
+              letterSpacing={"0.1em"}
+              className={"infoIcon"}
+            ><BsInfoCircle /></Flex>
+            <Flex>Thanks for checking out our Beta app. Keep in mind, this is a rough version of our product. We work hard and move fast, so you'll probably encounter some bugs. Bear with us while we iron them out.</Flex>
+          </Flex>
+        </Flex>
+      </Flex>
+    </Flex>
   );
 };
 

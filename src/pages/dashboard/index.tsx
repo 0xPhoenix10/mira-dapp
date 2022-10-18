@@ -17,7 +17,7 @@ const DashboardPage = () => {
         updateInvest: updateInvest,
       }}
     >
-      <Flex col width={"100%"} height={"max-content"} py={"20px"}>
+      <Flex col width={"100%"} height={"max-content"} py={"20px"} px={"32px"}>
         <DashboardRecommended />
         <DashboardLeaderBoard />
       </Flex>
