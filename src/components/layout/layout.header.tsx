@@ -28,6 +28,7 @@ const LayoutHeader = () => {
     if (walletConnected) {
       const createMiraAccount = async () => {
         const client = new AptosClient(NODE_URL);
+
         try {
           let resource = await client.getAccountResource(
             walletAddress,

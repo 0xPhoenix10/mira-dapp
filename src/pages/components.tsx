@@ -41,7 +41,7 @@ import {
   YAxis,
 } from 'recharts'
 import { useNavigate } from 'react-router-dom'
-import { AptosClient } from 'aptos'
+import { AptosClient, AptosAccount, CoinClient } from 'aptos'
 import { FEE_DECIMAL, MODULE_ADDR, DECIMAL, NODE_URL } from '../config'
 import { useWalletHook } from '../common/hooks/wallet'
 import { UpdateIndexProviderContext } from './dashboard'
@@ -2519,6 +2519,25 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
 }
 
 const AddRemoveBox = () => {
+  const { walletConnected, walletAddress } = useWalletHook()
+  const [max, setMax] = useState(0)
+  const [amount, setAmount] = useState(0)
+
+  useEffect(() => {
+    if(walletConnected) {
+      getAccountBalance();
+    }
+  }, [walletConnected])
+
+  const getAccountBalance = async () => {
+    const client = new AptosClient(NODE_URL)
+    const aptos_account = new AptosAccount(undefined, walletAddress)
+    const coin_client = new CoinClient(client)
+
+    let balance = await coin_client.checkBalance(aptos_account)
+    setMax(parseInt(balance.toString()) / DECIMAL)
+  }
+
   return (
     <Flex
       col
@@ -2547,8 +2566,16 @@ const AddRemoveBox = () => {
       </Flex>
       <Flex alignCenter justifyContent={'flex-end'} gridGap={'8px'}>
         <Flex>Balance :</Flex>
-        <Flex>10</Flex>
-        <Link ml={'8px'} p={'4px 8px'} bg={'#26242f'} borderRadius={'4px'}>
+        <Flex>{max}</Flex>
+        <Link 
+          ml={'8px'} 
+          p={'4px 8px'} 
+          bg={'#26242f'} 
+          borderRadius={'4px'} 
+          onClick={() => {
+            setAmount(max)
+          }}
+        >
           Max
         </Link>
       </Flex>
@@ -2564,9 +2591,26 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({ miraInfo }) => {
     walletConnected,
     openConnectModal,
     signAndSubmitTransaction,
+    walletAddress
   } = useWalletHook()
-  const [isInvest, setInvest] = React.useState(true)
-  const [amount, setAmount] = useState<number>(0)
+  const [isInvest, setInvest] = useState(true)
+  const [amount, setAmount] = useState<number>(0.0)
+  const [max, setMax] = useState(0)
+
+  useEffect(() => {
+    if(walletConnected) {
+      getAccountBalance();
+    }
+  }, [walletConnected])
+
+  const getAccountBalance = async () => {
+    const client = new AptosClient(NODE_URL)
+    const aptos_account = new AptosAccount(undefined, walletAddress)
+    const coin_client = new CoinClient(client)
+
+    let balance = await coin_client.checkBalance(aptos_account)
+    setMax(parseInt(balance.toString()) / DECIMAL)
+  }
 
   const invest = async () => {
     if (!walletConnected) return
@@ -2677,6 +2721,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({ miraInfo }) => {
                 color={'#70e094'}
                 placeholder={'0.0'}
                 placeColor={'#70e094'}
+                value={amount}
                 onChange={(e) => {
                   setAmount(parseInt(e.target.value))
                 }}
@@ -2695,8 +2740,16 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({ miraInfo }) => {
         </Flex>
         <Flex alignCenter justifyContent={'flex-end'} gridGap={'8px'}>
           <Flex>Balance :</Flex>
-          <Flex>10</Flex>
-          <Link ml={'8px'} p={'4px 8px'} bg={'#26242f'} borderRadius={'4px'}>
+          <Flex>{max}</Flex>
+          <Link 
+            ml={'8px'} 
+            p={'4px 8px'} 
+            bg={'#26242f'} 
+            borderRadius={'4px'} 
+            onClick={() => {
+              setAmount(max)
+            }}
+          >
             Max
           </Link>
         </Flex>
