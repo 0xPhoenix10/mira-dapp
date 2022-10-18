@@ -167,11 +167,15 @@ Box.defaultProps = {
 
 interface InputProps extends AllProps {
   outline?: string;
+  placeColor?: string;
 }
 export const Input = styled.input<InputProps>`
   ${allCompose}
   &::-webkit-inner-spin-button {
     display: none;
+  }
+  &::placeholder {
+    color: ${(p) => (p.placeColor ? p.placeColor : "unset")};
   }
 `;
 Input.defaultProps = {

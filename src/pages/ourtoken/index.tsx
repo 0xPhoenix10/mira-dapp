@@ -176,6 +176,7 @@ const OurTokenPage: React.FC = () => {
 const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   title = "???",
   setVisible = () => { },
+  miraIndexInfo = {},
   ...props
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -481,8 +482,7 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
             </Flex>
           </Flex>
           <BuySellSection
-            setVisibleDeposit={setVisibleDeposit}
-            setVisibleWithdraw={setVisibleWithdraw}
+            miraInfo={miraIndexInfo}
           />
           {/* <SwapSection /> */}
         </Flex>
