@@ -169,7 +169,7 @@ const ProfilePage = () => {
   const fetchIndexes = async () => {
     const client = new AptosClient(NODE_URL);
     let events = await client.getEventsByEventHandle(
-      MODULE_ADDR,
+      walletAddress,
       `${MODULE_ADDR}::mira::MiraStatus`,
       "create_pool_events",
       { limit: 1000 }

@@ -27,13 +27,13 @@ interface CreatePoolEvent {
   pool_name: string;
   pool_address: string;
   pool_owner: string;
-  private_allocation: boolean;
+  privacy_allocation: number;
   management_fee: number;
   founded: number;
 }
 
 const DashboardLeaderBoard = () => {
-  const { walletConnected } = useWalletHook();
+  const { walletConnected, walletAddress } = useWalletHook();
   const navigate = useNavigate();
 
   const [portfolioModalVisible, setPortfolioModalVisible] = useState(false);
@@ -53,11 +53,11 @@ const DashboardLeaderBoard = () => {
   const { updateIndex } = useContext(UpdateIndexProviderContext);
 
   useEffect(() => {
-    // fetchIndexes();
-  }, []);
-
-  useEffect(() => {
     !walletConnected && setCurrentTab(0);
+    
+    if(walletConnected) {
+      fetchIndexes();
+    }
   }, [walletConnected]);
 
   const fetchIndexes = async () => {
@@ -73,7 +73,8 @@ const DashboardLeaderBoard = () => {
       let create_pool_events: MiraIndex[] = [];
       for (let ev of events) {
         let e: CreatePoolEvent = ev.data;
-        if (e.private_allocation) continue;
+
+        if (walletAddress != e.pool_owner && e.privacy_allocation == 1) continue;
         create_pool_events.push({
           poolName: e.pool_name,
           poolAddress: e.pool_address,
