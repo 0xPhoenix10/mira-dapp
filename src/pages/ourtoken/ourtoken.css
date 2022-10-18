@@ -1,0 +1,15 @@
+.ourTokenContainer {
+}
+
+@media screen and (min-width: 320px) and (max-width: 700px) {
+    
+    .ourTokenContainer .tokenBody {
+        padding: 0px;
+    }
+    .ourTokenContainer .tokenBody .tokenContent {
+        padding: 0px;
+    }
+    .ourTokenContainer .tokenBody .tokenContent .infoIcon {
+        display: none;
+    }
+}
