@@ -111,6 +111,7 @@ const DashboardRecommended = () => {
 
   const fetchIndexes = async () => {
     const client = new AptosClient(NODE_URL)
+
     try {
       let events = await client.getEventsByEventHandle(
         MODULE_ADDR,
@@ -477,7 +478,7 @@ const DashboardRecommended = () => {
                           title={item.poolName}
                           cursor={'pointer'}
                           onClickPieChart={() => {
-                            setModifyModalVisible(true)
+                            setPortfolioModalVisible(true)
                           }}
                           onClickTitle={() => {
                             setProfile({
