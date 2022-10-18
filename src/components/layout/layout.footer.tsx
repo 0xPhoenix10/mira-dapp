@@ -27,6 +27,10 @@ import Divider from "@mui/material/Divider";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+
+import { CustomTooltip } from "components/elements/tooptip";
+import { BsInfoCircle } from "react-icons/bs";
 
 interface IItem {
   id: string;
@@ -41,13 +45,22 @@ const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
     "-5px -3px 10px 0px #fff1, -5px 5px 10px 0px #fff1, 5px 3px 10px 0px #0006",
   borderRadius: "10px 10px 0px 0px",
   border: "0px",
-  borderBottom: "none",
   color: "#fff8",
 
   "&:hover": {
     background: "none",
     boxShadow:
       "-5px -3px 10px 0px #fff1, -5px 5px 10px 0px #fff1, 5px 3px 10px 0px #0006",
+    color: "#fff",
+  },
+}));
+const CollapeButton = styled(Button)<ButtonProps>(({ theme }) => ({
+  border: "0px",
+  color: "#fff8",
+  background: "none",
+
+  "&:hover": {
+    background: "none",
     color: "#fff",
   },
 }));
@@ -263,6 +276,7 @@ const defaultRemoveMenuList = {
 const LayoutFooter = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isCollapse, setCollapse] = useState(false);
   const [items, setItems] = useState<IItem[]>([]);
   const [moreItems, setMoreItems] = useState<IItem[]>([]);
   const [removeItems, setRemoveItems] = useState<IItem[]>([]);
@@ -459,101 +473,115 @@ const LayoutFooter = () => {
   };
 
   return (
-    <Flex
-      background={"#222129"}
-      justifyCenter
-      p={"15px"}
-      pb={"0px"}
-      borderTop={"1px solid #333334"}
-      overflow={"auto"}
-    >
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="droppable" direction="horizontal">
-          {(provided, snapshot) => (
-            <Flex
-              gridGap={"25px"}
-              ref={provided.innerRef}
-              style={getListStyle(snapshot.isDraggingOver)}
-              {...provided.droppableProps}
-            >
-              {items.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={getItemStyle(
-                        snapshot.isDragging,
-                        provided.draggableProps.style
-                      )}
-                    >
-                      {
-                        <FooterBtn
-                          active={location.pathname === item.link}
-                          title={item.title}
-                          icon={getIconComponent(item.icon)}
-                          onClick={() => navigate(item.link)}
-                        />
-                      }
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </Flex>
-          )}
-        </Droppable>
-      </DragDropContext>
-      <Flex gridGap={"25px"} pt={"5px"} ml={"10px"}>
-        <StyledButton
-          id="demo-customized-button"
-          aria-controls={openMoreMenu ? "demo-customized-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={openMoreMenu ? "true" : undefined}
-          variant="contained"
-          disableElevation
-          onClick={handleMoreMenuClick}
-          endIcon={<KeyboardArrowUpIcon />}
-        ></StyledButton>
-        <StyledMenu
-          id="demo-customized-menu"
-          MenuListProps={{
-            "aria-labelledby": "demo-customized-button",
-          }}
-          anchorEl={anchorEl}
-          open={openMoreMenu}
-          onClose={handleMoreMenuClose}
-        >
-          {moreItems.map((item, index) => (
-            <MenuItem
-              onClick={() => addNewMenu(index)}
-              disableRipple
-              key={index}
-            >
-              <AddIcon />
-              {item.title}
-            </MenuItem>
-          ))}
-          {removeItems.length !== 0 && (
-            <Divider sx={{ my: 0.5 }} textAlign="left">
-              Added
-            </Divider>
-          )}
-          {removeItems.length !== 0 &&
-            removeItems.map((item, index) => (
+    <>
+      <Flex
+        background={"#222129"}
+        justifyCenter
+        p={"15px"}
+        pb={"0px"}
+        borderTop={"1px solid #333334"}
+        overflow={"auto"}
+        display={isCollapse ? 'none' : 'flex' }
+      >
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="droppable" direction="horizontal">
+            {(provided, snapshot) => (
+              <Flex
+                gridGap={"25px"}
+                ref={provided.innerRef}
+                style={getListStyle(snapshot.isDraggingOver)}
+                {...provided.droppableProps}
+              >
+                {items.map((item, index) => (
+                  <Draggable key={item.id} draggableId={item.id} index={index}>
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={getItemStyle(
+                          snapshot.isDragging,
+                          provided.draggableProps.style
+                        )}
+                      >
+                        {
+                          <FooterBtn
+                            active={location.pathname === item.link}
+                            title={item.title}
+                            icon={getIconComponent(item.icon)}
+                            onClick={() => navigate(item.link)}
+                            tooltip="add info popup for each tab in the footer (Mira Funds,...) - I will add the text myself"
+                          />
+                        }
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </Flex>
+            )}
+          </Droppable>
+        </DragDropContext>
+        <Flex gridGap={"25px"} pt={"5px"} ml={"10px"}>
+          <StyledButton
+            id="demo-customized-button"
+            aria-controls={openMoreMenu ? "demo-customized-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={openMoreMenu ? "true" : undefined}
+            variant="contained"
+            disableElevation
+            onClick={handleMoreMenuClick}
+          >
+            ...
+          </StyledButton>
+          <StyledMenu
+            id="demo-customized-menu"
+            MenuListProps={{
+              "aria-labelledby": "demo-customized-button",
+            }}
+            anchorEl={anchorEl}
+            open={openMoreMenu}
+            onClose={handleMoreMenuClose}
+          >
+            {moreItems.map((item, index) => (
               <MenuItem
-                onClick={() => removeMenu(index)}
+                onClick={() => addNewMenu(index)}
                 disableRipple
                 key={index}
               >
-                <RemoveIcon />
+                <AddIcon />
                 {item.title}
               </MenuItem>
             ))}
-        </StyledMenu>
+            {removeItems.length !== 0 && (
+              <Divider sx={{ my: 0.5 }} textAlign="left">
+                Added
+              </Divider>
+            )}
+            {removeItems.length !== 0 &&
+              removeItems.map((item, index) => (
+                <MenuItem
+                  onClick={() => removeMenu(index)}
+                  disableRipple
+                  key={index}
+                >
+                  <RemoveIcon />
+                  {item.title}
+                </MenuItem>
+              ))}
+          </StyledMenu>
+        </Flex>
       </Flex>
-    </Flex>
+      <Flex gridGap={"25px"} pt={"5px"} ml={"10px"} position={"absolute"} right={"0px"} minHeight={"56px"} bottom={"0px"}>
+        <CollapeButton
+          variant="contained"
+          disableElevation
+          onClick={()=>{setCollapse(!isCollapse)}}
+        >
+          {isCollapse ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+        </CollapeButton>
+      </Flex>
+    </>
   );
 };
 const FooterBtnBase = styledComponents(Box)`
@@ -573,12 +601,14 @@ interface FooterBtnProps {
   title?: any;
   onClick?: any;
   active?: boolean;
+  tooltip?: string;
 }
 const FooterBtn: React.FC<FooterBtnProps> = ({
   icon = "",
   title = "",
   onClick = () => {},
   active,
+  tooltip = "",
 }) => {
   return (
     <FooterBtnBase
@@ -595,6 +625,17 @@ const FooterBtn: React.FC<FooterBtnProps> = ({
       <Flex alignCenter gridGap={"8px"}>
         <Flex fontSize={"20px"}>{icon}</Flex>
         <Flex fontSize={"16px"}>{title}</Flex>
+        {
+          tooltip != "" &&
+          <CustomTooltip
+            title={tooltip}
+            arrow
+            disableInteractive
+            placement="top"
+          >
+            <span>ⓘ</span>
+          </CustomTooltip>
+        }
       </Flex>
     </FooterBtnBase>
   );
