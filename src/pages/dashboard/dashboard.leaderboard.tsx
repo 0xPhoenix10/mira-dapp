@@ -14,6 +14,7 @@ import DepositModalBody from "./deposit.modal.body";
 import WithdrawModalBody from "./withdraw.modal.body";
 import { UpdateIndexProviderContext } from "./index";
 import { PortfolioModalBody } from "./portfolio.modal.body";
+import { ProfileModalBody } from "../otherprofile"
 
 interface MiraIndex {
   poolName: string;
@@ -36,7 +37,9 @@ const DashboardLeaderBoard = () => {
   const { walletConnected, walletAddress } = useWalletHook();
   const navigate = useNavigate();
 
+  const [profile, setProfile] = useState({})
   const [portfolioModalVisible, setPortfolioModalVisible] = useState(false);
+  const [profileModalVisible, setProfileModalVisible] = useState(false);
   const [leaderboardMmodalVisible, setLeaderboardModalVisible] =
     useState(false);
 
@@ -135,6 +138,18 @@ const DashboardLeaderBoard = () => {
 
   return (
     <>
+      {
+        <ModalParent
+          visible={profileModalVisible}
+          setVisible={setProfileModalVisible}
+        >
+          <ProfileModalBody
+            flex={1}
+            setVisible={setProfileModalVisible}
+            profile={profile}
+          />
+        </ModalParent>
+      }
       {
         <ModalParent
           visible={showDepositModal}
@@ -444,15 +459,11 @@ const DashboardLeaderBoard = () => {
                           gridGap={"10px"}
                           cursor={"pointer"}
                           onClick={() => {
-                            navigate(
-                              "/otherprofile",
-                              {
-                                state: {
-                                  username: miraIndex.poolName,
-                                  owner: miraIndex.poolOwner
-                                }
-                              }
-                            );
+                            setProfile({
+                              username: miraIndex.poolName,
+                              owner: miraIndex.poolName,
+                            })
+                            setProfileModalVisible(true)
                           }}
                         >
                           <Box

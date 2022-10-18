@@ -338,20 +338,23 @@ const DashboardRecommended = () => {
             alignCenter
             position={'relative'}
           >
-            <Link
-              p={'8px 16px'}
-              border={carouselStop ? '1px solid #70E094' : '1px solid #fff4'}
-              color={carouselStop ? '#70E094' : '#fff'}
-              borderRadius={'8px'}
-              onClick={() =>
-                carouselStop ? setCarouselStop(false) : setCarouselStop(true)
-              }
-              position={'absolute'}
-              left={'-10px'}
-              zIndex={1}
-            >
-              {carouselStop ? <VscDebugStart /> : <BsPause />}
-            </Link>
+            {
+              (recommendedIndexes.length > 0 || (currentTab == 1 && miraMyIndexes.length > 0) || (currentTab == 0 && miraMyInvests.length > 0)) && 
+              <Link
+                p={'8px 16px'}
+                border={carouselStop ? '1px solid #70E094' : '1px solid #fff4'}
+                color={carouselStop ? '#70E094' : '#fff'}
+                borderRadius={'8px'}
+                onClick={() =>
+                  carouselStop ? setCarouselStop(false) : setCarouselStop(true)
+                }
+                position={'absolute'}
+                left={'-10px'}
+                zIndex={1}
+              >
+                {carouselStop ? <VscDebugStart /> : <BsPause />}
+              </Link>
+            }
             {recommendedIndexes.length > 0 ? (
               <Carousel3D
                 ref={Carousel3D1}
