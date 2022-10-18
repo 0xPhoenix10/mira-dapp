@@ -130,6 +130,7 @@ const DashboardRecommended = () => {
           founded: getFormatedDate(e.founded),
         })
       }
+      console.log(create_pool_events)
       setMiraMyIndexes(create_pool_events)
     } catch (error) {
       console.log('set mira indexes error', error)

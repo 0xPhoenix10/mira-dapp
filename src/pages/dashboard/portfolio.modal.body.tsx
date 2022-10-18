@@ -376,8 +376,7 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
             </Flex>
           </Flex>
           <BuySellSection
-            setVisibleDeposit={setVisibleDeposit}
-            setVisibleWithdraw={setVisibleWithdraw}
+            miraInfo={miraIndexInfo}
           />
         </Flex>
       )}
