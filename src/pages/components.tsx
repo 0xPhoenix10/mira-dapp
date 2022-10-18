@@ -23,7 +23,7 @@ import {
   IconNarrow,
   SortDirIcon,
 } from 'components/icons'
-
+import { ModalParent } from 'components/modal'
 import { CustomTooltip } from 'components/elements/tooptip'
 import React, { useEffect, useContext, useState } from 'react'
 import { FriendStatus, getFriendData, requestFriend } from '../utils/graphql'
@@ -41,7 +41,8 @@ import {
   YAxis,
 } from 'recharts'
 import { useNavigate } from 'react-router-dom'
-import { FEE_DECIMAL, MODULE_ADDR, DECIMAL } from '../config'
+import { AptosClient } from 'aptos'
+import { FEE_DECIMAL, MODULE_ADDR, DECIMAL, NODE_URL } from '../config'
 import { useWalletHook } from '../common/hooks/wallet'
 import { UpdateIndexProviderContext } from './dashboard'
 import { PortfolioModalBody } from './dashboard/portfolio.modal.body'
@@ -50,8 +51,11 @@ import WithdrawModalBody from './dashboard/withdraw.modal.body'
 import { renderActiveShape } from '../common/recharts/piechart'
 import { ArtButton, NormalBtn, AddBtn } from 'components/elements/buttons'
 import { IndexAllocation } from '../utils/types'
+import { getFormatedDate, getStringFee } from '../utils'
 import { IndexAllocationModalBody } from './index.allocation.modal'
 import { ProfileModalBody } from './otherprofile'
+import { MoveStructValue } from 'aptos/src/generated'
+import { displayPartsToString } from 'typescript'
 
 interface ChartBoxProps {
   title?: string
@@ -458,7 +462,6 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
       ],
       type_arguments: [],
     }
-    console.log(transaction)
     const result = await signAndSubmitTransaction(transaction)
 
     if (result) {
@@ -932,17 +935,55 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
 
 export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
   setVisible = () => {},
+  poolInfo = {},
   ...props
 }) => {
-  const [nameValue, setNameValue] = useState<string>('')
-  const [totalAmount, setTotalAmount] = useState<number>(0)
-  const [managementFee, setManagementFee] = useState<number>(0)
-  const [rebalancingPeriod, setRebalancingPeriod] = useState<number>(0)
-  const [minimumContribution, setMiniumContribution] = useState<number>(0)
-  const [miniumWithdrawal, setMiniumWithdrawal] = useState<number>(0)
-  const [privateAllocation, setPrivateAlloation] = useState<number>(0)
-  const [referralReward, setReferralReward] = useState<number>(0)
-  const [openMoreSetting, setOpenMoreSetting] = useState(false)
+  const { walletConnected, signAndSubmitTransaction } = useWalletHook()
+
+  const [nameValue, setNameValue] = useState<string>(poolInfo.poolName.trim())
+  const [rebalancingPeriod, setRebalancingPeriod] = useState<number>(poolInfo.settings.rebalancing_period * 1)
+  const [minimumContribution, setMiniumContribution] = useState<number>(poolInfo.settings.minimum_contribution / DECIMAL)
+  const [miniumWithdrawal, setMiniumWithdrawal] = useState<number>(poolInfo.settings.minimum_withdrawal_period * 1)
+  const [privateAllocation, setPrivateAlloation] = useState<number>(poolInfo.settings.privacy_allocation)
+  const [referralReward, setReferralReward] = useState<number>(poolInfo.settings.referral_reward / DECIMAL)
+
+  const updatePool = async () => {
+    if (!walletConnected) return
+
+    let pool_name = nameValue.trim()
+    let rebalancing_period = rebalancingPeriod * 1
+    let minimum_contribution = minimumContribution * DECIMAL
+    let minimum_withdrawal_period = miniumWithdrawal * 1
+    let referral_reward = referralReward * DECIMAL
+    let privacy_allocation = privateAllocation
+    let index_allocation_key = poolInfo.indexList
+    let index_allocation_value = poolInfo.indexAllocation
+
+    if (pool_name === '') return
+    if (minimum_contribution < 0 || minimum_contribution > DECIMAL) return
+    
+    console.log(pool_name, rebalancing_period, minimum_contribution, minimum_withdrawal_period, referral_reward, index_allocation_key, index_allocation_value, privacy_allocation)
+    const transaction = {
+      type: 'entry_function_payload',
+      function: `${MODULE_ADDR}::mira::update_pool`,
+      arguments: [
+        pool_name,
+        rebalancing_period,
+        minimum_contribution,
+        minimum_withdrawal_period,
+        referral_reward,
+        index_allocation_key,
+        index_allocation_value,
+        privacy_allocation
+      ],
+      type_arguments: [],
+    }
+    const result = await signAndSubmitTransaction(transaction)
+
+    if(result) {
+      setVisible(false);
+    }
+  };
 
   return (
     <Flex col gridGap={'10px'}>
@@ -990,63 +1031,8 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                           color={'white'}
                           placeholder={'input here...'}
                           readOnly={true}
-                          onChange={(e) => {
-                            setNameValue(e.target.value)
-                          }}
+                          value={nameValue}
                         />
-                      </Flex>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Td px={'4px'} py={'2px'} borderBottom={'none'}>
-                      Deposit amount :
-                    </Td>
-                    <Td px={'4px'} py={'2px'} borderBottom={'none'}>
-                      <Flex
-                        alignCenter
-                        p={'4px'}
-                        borderBottom={'1px solid #34383b'}
-                      >
-                        <Input
-                          flex={'1'}
-                          type={'number'}
-                          border={'none'}
-                          background={'transparent'}
-                          color={'white'}
-                          placeholder={'input here...'}
-                          max={'100'}
-                          min={'0'}
-                          onChange={(e) => {
-                            setTotalAmount(parseInt(e.target.value))
-                          }}
-                        />
-                      </Flex>
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Td px={'4px'} py={'2px'} borderBottom={'none'}>
-                      Management fee :
-                    </Td>
-                    <Td px={'4px'} py={'2px'} borderBottom={'none'}>
-                      <Flex
-                        alignCenter
-                        p={'4px'}
-                        borderBottom={'1px solid #34383b'}
-                      >
-                        <Input
-                          flex={'1'}
-                          type={'number'}
-                          border={'none'}
-                          background={'transparent'}
-                          color={'white'}
-                          placeholder={'input here...'}
-                          max={'100'}
-                          min={'0'}
-                          onChange={(e) => {
-                            setManagementFee(parseInt(e.target.value))
-                          }}
-                        />
-                        %
                       </Flex>
                     </Td>
                   </Tr>
@@ -1063,6 +1049,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                       >
                         <CustomSelect
                           flex={'1'}
+                          value={`${rebalancingPeriod}`}
                           onChange={(e: number) => {
                             setRebalancingPeriod(e)
                           }}
@@ -1076,137 +1063,118 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                       </Flex>
                     </Td>
                   </Tr>
-                  {openMoreSetting && (
-                    <>
-                      <Tr>
-                        <Td px={'4px'} py={'2px'} borderBottom={'none'}>
-                          Minimum Contribution :
-                        </Td>
-                        <Td px={'4px'} py={'2px'} borderBottom={'none'}>
-                          <Flex
-                            alignCenter
-                            p={'4px'}
-                            borderBottom={'1px solid #34383b'}
-                          >
-                            <Input
-                              flex={'1'}
-                              border={'none'}
-                              background={'transparent'}
-                              color={'white'}
-                              placeholder={'input here...'}
-                              onChange={(e) => {
-                                setMiniumContribution(
-                                  parseFloat(e.target.value),
-                                )
-                              }}
-                            />
-                            %
-                          </Flex>
-                        </Td>
-                      </Tr>
-                      <Tr>
-                        <Td px={'4px'} py={'2px'} borderBottom={'none'}>
-                          Minimum Withdrawal Period :
-                        </Td>
-                        <Td px={'4px'} py={'2px'} borderBottom={'none'}>
-                          <Flex
-                            alignCenter
-                            px={'4px'}
-                            py={'1px'}
-                            borderBottom={'1px solid #34383b'}
-                          >
-                            <CustomSelect
-                              flex={'1'}
-                              onChange={(e: number) => {
-                                setMiniumWithdrawal(e)
-                              }}
-                            >
-                              <SmOption value="1">1 Day</SmOption>
-                              <SmOption value="7">1 Week</SmOption>
-                              <SmOption value="14">2 Weeks</SmOption>
-                              <SmOption value="30">1 Month</SmOption>
-                              <SmOption value="60">2 Months</SmOption>
-                            </CustomSelect>
-                          </Flex>
-                        </Td>
-                      </Tr>
-                      <Tr>
-                        <Td px={'4px'} py={'2px'} borderBottom={'none'}>
-                          Privacy Allocation :
-                        </Td>
-                        <Td px={'4px'} py={'2px'} borderBottom={'none'}>
-                          <Flex
-                            alignCenter
-                            p={'4px'}
-                            borderBottom={'1px solid #34383b'}
-                            gridGap={'20px'}
-                          >
-                            <RadioBtn
-                              name={'privacy_allocation'}
-                              value={'0'}
-                              title={'Public'}
-                              selected
-                              onChange={(e: any) => {
-                                setPrivateAlloation(e)
-                              }}
-                            />
-                            <RadioBtn
-                              name={'privacy_allocation'}
-                              value={'1'}
-                              title={'Private'}
-                              onChange={(e: any) => {
-                                setPrivateAlloation(e)
-                              }}
-                            />
-                            <RadioBtn
-                              name={'privacy_allocation'}
-                              value={'2'}
-                              title={'Private Fund'}
-                              onChange={(e: any) => {
-                                setPrivateAlloation(e)
-                              }}
-                            />
-                          </Flex>
-                        </Td>
-                      </Tr>
-                      <Tr>
-                        <Td px={'4px'} py={'2px'} borderBottom={'none'}>
-                          Referral Rewards :
-                        </Td>
-                        <Td px={'4px'} py={'2px'} borderBottom={'none'}>
-                          <Flex
-                            alignCenter
-                            p={'4px'}
-                            borderBottom={'1px solid #34383b'}
-                          >
-                            <Input
-                              flex={'1'}
-                              border={'none'}
-                              background={'transparent'}
-                              color={'white'}
-                              placeholder={'input here...'}
-                              onChange={(e) => {
-                                setReferralReward(parseInt(e.target.value))
-                              }}
-                            />
-                            %
-                          </Flex>
-                        </Td>
-                      </Tr>
-                    </>
-                  )}
-
                   <Tr>
-                    <Td
-                      px={'4px'}
-                      py={'2px'}
-                      borderBottom={'none'}
-                      cursor={'pointer'}
-                      onClick={() => setOpenMoreSetting(!openMoreSetting)}
-                      color={'#ab9b4e'}
-                      style={{ textDecoration: 'underline' }}
-                    >
-                      {openMoreSetting ? 'Hide...' : 'Advanced Settings...'}
+                    <Td px={'4px'} py={'2px'} borderBottom={'none'}>
+                      Minimum Contribution :
+                    </Td>
+                    <Td px={'4px'} py={'2px'} borderBottom={'none'}>
+                      <Flex
+                        alignCenter
+                        p={'4px'}
+                        borderBottom={'1px solid #34383b'}
+                      >
+                        <Input
+                          flex={'1'}
+                          border={'none'}
+                          background={'transparent'}
+                          color={'white'}
+                          placeholder={'input here...'}
+                          value={minimumContribution}
+                          onChange={(e) => {
+                            setMiniumContribution(parseFloat(e.target.value))
+                          }}
+                        />
+                      </Flex>
+                    </Td>
+                  </Tr>
+                  <Tr>
+                    <Td px={'4px'} py={'2px'} borderBottom={'none'}>
+                      Minimum Withdrawal Period :
+                    </Td>
+                    <Td px={'4px'} py={'2px'} borderBottom={'none'}>
+                      <Flex
+                        alignCenter
+                        px={'4px'}
+                        py={'1px'}
+                        borderBottom={'1px solid #34383b'}
+                      >
+                        <CustomSelect
+                          flex={'1'}
+                          value={`${miniumWithdrawal}`}
+                          onChange={(e: number) => {
+                            setMiniumWithdrawal(e)
+                          }}
+                        >
+                          <SmOption value="1">1 Day</SmOption>
+                          <SmOption value="7">1 Week</SmOption>
+                          <SmOption value="14">2 Weeks</SmOption>
+                          <SmOption value="30">1 Month</SmOption>
+                          <SmOption value="60">2 Months</SmOption>
+                        </CustomSelect>
+                      </Flex>
+                    </Td>
+                  </Tr>
+                  <Tr>
+                    <Td px={'4px'} py={'2px'} borderBottom={'none'}>
+                      Privacy Allocation :
+                    </Td>
+                    <Td px={'4px'} py={'2px'} borderBottom={'none'}>
+                      <Flex
+                        alignCenter
+                        p={'4px'}
+                        borderBottom={'1px solid #34383b'}
+                        gridGap={'20px'}
+                      >
+                        <RadioBtn
+                          name={'privacy_allocation'}
+                          value={'0'}
+                          title={'Public'}
+                          selected
+                          onChange={(e: any) => {
+                            setPrivateAlloation(e)
+                          }}
+                        />
+                        <RadioBtn
+                          name={'privacy_allocation'}
+                          value={'1'}
+                          title={'Private'}
+                          onChange={(e: any) => {
+                            setPrivateAlloation(e)
+                          }}
+                        />
+                        <RadioBtn
+                          name={'privacy_allocation'}
+                          value={'2'}
+                          title={'Private Fund'}
+                          onChange={(e: any) => {
+                            setPrivateAlloation(e)
+                          }}
+                        />
+                      </Flex>
+                    </Td>
+                  </Tr>
+                  <Tr>
+                    <Td px={'4px'} py={'2px'} borderBottom={'none'}>
+                      Referral Rewards :
+                    </Td>
+                    <Td px={'4px'} py={'2px'} borderBottom={'none'}>
+                      <Flex
+                        alignCenter
+                        p={'4px'}
+                        borderBottom={'1px solid #34383b'}
+                      >
+                        <Input
+                          flex={'1'}
+                          border={'none'}
+                          background={'transparent'}
+                          color={'white'}
+                          placeholder={'input here...'}
+                          value={referralReward}
+                          onChange={(e) => {
+                            setReferralReward(parseInt(e.target.value))
+                          }}
+                        />
+                      </Flex>
                     </Td>
                   </Tr>
                 </Tbody>
@@ -1222,6 +1190,9 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                   border={'1px solid #34383b'}
                   borderRadius={'8px'}
                   cursor="pointer"
+                  onClick={() => {
+                    updatePool();
+                  }}
                 >
                   <CheckIcon size={'1.2em'} />
                   Save
@@ -1885,6 +1856,28 @@ export const FilterItem: React.FC<{
   )
 }
 
+interface MiraPoolSettings {
+  management_fee: number
+  rebalancing_period: number
+  minimum_contribution: number
+  minimum_withdrawal_period: number
+  referral_reward: number
+  privacy_allocation: number
+}
+
+interface MiraPool {
+  poolName: string
+  created: string
+  poolAddress: string
+  managerAddress: string
+  rebalancingGas: number
+  indexAllocation: Array<number>
+  indexList: Array<string>
+  amount: number
+  gasPool: number
+  settings: MiraPoolSettings
+}
+
 export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
   miraIndexInfo = {},
   setVisible = () => {},
@@ -1901,6 +1894,9 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
   const [isHovered, setHovered] = useState(false)
   const [isReal, setRealAlloc] = useState(true)
   const [isMore, setMoreBtn] = useState(false)
+  const [myPoolInfo, setMyPoolInfo] = useState<MiraPool | null>(null)
+  const [indexAllocation, setIndexAllocation] = useState<IndexAllocation[]>([])
+  const [allocVisible, setAllocVisible] = useState(false)
 
   useEffect(() => {
     if (walletConnected) {
@@ -1918,8 +1914,62 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
       }
 
       getFetchFriend()
+      getMiraPoolInfo()
     }
+
+    console.log(allocationData)
   }, [walletConnected, miraIndexInfo.poolOwner, walletAddress])
+
+  const getMiraPoolInfo = async () => {
+    const client = new AptosClient(NODE_URL)
+    try {
+      let resource = await client.getAccountResource(
+        miraIndexInfo.poolAddress,
+        `${MODULE_ADDR}::mira::MiraPool`,
+      )
+
+      const data = resource?.data as {
+        amount: number
+        created: number
+        gas_pool: number
+        index_allocation: Array<number>
+        index_list: Array<string>
+        manager_addr: string
+        pool_address: string
+        pool_name: string
+        rebalancing_gas: number
+        settings: MiraPoolSettings
+      }
+
+      let pool_info: MiraPool = {
+        poolName: data?.pool_name,
+        created: getFormatedDate(data?.created),
+        poolAddress: data?.pool_name,
+        managerAddress: data?.manager_addr,
+        rebalancingGas: data?.rebalancing_gas,
+        indexAllocation: data?.index_allocation,
+        indexList: data?.index_list,
+        amount: data?.amount,
+        gasPool: data?.gas_pool,
+        settings: data?.settings,
+      }
+
+      setMyPoolInfo(pool_info)
+      console.log('my pool info? ', pool_info)
+
+      let allocation: IndexAllocation[] = []
+      for (let i = 0; i < pool_info.indexAllocation.length; i++) {
+        allocation.push({
+          name: pool_info.indexList[i],
+          value: pool_info.indexAllocation[i] * 1,
+        })
+      }
+
+      setIndexAllocation(allocation)
+    } catch (error) {
+      console.log('get mira pools error', error)
+    }
+  }
 
   const data2 = [
     { month: '9/24', value: 394 },
@@ -1990,7 +2040,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
 
   const CustomizedTooltip = React.memo((props: any) => {
     if (props.payload.length > 0) {
-      const sum = allocationData.reduce((a, v) => (a = a + v.value), 0)
+      const sum = indexAllocation.reduce((a, v) => (a = a + v.value), 0)
 
       const item: IData = props.payload[0]
       return (
@@ -2111,22 +2161,37 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
               </Flex>
             </Flex>
             <Flex p={'20px'}>
+              {allocVisible && (
+                <ModalParent
+                  visible={allocVisible}
+                  setVisible={setAllocVisible}
+                  zIndex={'1004'}
+                >
+                  <IndexAllocationModalBody
+                    flex={1}
+                    allocationData={indexAllocation}
+                    setAllocationData={setIndexAllocation}
+                    setVisible={setAllocVisible}
+                    poolInfo={myPoolInfo}
+                  />
+                </ModalParent>
+              )}
               <Flex col flex={3} width={'0px'} p={'20px'} aspectRatio={'2'}>
                 <ResponsiveContainer>
-                  {allocationData && Array.isArray(allocationData) && (
+                  {indexAllocation && Array.isArray(indexAllocation) && (
                     <PieChart
                       width={300}
                       height={300}
                       style={{ cursor: 'pointer' }}
                       onClick={() => {
-                        setAllocationVisible(true)
+                        setAllocVisible(true)
                       }}
                     >
                       <Tooltip content={<CustomizedTooltip />} />
                       <Pie
                         activeIndex={isHovered ? activeIndex : null}
                         activeShape={renderActiveShape}
-                        data={allocationData}
+                        data={indexAllocation}
                         cx="50%"
                         cy="50%"
                         labelLine={false}
@@ -2138,7 +2203,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
                         onMouseEnter={onPieEnter}
                         onMouseLeave={onPieLeave}
                       >
-                        {allocationData.map((entry, index) => (
+                        {indexAllocation.map((entry, index) => (
                           <Cell
                             key={`cell-${index}`}
                             fill={COLORS[index % COLORS.length]}
@@ -2148,6 +2213,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
                     </PieChart>
                   )}
                 </ResponsiveContainer>
+
                 <div>
                   <Flex
                     mt={'1em'}
@@ -2308,7 +2374,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
           <UpdateSection
             setVisibleDeposit={setVisibleDeposit}
             setVisibleWithdraw={setVisibleWithdraw}
-            setUpdateVisible={setUpdateVisible}
+            poolInfo={myPoolInfo}
           />
         </Flex>
       )}
@@ -2319,15 +2385,17 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
 type UpdateSectionProps = {
   setVisibleDeposit: (arg: boolean) => void
   setVisibleWithdraw: (arg: boolean) => void
-  setUpdateVisible: (arg: boolean) => void
+  poolInfo: MiraPool
 }
 const UpdateSection: React.FC<UpdateSectionProps> = ({
   setVisibleDeposit,
   setVisibleWithdraw,
-  setUpdateVisible,
+  poolInfo,
 }) => {
   const { walletConnected, openConnectModal } = useWalletHook()
-  const [isInvest, setInvest] = React.useState(true)
+  const [isInvest, setInvest] = useState(true)
+  const [updateModalVisible, setUpdateModalVisible] = useState(false)
+
   return (
     <Flex
       col
@@ -2355,7 +2423,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
           padding={'12px 24px'}
           textAlign={'center'}
           onClick={() => {
-            setUpdateVisible(true)
+            setUpdateModalVisible(true)
           }}
         >
           Change Settings
@@ -2433,6 +2501,19 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
           Connect Wallet
         </ArtButton>
       )}
+      {updateModalVisible && (
+        <ModalParent
+          visible={updateModalVisible}
+          setVisible={setUpdateModalVisible}
+          zIndex={'1004'}
+        >
+          <UpdateModalBody
+            flex={1}
+            setVisible={setUpdateModalVisible}
+            poolInfo={poolInfo}
+          />
+        </ModalParent>
+      )}
     </Flex>
   )
 }
@@ -2493,9 +2574,8 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({ miraInfo }) => {
     let amnt = amount * DECIMAL
 
     if (amnt < DECIMAL) return
-    
+
     try {
-      
       const transaction = {
         type: 'entry_function_payload',
         function: `${MODULE_ADDR}::mira::invest`,
@@ -2586,19 +2666,19 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({ miraInfo }) => {
       >
         <Flex alignCenter justifyContent={'space-between'}>
           <Flex col>
-            <Flex >
+            <Flex>
               <Input
-                flex={"1"}
-                border={"none"}
-                width={"50%"}
+                flex={'1'}
+                border={'none'}
+                width={'50%'}
                 fontSize={'1.4em'}
                 fontWeight={'bold'}
-                background={"transparent"}
-                color={"#70e094"}
-                placeholder={"0.0"}
-                placeColor={"#70e094"}
+                background={'transparent'}
+                color={'#70e094'}
+                placeholder={'0.0'}
+                placeColor={'#70e094'}
                 onChange={(e) => {
-                  setAmount(parseInt(e.target.value));
+                  setAmount(parseInt(e.target.value))
                 }}
               />
             </Flex>
