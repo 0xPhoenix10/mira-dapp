@@ -35,7 +35,7 @@ export const Carousel3D: React.FC<{
       setCurrentSlide(
         (currentSlide + childNodes.length - 1) % childNodes.length
       );
-    }, 1500);
+    }, 5500);
     return () => clearTimeout(timeout);
   }, [currentSlide, stop, isHover]);
 

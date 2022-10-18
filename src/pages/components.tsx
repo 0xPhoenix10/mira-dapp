@@ -41,7 +41,7 @@ import {
   YAxis,
 } from "recharts";
 import { useNavigate } from "react-router-dom";
-import { FEE_DECIMAL, MODULE_ADDR } from "../config";
+import { FEE_DECIMAL, MODULE_ADDR, DECIMAL } from "../config";
 import { useWalletHook } from "../common/hooks/wallet";
 import { UpdateIndexProviderContext } from "./dashboard";
 import { PortfolioModalBody } from "./dashboard/portfolio.modal.body";
@@ -298,7 +298,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
 };
 
 interface BlankCardProps {
-  type?: "invest" | "index";
+  type?: "invest" | "index" | "recommend";
   [index: string]: any;
 }
 
@@ -331,6 +331,8 @@ export const BlankCard: React.FC<BlankCardProps> = ({
               "You haven't invested in any portfolios yet. Check out Our Tokens or browse the Leaderboard to get started!"}
             {type === "index" &&
               "You haven't created an index yet. Click here to get started!"}
+            {type === "recommend" &&
+              "There is no recommended index now."}
           </p>
         </Flex>
       </Flex>
@@ -356,7 +358,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   const [rebalancingPeriod, setRebalancingPeriod] = useState<number>(0);
   const [minimumContribution, setMiniumContribution] = useState<number>(0);
   const [miniumWithdrawal, setMiniumWithdrawal] = useState<number>(0);
-  const [privateAllocation, setPrivateAlloation] = useState<boolean>(false);
+  const [privateAllocation, setPrivateAlloation] = useState<number>(0);
   const [referralReward, setReferralReward] = useState<number>(0);
   const [openMoreSetting, setOpenMoreSetting] = useState(false);
   const [activeIndex, setActiveIndex] = React.useState(0);
@@ -408,12 +410,14 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
     if (!walletConnected) return;
 
     let pool_name = nameValue.trim();
-    let total_amount = totalAmount;
+    let total_amount = totalAmount * DECIMAL;
+    let gas_amount = 20000;
     let management_fee = managementFee * FEE_DECIMAL;
     let rebalancing_period = rebalancingPeriod * 1;
-    let minimum_contribution = minimumContribution * FEE_DECIMAL;
+    let rebalancing_gas = 20000;
+    let minimum_contribution = minimumContribution * DECIMAL;
     let minimum_withdrawal = miniumWithdrawal * 1;
-    let referral_reward = referralReward * FEE_DECIMAL;
+    let referral_reward = referralReward * DECIMAL;
 
     let index_allocation_key: string[] = [];
     let index_allocation_value: number[] = [];
@@ -425,22 +429,23 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
     });
     if (sum !== 100) return;
 
-    let private_allocation = privateAllocation;
+    let private_allocation = privateAllocation * 1;
 
     if (pool_name === "") return;
-    if (total_amount < 1) return;
+    if (total_amount < DECIMAL) return;
     if (management_fee < 0 || managementFee > 100) return;
-    if (minimum_contribution < 0 || minimum_contribution > 10000) return;
+    if (minimum_contribution < 0 || minimum_contribution > DECIMAL) return;
 
     const transaction = {
       type: "entry_function_payload",
       function: `${MODULE_ADDR}::mira::create_pool`,
-      type_arguments: [],
       arguments: [
         pool_name,
         total_amount,
+        gas_amount,
         management_fee,
         rebalancing_period,
+        rebalancing_gas,
         minimum_contribution,
         minimum_withdrawal,
         referral_reward,
@@ -448,9 +453,11 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
         index_allocation_value,
         private_allocation,
       ],
+      type_arguments: [],
     };
     console.log(transaction);
     const result = await signAndSubmitTransaction(transaction);
+
     if (result) {
       setUpdateIndex(!updateIndex);
       setVisible(false);
@@ -713,13 +720,12 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                               onChange={(e: number) => {
                                 setRebalancingPeriod(e);
                               }}
-                              value={0}
                             >
-                              <SmOption value="0">1 Day</SmOption>
-                              <SmOption value="1">1 Week</SmOption>
-                              <SmOption value="2">2 Weeks</SmOption>
-                              <SmOption value="3">1 Month</SmOption>
-                              <SmOption value="4">2 Months</SmOption>
+                              <SmOption value="1">1 Day</SmOption>
+                              <SmOption value="7">1 Week</SmOption>
+                              <SmOption value="14">2 Weeks</SmOption>
+                              <SmOption value="30">1 Month</SmOption>
+                              <SmOption value="60">2 Months</SmOption>
                             </CustomSelect>
                           </Flex>
                         </Td>
@@ -745,11 +751,10 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                   readOnly={type === "modify"}
                                   onChange={(e) => {
                                     setMiniumContribution(
-                                      parseInt(e.target.value)
+                                      parseFloat(e.target.value)
                                     );
                                   }}
                                 />
-                                %
                               </Flex>
                             </Td>
                           </Tr>
@@ -766,23 +771,22 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                               >
                                 <CustomSelect
                                   flex={"1"}
-                                  value={"0"}
                                   onChange={(e: number) => {
                                     setMiniumWithdrawal(e);
                                   }}
                                 >
-                                  <SmOption value="0">1 Day</SmOption>
-                                  <SmOption value="1">1 Week</SmOption>
-                                  <SmOption value="2">2 Weeks</SmOption>
-                                  <SmOption value="3">1 Month</SmOption>
-                                  <SmOption value="4">2 Months</SmOption>
+                                  <SmOption value="1">1 Day</SmOption>
+                                  <SmOption value="7">1 Week</SmOption>
+                                  <SmOption value="14">2 Weeks</SmOption>
+                                  <SmOption value="30">1 Month</SmOption>
+                                  <SmOption value="60">2 Months</SmOption>
                                 </CustomSelect>
                               </Flex>
                             </Td>
                           </Tr>
                           <Tr>
                             <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                              Public/Private Allocation :
+                              Privacy Allocation :
                             </Td>
                             <Td px={"4px"} py={"2px"} borderBottom={"none"}>
                               <Flex
@@ -792,20 +796,28 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                 gridGap={"20px"}
                               >
                                 <RadioBtn
-                                  name={"private_allocation"}
+                                  name={"privacy_allocation"}
                                   value={"0"}
-                                  title={"false"}
+                                  title={"Public"}
                                   selected
                                   onChange={(e: any) => {
-                                    setPrivateAlloation(false);
+                                    setPrivateAlloation(e);
                                   }}
                                 />
                                 <RadioBtn
-                                  name={"private_allocation"}
+                                  name={"privacy_allocation"}
                                   value={"1"}
-                                  title={"true"}
+                                  title={"Private"}
                                   onChange={(e: any) => {
-                                    setPrivateAlloation(true);
+                                    setPrivateAlloation(e);
+                                  }}
+                                />
+                                <RadioBtn
+                                  name={"privacy_allocation"}
+                                  value={"2"}
+                                  title={"Private Fund"}
+                                  onChange={(e: any) => {
+                                    setPrivateAlloation(e);
                                   }}
                                 />
                               </Flex>
@@ -832,7 +844,6 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                     setReferralReward(parseInt(e.target.value));
                                   }}
                                 />
-                                %
                               </Flex>
                             </Td>
                           </Tr>
@@ -926,7 +937,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
   const [rebalancingPeriod, setRebalancingPeriod] = useState<number>(0);
   const [minimumContribution, setMiniumContribution] = useState<number>(0);
   const [miniumWithdrawal, setMiniumWithdrawal] = useState<number>(0);
-  const [privateAllocation, setPrivateAlloation] = useState<boolean>(false);
+  const [privateAllocation, setPrivateAlloation] = useState<number>(0);
   const [referralReward, setReferralReward] = useState<number>(0);
   const [openMoreSetting, setOpenMoreSetting] = useState(false);
 
@@ -1052,13 +1063,12 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                           onChange={(e: number) => {
                             setRebalancingPeriod(e);
                           }}
-                          value={0}
                         >
-                          <SmOption value="0">1 Day</SmOption>
-                          <SmOption value="1">1 Week</SmOption>
-                          <SmOption value="2">2 Weeks</SmOption>
-                          <SmOption value="3">1 Month</SmOption>
-                          <SmOption value="4">2 Months</SmOption>
+                          <SmOption value="1">1 Day</SmOption>
+                          <SmOption value="7">1 Week</SmOption>
+                          <SmOption value="14">2 Weeks</SmOption>
+                          <SmOption value="30">1 Month</SmOption>
+                          <SmOption value="60">2 Months</SmOption>
                         </CustomSelect>
                       </Flex>
                     </Td>
@@ -1082,7 +1092,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                               color={"white"}
                               placeholder={"input here..."}
                               onChange={(e) => {
-                                setMiniumContribution(parseInt(e.target.value));
+                                setMiniumContribution(parseFloat(e.target.value));
                               }}
                             />
                             %
@@ -1102,23 +1112,22 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                           >
                             <CustomSelect
                               flex={"1"}
-                              value={"0"}
                               onChange={(e: number) => {
                                 setMiniumWithdrawal(e);
                               }}
                             >
-                              <SmOption value="0">1 Day</SmOption>
-                              <SmOption value="1">1 Week</SmOption>
-                              <SmOption value="2">2 Weeks</SmOption>
-                              <SmOption value="3">1 Month</SmOption>
-                              <SmOption value="4">2 Months</SmOption>
+                              <SmOption value="1">1 Day</SmOption>
+                              <SmOption value="7">1 Week</SmOption>
+                              <SmOption value="14">2 Weeks</SmOption>
+                              <SmOption value="30">1 Month</SmOption>
+                              <SmOption value="60">2 Months</SmOption>
                             </CustomSelect>
                           </Flex>
                         </Td>
                       </Tr>
                       <Tr>
                         <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          Public/Private Allocation :
+                          Privacy Allocation :
                         </Td>
                         <Td px={"4px"} py={"2px"} borderBottom={"none"}>
                           <Flex
@@ -1128,20 +1137,28 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                             gridGap={"20px"}
                           >
                             <RadioBtn
-                              name={"private_allocation"}
+                              name={"privacy_allocation"}
                               value={"0"}
-                              title={"false"}
+                              title={"Public"}
                               selected
                               onChange={(e: any) => {
-                                setPrivateAlloation(false);
+                                setPrivateAlloation(e);
                               }}
                             />
                             <RadioBtn
-                              name={"private_allocation"}
+                              name={"privacy_allocation"}
                               value={"1"}
-                              title={"true"}
+                              title={"Private"}
                               onChange={(e: any) => {
-                                setPrivateAlloation(true);
+                                setPrivateAlloation(e);
+                              }}
+                            />
+                            <RadioBtn
+                              name={"privacy_allocation"}
+                              value={"2"}
+                              title={"Private Fund"}
+                              onChange={(e: any) => {
+                                setPrivateAlloation(e);
                               }}
                             />
                           </Flex>
