@@ -11,13 +11,61 @@ import {
   Tr,
 } from "../components/base";
 import { MinusIcon, PlusIcon, SearchIcon } from "../components/icons";
+import { useWalletHook } from '../common/hooks/wallet';
+import { FEE_DECIMAL, MODULE_ADDR, DECIMAL, NODE_URL } from '../config';
 
 export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = ({
   setVisible = () => {},
   allocationData,
   setAllocationData = () => {},
+  poolInfo = {},
   ...props
 }) => {
+  const { walletConnected, signAndSubmitTransaction } = useWalletHook()
+
+  const updatePool = async () => {
+    if (!walletConnected) return
+
+    let pool_name = poolInfo.poolName.trim()
+    let rebalancing_period = poolInfo.settings.rebalancing_period * 1
+    let minimum_contribution = poolInfo.settings.minimum_contribution
+    let minimum_withdrawal_period = poolInfo.settings.minimum_withdrawal_period * 1
+    let referral_reward = poolInfo.settings.referral_reward
+    let privacy_allocation = poolInfo.settings.privacy_allocation
+
+    let index_allocation_key: string[] = []
+    let index_allocation_value: number[] = []
+    let sum = 0
+    allocationData.forEach((data: any) => {
+      index_allocation_key.push(data.name)
+      index_allocation_value.push(data.value)
+      sum += data.value
+    })
+    if (sum !== 100) return
+    
+    console.log(pool_name, rebalancing_period, minimum_contribution, minimum_withdrawal_period, referral_reward, index_allocation_key, index_allocation_value, privacy_allocation)
+    const transaction = {
+      type: 'entry_function_payload',
+      function: `${MODULE_ADDR}::mira::update_pool`,
+      arguments: [
+        pool_name,
+        rebalancing_period,
+        minimum_contribution,
+        minimum_withdrawal_period,
+        referral_reward,
+        index_allocation_key,
+        index_allocation_value,
+        privacy_allocation
+      ],
+      type_arguments: [],
+    }
+    const result = await signAndSubmitTransaction(transaction)
+
+    if(result) {
+      setVisible(false);
+    }
+  };
+
   return (
     <Flex col gridGap={"10px"}>
       <Flex
@@ -156,7 +204,7 @@ export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = ({
         borderRadius={"8px"}
         cursor="pointer"
         onClick={() => {
-          setVisible(false);
+          updatePool();
         }}
         zIndex={"0"}
       >
