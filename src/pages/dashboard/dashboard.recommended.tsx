@@ -130,7 +130,6 @@ const DashboardRecommended = () => {
           founded: getFormatedDate(e.founded),
         })
       }
-      console.log(create_pool_events)
       setMiraMyIndexes(create_pool_events)
     } catch (error) {
       console.log('set mira indexes error', error)
@@ -268,6 +267,7 @@ const DashboardRecommended = () => {
             setUpdateVisible={setUpdateModalVisible}
             setAllocationVisible={setIndexAllocationModalVisible}
             allocationData={allocationData}
+            miraIndexInfo={selectIndexInfo}
           />
         </ModalParent>
       }
@@ -519,6 +519,7 @@ const DashboardRecommended = () => {
                         cursor={'pointer'}
                         onClickPieChart={() => {
                           setModifyModalVisible(true)
+                          setSelectIndexInfo(item)
                         }}
                         onClickTitle={() => {
                           setProfile({
