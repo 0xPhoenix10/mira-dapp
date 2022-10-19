@@ -107,6 +107,8 @@ const ProfilePage = () => {
     };
 
     const getFriendInfo = async (owner_addr: string) => {
+      if (!walletConnected) return;
+
       const aptos_client = new AptosClient(NODE_URL);
       let resource = await aptos_client.getAccountResource(
         owner_addr,
@@ -123,6 +125,7 @@ const ProfilePage = () => {
 
     const getFriendList = async () => {
       if (!walletConnected) return;
+      
       let friends = await getFriendData(walletAddress);
       friends.map(async (friend, index) => {
         if (friend.status !== FriendStatus.Friend) return;
@@ -253,6 +256,7 @@ const ProfilePage = () => {
         width={"100%"}
         height={"max-content"}
         py={"20px"}
+        px={"32px"}
         gridGap={"20px"}
       >
         <Flex flex={1} col gridGap={"20px"}>
