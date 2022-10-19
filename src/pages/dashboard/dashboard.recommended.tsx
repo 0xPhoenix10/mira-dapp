@@ -99,14 +99,15 @@ const DashboardRecommended = () => {
     Carousel3D1?.current?.reset()
     Carousel3D2?.current?.reset()
     Carousel3D3?.current?.reset()
-  }, [walletConnected, isInvest])
+  }, [])
 
   useEffect(() => {
     if (walletAddress) {
       fetchIndexes()
       fetchInvests()
-      getRecommendedIndexes()
     }
+    
+    getRecommendedIndexes()
   }, [walletAddress])
 
   const fetchIndexes = async () => {
