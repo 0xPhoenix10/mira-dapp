@@ -2601,6 +2601,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({ miraInfo }) => {
     if(walletConnected) {
       getAccountBalance();
     }
+
   }, [walletConnected])
 
   const getAccountBalance = async () => {
@@ -2722,8 +2723,9 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({ miraInfo }) => {
                 placeholder={'0.0'}
                 placeColor={'#70e094'}
                 value={amount}
+                type={'number'}
                 onChange={(e) => {
-                  setAmount(parseInt(e.target.value))
+                  setAmount(Number(e.target.value))
                 }}
               />
             </Flex>
