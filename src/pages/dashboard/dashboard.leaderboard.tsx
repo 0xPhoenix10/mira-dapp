@@ -4,15 +4,13 @@ import { CustomTooltip } from "components/elements/tooptip";
 import { Flex } from "components/base/container";
 import { FilterIcon, IconNarrow, SearchIcon } from "components/icons";
 import { ModalParent } from "components/modal";
-import { useNavigate } from "react-router-dom";
 import { FilterItem, IndexListModalBody, SortBtn } from "pages/components";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { MODULE_ADDR, NODE_URL } from "config";
 import { AptosClient } from "aptos";
 import { getFormatedDate, getStringFee } from "../../utils";
 import DepositModalBody from "./deposit.modal.body";
 import WithdrawModalBody from "./withdraw.modal.body";
-import { UpdateIndexProviderContext } from "./index";
 import { PortfolioModalBody } from "./portfolio.modal.body";
 import { ProfileModalBody } from "../otherprofile"
 
@@ -35,7 +33,6 @@ interface CreatePoolEvent {
 
 const DashboardLeaderBoard = () => {
   const { walletConnected, walletAddress } = useWalletHook();
-  const navigate = useNavigate();
 
   const [profile, setProfile] = useState({})
   const [portfolioModalVisible, setPortfolioModalVisible] = useState(false);
@@ -53,19 +50,17 @@ const DashboardLeaderBoard = () => {
 
   const [miraIndexes, setMiraIndexes] = useState<MiraIndex[]>([]);
 
-  const { updateIndex } = useContext(UpdateIndexProviderContext);
-
   useEffect(() => {
-    !walletConnected && setCurrentTab(0);
+    !walletAddress && setCurrentTab(0);
     
-    if(walletConnected) {
+    if(walletAddress) {
       fetchIndexes();
     }
-  }, [walletConnected]);
+  }, [walletAddress]);
 
   const fetchIndexes = async () => {
     const client = new AptosClient(NODE_URL);
-    if (!walletConnected) return;
+    if (!walletAddress) return;
     try {
       let events = await client.getEventsByEventHandle(
         MODULE_ADDR,
@@ -102,7 +97,10 @@ const DashboardLeaderBoard = () => {
   const [foundedMax, setFoundedMax] = useState("");
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    setSearchValue(window.localStorage.getItem("searchValue"));
+    if(window.localStorage.getItem("searchValue") !== null) {
+      setSearchValue(window.localStorage.getItem("searchValue"));
+    }
+    
     setSortDir(window.localStorage.getItem("sortDir") === "true");
     setSortValue(window.localStorage.getItem("sortValue"));
     setActiveFilter(window.localStorage.getItem("activeFilter") === "true");
