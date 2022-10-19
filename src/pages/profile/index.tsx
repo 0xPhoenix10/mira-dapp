@@ -78,6 +78,7 @@ const ProfilePage = () => {
       fetchInvests();
     }
 
+    console.log("line 81");
     !walletConnected && navigate("/");
     const initMiraAccountProps = async () => {
       const client = new AptosClient(NODE_URL);
@@ -87,7 +88,8 @@ const ProfilePage = () => {
           `${MODULE_ADDR}::mira::MiraAccount`
         );
         if (!resource) {
-          navigate("/");
+          console.log("resource not found!");
+          // navigate("/");
           return;
         }
 
@@ -101,7 +103,8 @@ const ProfilePage = () => {
           created: getFormatedDate(data?.created),
         });
       } catch (error) {
-        navigate("/");
+        console.log(error);
+        // navigate("/");
         return;
       }
     };
@@ -125,7 +128,7 @@ const ProfilePage = () => {
 
     const getFriendList = async () => {
       if (!walletConnected) return;
-      
+
       let friends = await getFriendData(walletAddress);
       friends.map(async (friend, index) => {
         if (friend.status !== FriendStatus.Friend) return;
