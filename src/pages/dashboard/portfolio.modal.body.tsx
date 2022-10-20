@@ -26,10 +26,19 @@ import { renderActiveShape } from "../../common/recharts/piechart";
 import { NormalBtn, AddBtn } from "components/elements/buttons";
 import { ArrowIcon } from "components/icons";
 import { BuySellSection } from "pages/components";
+import { AptosClient } from "aptos";
+import { MODULE_ADDR, NODE_URL, DECIMAL } from "config";
 
 interface IData {
   name: string;
   value: string | number;
+}
+
+interface DepositPoolEvent {
+  pool_name: string;
+  investor: string;
+  amount: number;
+  timestamp: string;
 }
 
 export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
@@ -47,6 +56,7 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   const [isMore, setMoreBtn] = useState(false);
   const [dataRange, setDataRange] = useState("1D");
   const [chartData, setChartData] = useState([]);
+  const [depositAmount, setDepositAmount] = useState<number>(0);
 
   useEffect(() => {
     if (walletConnected) {
@@ -64,8 +74,53 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
       };
 
       getFetchFriend();
+      getIndexDeposit();
     }
   }, [walletConnected, walletAddress]);
+
+  const getIndexDeposit = async () => {
+    const client = new AptosClient(NODE_URL)
+    let deposit_amnt = 0
+    let withdraw_amnt = 0
+    
+    if(!walletAddress) return;
+
+    try {
+      let events = await client.getEventsByEventHandle(
+        MODULE_ADDR,
+        `${MODULE_ADDR}::mira::MiraStatus`,
+        "deposit_pool_events"
+      )
+      
+      for (let ev of events) {
+        let e: DepositPoolEvent = ev.data;
+        
+        if(e.pool_name != miraIndexInfo.poolName || walletAddress != e.investor) continue
+        deposit_amnt = e ? e.amount / DECIMAL : 0
+      }
+    } catch (error) {
+      console.log("get index deposit error", error)
+    }
+
+    try {
+      let events = await client.getEventsByEventHandle(
+        MODULE_ADDR,
+        `${MODULE_ADDR}::mira::MiraStatus`,
+        "withdraw_pool_events"
+      )
+      
+      for (let ev of events) {
+        let e: DepositPoolEvent = ev.data;
+        
+        if(e.pool_name != miraIndexInfo.poolName || walletAddress != e.investor) continue
+        withdraw_amnt = e ? e.amount / DECIMAL : 0
+      }
+    } catch (error) {
+      console.log("get index deposit error", error)
+    }
+
+    setDepositAmount(deposit_amnt - withdraw_amnt)
+  }
 
   const data = [
     { name: "WORM", value: 350 },
@@ -409,6 +464,7 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
           </Flex>
           <BuySellSection
             miraInfo={miraIndexInfo}
+            depositAmnt={depositAmount}
           />
         </Flex>
       )}
