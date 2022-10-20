@@ -2616,7 +2616,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({ miraInfo, deposi
 
   const setMaxValue = () => {
     if(walletConnected) {
-      isInvest ? getAccountBalance() : setMax(depositAmnt);
+      !isInvest ? getAccountBalance() : setMax(depositAmnt);
     }
   }
 
