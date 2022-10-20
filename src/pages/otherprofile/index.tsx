@@ -207,7 +207,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
           <IndexListModalBody
             flex={1}
             type={"create"}
-            title={profile.username + "'s Indexes"}
+            title={profile.owner + "'s Indexes"}
           />
         </ModalParent>
       }
@@ -219,7 +219,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
           <IndexListModalBody
             flex={1}
             type={"create"}
-            title={profile.username + "'s Investments"}
+            title={profile.owner + "'s Investments"}
           />
         </ModalParent>
       }
@@ -233,7 +233,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
         <Flex flex={1} col gridGap={"20px"}>
           <Flex height={"42px"}>
             <Flex fontFamily={"art"} fontSize={"24px"} fontWeight={"bold"}>
-              {profile.username}
+              {profile.owner}
             </Flex>
           </Flex>
           <Flex alignCenter gridGap={"16px"}>
@@ -251,7 +251,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
                 background={"transparent"}
                 color={"white"}
                 placeholder={"user_name"}
-                value={profile.username}
+                value={profile.owner}
                 readOnly={true}
               />
             </Flex>
@@ -439,7 +439,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
                 cursor="pointer"
                 onClick={() => setMyIndexesModalVisible(true)}
               >
-                {profile.username}'s Indexes
+                {profile.owner}'s Indexes
               </Box>
             </Flex>
             <Flex justifyCenter gridGap={"16px"}>
@@ -494,7 +494,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
                 cursor="pointer"
                 onClick={() => setMyInvestmentsModalVisible(true)}
               >
-                {profile.username}'s Investments
+                {profile.owner}'s Investments
               </Box>
             </Flex>
             <Flex justifyCenter gridGap={"16px"}>
@@ -544,7 +544,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
           fontWeight={"bold"}
           borderBottom={"1px solid #34383b"}
         >
-          <Box> {profile.username}'s Friends</Box>
+          <Box> {profile.owner}'s Friends</Box>
         </Flex>
 
         <Flex

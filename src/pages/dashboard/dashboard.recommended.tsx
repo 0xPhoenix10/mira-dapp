@@ -420,8 +420,8 @@ const DashboardRecommended = () => {
                       }}
                       onClickTitle={() => {
                         setProfile({
-                          username: item.poolName,
-                          owner: item.poolName,
+                          pool_name: item.poolName,
+                          owner: item.ownerName,
                         })
                         setProfileModalVisible(true)
                       }}
@@ -568,8 +568,8 @@ const DashboardRecommended = () => {
                         }}
                         onClickTitle={() => {
                           setProfile({
-                            username: item.poolName,
-                            owner: item.poolName,
+                            pool_name: item.poolName,
+                            owner: item.ownerName,
                           })
                           setProfileModalVisible(true)
                         }}

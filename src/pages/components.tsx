@@ -1918,7 +1918,6 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
       getMiraPoolInfo()
     }
 
-    console.log(allocationData)
   }, [walletConnected, miraIndexInfo.poolOwner, walletAddress])
 
   const getMiraPoolInfo = async () => {
@@ -1928,7 +1927,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
         miraIndexInfo.poolAddress,
         `${MODULE_ADDR}::mira::MiraPool`,
       )
-
+      
       const data = resource?.data as {
         amount: number
         created: number
@@ -1956,7 +1955,6 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
       }
 
       setMyPoolInfo(pool_info)
-      console.log('my pool info? ', pool_info)
 
       let allocation: IndexAllocation[] = []
       for (let i = 0; i < pool_info.indexAllocation.length; i++) {
@@ -2586,12 +2584,14 @@ const AddRemoveBox = () => {
 
 type BuySellSectionProps = {
   miraInfo?: any
+  depositAmnt?: number
 }
-export const BuySellSection: React.FC<BuySellSectionProps> = ({ miraInfo }) => {
+export const BuySellSection: React.FC<BuySellSectionProps> = ({ miraInfo, depositAmnt }) => {
   const {
     walletConnected,
     openConnectModal,
     signAndSubmitTransaction,
+    signTransaction,
     walletAddress
   } = useWalletHook()
   const [isInvest, setInvest] = useState(true)
@@ -2600,7 +2600,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({ miraInfo }) => {
 
   useEffect(() => {
     if(walletConnected) {
-      getAccountBalance();
+      isInvest ? getAccountBalance() : setMax(depositAmnt);
     }
 
   }, [walletConnected])
@@ -2612,6 +2612,12 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({ miraInfo }) => {
 
     let balance = await coin_client.checkBalance(aptos_account)
     setMax(parseInt(balance.toString()) / DECIMAL)
+  }
+
+  const setMaxValue = () => {
+    if(walletConnected) {
+      isInvest ? getAccountBalance() : setMax(depositAmnt);
+    }
   }
 
   const invest = async () => {
@@ -2680,7 +2686,10 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({ miraInfo }) => {
       >
         <Flex
           cursor={'pointer'}
-          onClick={() => setInvest(true)}
+          onClick={() => {
+            setInvest(true)
+            setMaxValue()
+          }}
           color={isInvest ? '#d15151' : '#fafafa'}
         >
           Invest
@@ -2689,13 +2698,19 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({ miraInfo }) => {
           m={'auto 0px'}
           fontSize={'2em'}
           transform={'rotate(90deg)'}
-          onClick={() => setInvest(!isInvest)}
+          onClick={() => {
+            setInvest(!isInvest)
+            setMaxValue()
+          }}
         >
           <ExchangeIcon />
         </Link>
         <Flex
           cursor={'pointer'}
-          onClick={() => setInvest(false)}
+          onClick={() => {
+            setInvest(false)
+            setMaxValue()
+          }}
           color={!isInvest ? '#d15151' : '#fafafa'}
         >
           Withdraw

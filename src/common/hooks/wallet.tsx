@@ -10,6 +10,7 @@ export const useWalletHook = () => {
     account,
     select,
     signAndSubmitTransaction,
+    signTransaction,
     wallet,
   } = useWallet();
   const { setOpenConnectModal } = useContext(WalletProviderContext);
@@ -25,6 +26,7 @@ export const useWalletHook = () => {
     walletConnected: connected,
     walletAddress: account?.address as string,
     signAndSubmitTransaction: signAndSubmitTransaction,
+    signTransaction: signTransaction,
     wallet: wallet,
   };
 };
