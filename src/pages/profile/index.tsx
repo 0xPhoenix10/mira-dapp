@@ -78,7 +78,6 @@ const ProfilePage = () => {
       fetchInvests();
     }
 
-    console.log("line 81");
     !walletConnected && navigate("/");
     const initMiraAccountProps = async () => {
       const client = new AptosClient(NODE_URL);
