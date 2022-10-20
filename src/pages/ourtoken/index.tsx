@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Link, Table, Tbody, Td, Th, Thead, Tr } from "components/base";
 import { ChartBox, BuySellSection } from "pages/components";
 import { Flex } from "components/base/container";
@@ -200,6 +200,8 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   const [isMore, setMoreBtn] = useState(false)
   const [visibleDeposit, setVisibleDeposit] = useState(false);
   const [visibleWithdraw, setVisibleWithdraw] = useState(false);
+  const [dataRange, setDataRange] = useState("1D");
+  const [chartData, setChartData] = useState([]);
 
   const data1 = [
     { name: "WORM", value: 350 },
@@ -311,6 +313,37 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
     renderTooltip: renderTooltip,
     uniqueId: 2,
   }
+  useEffect(() => {
+    getChartData();
+  }, [dataRange]);
+  const getChartData = () => {
+    var arrTmp = [];
+    for (var i = 0; i < 7; i++) {
+      if (dataRange == "3D" && i > 2) {
+        continue;
+      }
+      var m = "";
+      switch (dataRange) {
+        case "1D":
+          m = `${(i + 1) * 2}:00`;
+          break;
+        case "3D":
+          m = `10/${i + 4}`;
+          break;
+        case "1W":
+          m = `10/${i + 10}`;
+          break;
+        case "1W":
+          m = `10/${i + 7}`;
+          break;
+      }
+      arrTmp.push({
+        month: m,
+        value: 100 + Math.floor(Math.random() * (500 - 100)),
+      });
+    }
+    setChartData(arrTmp);
+  };
 
   return (
     <>
@@ -407,23 +440,49 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
                 <Flex ml={"auto"} gridGap={"4px"}>
                   {isMore && (
                     <>
-                      <NormalBtn>1D</NormalBtn>
-                      <NormalBtn>3D</NormalBtn>
-                      <NormalBtn>1W</NormalBtn>
-                      <NormalBtn>2W</NormalBtn>
-                      <NormalBtn>1M</NormalBtn>
-                      <NormalBtn>3M</NormalBtn>
-                      <NormalBtn>6M</NormalBtn>
-                      <NormalBtn>1Y</NormalBtn>
-                      <NormalBtn>YTD</NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("1D")}>
+                        1D
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("3D")}>
+                        3D
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("1W")}>
+                        1W
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("2W")}>
+                        2W
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("1M")}>
+                        1M
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("3M")}>
+                        3M
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("6M")}>
+                        6M
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("1Y")}>
+                        1Y
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("YTD")}>
+                        YTD
+                      </NormalBtn>
                     </>
                   )}
                   {!isMore && (
                     <>
-                      <NormalBtn>1D</NormalBtn>
-                      <NormalBtn>1W</NormalBtn>
-                      <NormalBtn>1M</NormalBtn>
-                      <NormalBtn>YTD</NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("1D")}>
+                        1D
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("1W")}>
+                        1W
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("1M")}>
+                        1M
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("YTD")}>
+                        YTD
+                      </NormalBtn>
                     </>
                   )}
                   <AddBtn
@@ -433,7 +492,7 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
                   </AddBtn>
                 </Flex>
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={args.chartData}
+                  <AreaChart data={chartData}
                     margin={{ top: 20, right: 10, left: -30, bottom: 0 }}>
                     <defs>
                       <linearGradient id={"colorUv" + args.uniqueId} x1="0" y1="0" x2="0" y2="1">
