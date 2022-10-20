@@ -34,11 +34,12 @@ interface IData {
 }
 
 const OurTokenPage: React.FC = () => {
+  const firstModalFlag = localStorage.getItem('sawFirstModal');
   const [showPortfolio, setPortfolioModal] = useState<boolean>(false);
   const [portfolioTitle, setTitle] = useState("???");
   const [profile, setProfile] = useState({});
   const [profileModalVisible, setProfileModalVisible] = useState(false);
-  const [showStartup, setStartupModalVisible] = useState(true);
+  const [showStartup, setStartupModalVisible] = useState(firstModalFlag === "true" ? false : true);
 
   return (
     <>
@@ -511,6 +512,7 @@ const StartupModalBody: React.FC<{ [index: string]: any }> = ({
   setVisible = () => { },
   ...props
 }) => {
+  localStorage.setItem('sawFirstModal', "true");
 
   return (
     <Flex py={"20px"} width={"100%"} gridGap={"16px"} className={"ourTokenContainer"}>

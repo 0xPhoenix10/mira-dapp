@@ -59,6 +59,7 @@ import { displayPartsToString } from 'typescript'
 
 interface ChartBoxProps {
   title?: string
+  owner?: string
   [index: string]: any
 }
 
@@ -69,6 +70,7 @@ interface IData {
 
 export const ChartBox: React.FC<ChartBoxProps> = ({
   title = 'Chart Box',
+  owner = 'Mira',
   cursor = 'revert',
   onClickPieChart = () => {},
   onClickTitle = () => {},
@@ -224,7 +226,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
             mx={'auto'}
             onClick={onClickTitle}
           >
-            Mira
+            {owner}
           </Flex>
           <CustomTooltip
             title="today's market performance"
@@ -962,7 +964,6 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
     if (pool_name === '') return
     if (minimum_contribution < 0 || minimum_contribution > DECIMAL) return
     
-    console.log(pool_name, rebalancing_period, minimum_contribution, minimum_withdrawal_period, referral_reward, index_allocation_key, index_allocation_value, privacy_allocation)
     const transaction = {
       type: 'entry_function_payload',
       function: `${MODULE_ADDR}::mira::update_pool`,

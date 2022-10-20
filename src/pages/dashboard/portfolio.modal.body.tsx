@@ -261,7 +261,7 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
               pb={"6px"}
               borderBottom={"1px solid #34383b"}
             >
-              <Flex color={"#70e094"}>Mira</Flex>
+              <Flex color={"#70e094"}>{miraIndexInfo.poolName + " by " + miraIndexInfo.ownerName}</Flex>
               <Flex
                 ml={"auto"}
                 mt={"auto"}

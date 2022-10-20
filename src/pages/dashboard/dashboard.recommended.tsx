@@ -31,6 +31,7 @@ interface MiraIndex {
   poolOwner: string
   managementFee: string
   founded: string
+  ownerName: string
 }
 
 interface CreatePoolEvent {
@@ -46,6 +47,7 @@ interface MiraInvest {
   poolName: string
   investor: string
   amount: number
+  ownerName: string
 }
 
 interface DepositPoolEvent {
@@ -106,7 +108,7 @@ const DashboardRecommended = () => {
       fetchIndexes()
       fetchInvests()
     }
-    
+
     getRecommendedIndexes()
   }, [walletAddress])
 
@@ -120,16 +122,28 @@ const DashboardRecommended = () => {
         'create_pool_events',
         { limit: 1000 },
       )
+
       let create_pool_events: MiraIndex[] = []
       for (let ev of events) {
         let e: CreatePoolEvent = ev.data
         if (walletAddress != e.pool_owner) continue
+
+        let resource = await client.getAccountResource(
+          e.pool_owner,
+          `${MODULE_ADDR}::mira::MiraAccount`
+        );
+        
+        let resource_data = resource?.data as {
+          account_name: string
+        }
+      
         create_pool_events.push({
           poolName: e.pool_name,
           poolAddress: e.pool_address,
           poolOwner: e.pool_owner,
           managementFee: getStringFee(e.management_fee),
           founded: getFormatedDate(e.founded),
+          ownerName: resource_data.account_name
         })
       }
       setMiraMyIndexes(create_pool_events)
@@ -151,10 +165,21 @@ const DashboardRecommended = () => {
       for (let ev of events) {
         let e: DepositPoolEvent = ev.data
         if (walletAddress != e.investor) continue
+
+        let resource = await client.getAccountResource(
+          e.investor,
+          `${MODULE_ADDR}::mira::MiraAccount`
+        );
+        
+        let resource_data = resource?.data as {
+          account_name: string
+        }
+
         deposit_pool_events.push({
           poolName: e.pool_name,
           investor: e.investor,
           amount: e.amount,
+          ownerName: resource_data.account_name
         })
       }
       setMiraMyInvests(deposit_pool_events)
@@ -176,14 +201,26 @@ const DashboardRecommended = () => {
       for (let ev of events) {
         let e: CreatePoolEvent = ev.data
         if (e.privacy_allocation == 1 || walletAddress == e.pool_owner) continue
+
+        let resource = await client.getAccountResource(
+          e.pool_owner,
+          `${MODULE_ADDR}::mira::MiraAccount`
+        );
+        
+        let resource_data = resource?.data as {
+          account_name: string
+        }
+
         create_pool_events.push({
           poolName: e.pool_name,
           poolAddress: e.pool_address,
           poolOwner: e.pool_owner,
           managementFee: getStringFee(e.management_fee),
           founded: getFormatedDate(e.founded),
+          ownerName: resource_data.account_name
         })
       }
+
       setRecommendedIndexes(create_pool_events)
     } catch (error) {
       console.log('set recommended mira indexes error', error)
@@ -375,6 +412,7 @@ const DashboardRecommended = () => {
                       width={'0px'}
                       maxWidth={'70%'}
                       title={item.poolName}
+                      owner={item.ownerName}
                       cursor={'pointer'}
                       onClickPieChart={() => {
                         setPortfolioModalVisible(true)
@@ -480,6 +518,7 @@ const DashboardRecommended = () => {
                           width={'0px'}
                           maxWidth={'70%'}
                           title={item.poolName}
+                          owner={item.ownerName}
                           cursor={'pointer'}
                           onClickPieChart={() => {
                             setPortfolioModalVisible(true)
@@ -521,6 +560,7 @@ const DashboardRecommended = () => {
                         width={'0px'}
                         maxWidth={'70%'}
                         title={item.poolName}
+                        owner={item.ownerName}
                         cursor={'pointer'}
                         onClickPieChart={() => {
                           setModifyModalVisible(true)
