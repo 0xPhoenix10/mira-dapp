@@ -2585,8 +2585,9 @@ const AddRemoveBox = () => {
 type BuySellSectionProps = {
   miraInfo?: any
   depositAmnt?: number
+  accountBalance?: number
 }
-export const BuySellSection: React.FC<BuySellSectionProps> = ({ miraInfo, depositAmnt }) => {
+export const BuySellSection: React.FC<BuySellSectionProps> = ({ miraInfo, depositAmnt, accountBalance }) => {
   const {
     walletConnected,
     openConnectModal,
@@ -2600,23 +2601,14 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({ miraInfo, deposi
 
   useEffect(() => {
     if(walletConnected) {
-      isInvest ? getAccountBalance() : setMax(depositAmnt);
+      isInvest ? setMax(accountBalance) : setMax(depositAmnt);
     }
 
   }, [walletConnected])
 
-  const getAccountBalance = async () => {
-    const client = new AptosClient(NODE_URL)
-    const aptos_account = new AptosAccount(undefined, walletAddress)
-    const coin_client = new CoinClient(client)
-
-    let balance = await coin_client.checkBalance(aptos_account)
-    setMax(parseInt(balance.toString()) / DECIMAL)
-  }
-
   const setMaxValue = () => {
     if(walletConnected) {
-      !isInvest ? getAccountBalance() : setMax(depositAmnt);
+      !isInvest ? setMax(accountBalance) : setMax(depositAmnt);
     }
   }
 

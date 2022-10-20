@@ -26,7 +26,7 @@ import { renderActiveShape } from "../../common/recharts/piechart";
 import { NormalBtn, AddBtn } from "components/elements/buttons";
 import { ArrowIcon } from "components/icons";
 import { BuySellSection } from "pages/components";
-import { AptosClient } from "aptos";
+import { AptosClient, AptosAccount, CoinClient } from "aptos";
 import { MODULE_ADDR, NODE_URL, DECIMAL } from "config";
 
 interface IData {
@@ -57,6 +57,7 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   const [dataRange, setDataRange] = useState("1D");
   const [chartData, setChartData] = useState([]);
   const [depositAmount, setDepositAmount] = useState<number>(0);
+  const [accountBalance, setAccountBalance] = useState<number>(0);
 
   useEffect(() => {
     if (walletConnected) {
@@ -75,6 +76,7 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
 
       getFetchFriend();
       getIndexDeposit();
+      getAccountBalance();
     }
   }, [walletConnected, walletAddress]);
 
@@ -120,6 +122,15 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
     }
 
     setDepositAmount(deposit_amnt - withdraw_amnt)
+  }
+
+  const getAccountBalance = async () => {
+    const client = new AptosClient(NODE_URL)
+    const aptos_account = new AptosAccount(undefined, walletAddress)
+    const coin_client = new CoinClient(client)
+
+    let balance = await coin_client.checkBalance(aptos_account)
+    setAccountBalance(parseInt(balance.toString()) / DECIMAL)
   }
 
   const data = [
@@ -465,6 +476,7 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
           <BuySellSection
             miraInfo={miraIndexInfo}
             depositAmnt={depositAmount}
+            accountBalance={accountBalance}
           />
         </Flex>
       )}
