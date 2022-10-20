@@ -7,6 +7,8 @@ import { useState } from "react";
 const DepositModalBody: React.FC<{ [index: string]: any }> = ({
   miraIndexInfo = {},
   setVisible = () => {},
+  setEstimateAmount = ()=>{},
+  setShowPrice = ()=>{},
   setUpdateInvest = () => {},
   ...props
 }) => {
@@ -33,6 +35,7 @@ const DepositModalBody: React.FC<{ [index: string]: any }> = ({
     setVisible(false);
     setUpdateInvest((value) => value + 1);
   };
+
   return (
     <Flex col gridGap={"10px"}>
       <Flex
@@ -112,6 +115,7 @@ const DepositModalBody: React.FC<{ [index: string]: any }> = ({
                       placeholder={"input here..."}
                       onChange={(e) => {
                         setDepositAmount(parseInt(e.target.value));
+                        setEstimateAmount(parseInt(e.target.value))
                       }}
                     />
                     Aptos
@@ -127,7 +131,7 @@ const DepositModalBody: React.FC<{ [index: string]: any }> = ({
             border={"1px solid #34383b"}
             borderRadius={"8px"}
             p={"8px 16px"}
-            onClick={() => deposit()}
+            onClick={() => { setShowPrice(true); setVisible(false); } }
           >
             Deposit
           </Flex>
