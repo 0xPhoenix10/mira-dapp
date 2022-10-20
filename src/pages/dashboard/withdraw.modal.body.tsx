@@ -7,27 +7,12 @@ import { useState } from "react";
 const WithdrawModalBody: React.FC<{ [index: string]: any }> = ({
   miraIndexInfo = {},
   setVisible = () => {},
+ setEstimateAmount = ()=>{},
+ setShowPrice = ()=>{},
   ...props
 }) => {
-  const { walletConnected, signAndSubmitTransaction } = useWalletHook();
   const [withdrawAmount, setWithdrawAmount] = useState<number>(0);
-  const withdraw = async () => {
-    if (!walletConnected) return;
-    const transaction = {
-      type: "entry_function_payload",
-      function: `${MODULE_ADDR}::mira::withdraw`,
-      type_arguments: [],
-      arguments: [
-        miraIndexInfo.poolName,
-        miraIndexInfo.poolOwner,
-        withdrawAmount,
-      ],
-    };
-    const result = await signAndSubmitTransaction(transaction);
-    if (result) {
-      setVisible(false);
-    }
-  };
+
   return (
     <Flex col gridGap={"10px"}>
       <Flex
@@ -107,6 +92,7 @@ const WithdrawModalBody: React.FC<{ [index: string]: any }> = ({
                       placeholder={"input here..."}
                       onChange={(e) => {
                         setWithdrawAmount(parseInt(e.target.value));
+                        setEstimateAmount(parseInt(e.target.value));
                       }}
                     />
                     Aptos
@@ -122,7 +108,7 @@ const WithdrawModalBody: React.FC<{ [index: string]: any }> = ({
             border={"1px solid #34383b"}
             borderRadius={"8px"}
             p={"8px 16px"}
-            onClick={() => withdraw()}
+            onClick={() => { setShowPrice(true); setVisible(false); } }
           >
             Withdraw
           </Flex>

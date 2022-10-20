@@ -109,26 +109,40 @@ const StyledMenu = styled((props: MenuProps) => (
 
 const defaultMenuList = {
   APTOS: [
-    { id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" },
+    {
+      id: "our_tokens",
+      link: "/",
+      title: "Mira Funds",
+      icon: "CoinIcon",
+      tip: "Our index funds are built and monitored by experts to provide broad, diversified exposure to a variety of categories.",
+    },
     {
       id: "invest_manage",
       link: "/invest",
       title: "Invest & Manage",
       icon: "ManageIcon",
+      tip: "Browse our platform to find portfolios to invest in, or build your own.",
     },
-    { id: "stake", link: "/stake", title: "Stake", icon: "StakeIcon" },
-    { id: "swap", link: "/swap", title: "Swap", icon: "SwapIcon" },
     {
-      id: "launchpad",
-      link: "/launchpad",
-      title: "Launchpad",
-      icon: "LaunchpadIcon",
+      id: "stake",
+      link: "/stake",
+      title: "Stake",
+      icon: "StakeIcon",
+      tip: "Some blockchains validate the information on their network by rewarding users who stake their funds. You can earn interest on your deposits. To learn more, google proof-of-stake. ",
+    },
+    {
+      id: "swap",
+      link: "/swap",
+      title: "Swap",
+      icon: "SwapIcon",
+      tip: "Have a token and want a different token? Connect to a decentralized exchange (DEX), to swap one for the other.",
     },
     {
       id: "explorer",
       link: "/explorer",
       title: "Explorer",
       icon: "ExplorerIcon",
+      tip: "Watch blockchain transaction history evolve in real time.",
     },
   ],
   SUI: [{ id: "our_tokens", link: "/", title: "Mira Funds", icon: "CoinIcon" }],
@@ -185,8 +199,27 @@ const defaultMenuList = {
 
 const defaultMoreMenuList = {
   APTOS: [
-    { id: "mine", link: "/mine", title: "Mine", icon: "MineIcon" },
-    { id: "farm", link: "/farm", title: "Liquidity Farm", icon: "FarmIcon" },
+    {
+      id: "launchpad",
+      link: "/launchpad",
+      title: "Launchpad",
+      icon: "LaunchpadIcon",
+      tip: "Invest in new crypto companies by participating in ICOs (Initial Coin Offerings), or IDOs (Initial DEX Offerings).",
+    },
+    {
+      id: "farm",
+      link: "/farm",
+      title: "Liquidity Farm",
+      icon: "FarmIcon",
+      tip: "DEX's operate by pooling together funds for each trading pair (ex: BTC/USDC) in something called a Liquidity Pool (LP). By contributing to an LP, you can earn rewards - this is called yield or liquidity farming.",
+    },
+    {
+      id: "borrow",
+      link: "/borrow",
+      title: "Borrow",
+      icon: "CoinIcon",
+      tip: "Take out a loan on your crypto.",
+    },
   ],
   SUI: [
     { id: "mine", link: "/mine", title: "Mine", icon: "MineIcon" },
@@ -227,19 +260,26 @@ const defaultMoreMenuList = {
 };
 const defaultRemoveMenuList = {
   APTOS: [
-    { id: "stake", link: "/stake", title: "Stake", icon: "StakeIcon" },
-    { id: "swap", link: "/swap", title: "Swap", icon: "SwapIcon" },
     {
-      id: "launchpad",
-      link: "/launchpad",
-      title: "Launchpad",
-      icon: "LaunchpadIcon",
+      id: "stake",
+      link: "/stake",
+      title: "Stake",
+      icon: "StakeIcon",
+      tip: "Some blockchains validate the information on their network by rewarding users who stake their funds. You can earn interest on your deposits. To learn more, google proof-of-stake. ",
+    },
+    {
+      id: "swap",
+      link: "/swap",
+      title: "Swap",
+      icon: "SwapIcon",
+      tip: "Have a token and want a different token? Connect to a decentralized exchange (DEX), to swap one for the other.",
     },
     {
       id: "explorer",
       link: "/explorer",
       title: "Explorer",
       icon: "ExplorerIcon",
+      tip: "Watch blockchain transaction history evolve in real time.",
     },
   ],
   SUI: [],
@@ -370,6 +410,9 @@ const LayoutFooter = () => {
   const getIconComponent = (iconName: string) => {
     var res = <CoinIcon />;
     switch (iconName) {
+      case "ManageIcon":
+        res = <ManageIcon />;
+        break;
       case "CoinIcon":
         res = <CoinIcon />;
         break;
@@ -472,6 +515,13 @@ const LayoutFooter = () => {
     handleMoreMenuClose();
   };
 
+  const getTip = (item) => {
+    if (item.tip) {
+      return item.tip;
+    }
+    return "";
+  };
+
   return (
     <>
       <Flex
@@ -481,7 +531,7 @@ const LayoutFooter = () => {
         pb={"0px"}
         borderTop={"1px solid #333334"}
         overflow={"auto"}
-        display={isCollapse ? 'none' : 'flex' }
+        display={isCollapse ? "none" : "flex"}
       >
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable" direction="horizontal">
@@ -510,7 +560,7 @@ const LayoutFooter = () => {
                             title={item.title}
                             icon={getIconComponent(item.icon)}
                             onClick={() => navigate(item.link)}
-                            tooltip="add info popup for each tab in the footer (Mira Funds,...) - I will add the text myself"
+                            tooltip={getTip(item)}
                           />
                         }
                       </div>
@@ -572,11 +622,21 @@ const LayoutFooter = () => {
           </StyledMenu>
         </Flex>
       </Flex>
-      <Flex gridGap={"25px"} pt={"5px"} ml={"10px"} position={"absolute"} right={"0px"} minHeight={"56px"} bottom={"0px"}>
+      <Flex
+        gridGap={"25px"}
+        pt={"5px"}
+        ml={"10px"}
+        position={"absolute"}
+        right={"0px"}
+        minHeight={"56px"}
+        bottom={"0px"}
+      >
         <CollapeButton
           variant="contained"
           disableElevation
-          onClick={()=>{setCollapse(!isCollapse)}}
+          onClick={() => {
+            setCollapse(!isCollapse);
+          }}
         >
           {isCollapse ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
         </CollapeButton>
@@ -625,8 +685,7 @@ const FooterBtn: React.FC<FooterBtnProps> = ({
       <Flex alignCenter gridGap={"8px"}>
         <Flex fontSize={"20px"}>{icon}</Flex>
         <Flex fontSize={"16px"}>{title}</Flex>
-        {
-          tooltip != "" &&
+        {tooltip != "" && (
           <CustomTooltip
             title={tooltip}
             arrow
@@ -635,7 +694,7 @@ const FooterBtn: React.FC<FooterBtnProps> = ({
           >
             <span>ⓘ</span>
           </CustomTooltip>
-        }
+        )}
       </Flex>
     </FooterBtnBase>
   );

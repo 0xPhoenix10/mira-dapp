@@ -77,6 +77,7 @@ const LayoutHeader = () => {
           margin={0}
           padding={0}
         />
+        Beta
       </Box>
       {/* && createdMiraAccount */}
       <ArtButton ml={"auto"} padding={"0px"}>

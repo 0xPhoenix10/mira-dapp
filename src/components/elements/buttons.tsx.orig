@@ -1,6 +1,4 @@
 import { Box, Link } from "components/base";
-import { ArrowIcon } from "components/icons";
-import React from "react";
 import styled from "styled-components";
 
 interface ArtButtonProps {
@@ -16,7 +14,7 @@ export const ArtButton: React.FC<ArtButtonProps> = ({
   borderRadius = "100px",
   padding = "8px 24px",
   btnColor = "#302d38",
-  onClick = () => {},
+  onClick = () => { },
   children,
   ...props
 }) => {
@@ -41,15 +39,14 @@ export const ArtButton: React.FC<ArtButtonProps> = ({
   );
 };
 
-const ArtButtonBase = styled(Box)<ArtButtonProps>`
+const ArtButtonBase = styled(Box) <ArtButtonProps>`
   box-shadow: -5px -3px 10px 0px #fff2, 5px 3px 10px 0px #0006;
   cursor: pointer;
   & > div {
     background: ${(p) => `${p.btnColor}33`};
-    /* box-shadow: 3px 3px 10px 0px ${(p) =>
-      `${p.btnColor}88`} inset, -6px -6px 10px 0px ${(p) =>
-      `${p.btnColor}88`} inset,
-      -3px -3px 10px 0px ${(p) => `${p.btnColor}88`} inset; */
+    box-shadow: 3px 3px 10px 0px ${(p) => `${p.btnColor}88`} inset,
+      -6px -6px 10px 0px ${(p) => `${p.btnColor}88`} inset,
+      -3px -3px 10px 0px ${(p) => `${p.btnColor}88`} inset;
   }
   &:hover {
     & > div {
@@ -76,7 +73,7 @@ NormalBtn.defaultProps = {
   border: "1px solid #34383b",
   borderRadius: "8px",
   cursor: "pointer",
-  fontSize: "10px",
+  fontSize: "10px"
 };
 
 export const AddBtn = styled(Link)``;
@@ -88,24 +85,10 @@ AddBtn.defaultProps = {
   background: "#302d38",
   border: "1px solid #34383b",
   cursor: "pointer",
-  fontSize: "14px",
+  fontSize: "14px"
 };
-
-export const SwipeBtn: React.FC<{
-  children: React.ReactNode;
-  [index: string]: any;
-}> = ({ children, ...props }) => {
-  return (
-    <ArtButton borderWidth={"2px"} padding={"0px"} {...props}>
-      <SwipeBtnBase>
-        <span>
-          <ArrowIcon size="50%" color={"#3c3a45"} dir={"right"} />
-        </span>
-        {children}
-      </SwipeBtnBase>
-    </ArtButton>
-  );
-};
+<<<<<<< HEAD
+=======
 
 const SwipeBtnBase = styled(Box)`
   position: relative;
@@ -172,3 +155,4 @@ const SwipeBtnBase = styled(Box)`
     }
   }
 `;
+>>>>>>> fd9a320 (click & drag)

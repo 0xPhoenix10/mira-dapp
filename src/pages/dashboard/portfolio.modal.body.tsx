@@ -23,11 +23,18 @@ import {
   YAxis,
 } from "recharts";
 import { renderActiveShape } from "../../common/recharts/piechart";
-import { NormalBtn, AddBtn } from "components/elements/buttons";
-import { ArrowIcon } from "components/icons";
+
+import { CustomSelect, SmOption } from "components/form";
+import {
+  ArtButton,
+  NormalBtn,
+  AddBtn,
+  SwipeBtn,
+} from "components/elements/buttons";
+import { ArrowIcon, ExchangeIcon } from "components/icons";
+import { MODULE_ADDR, NODE_URL, DECIMAL } from "../../config";
 import { BuySellSection } from "pages/components";
 import { AptosClient, AptosAccount, CoinClient } from "aptos";
-import { MODULE_ADDR, NODE_URL, DECIMAL } from "config";
 
 interface IData {
   name: string;
@@ -42,18 +49,22 @@ interface DepositPoolEvent {
 }
 
 export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
-  setVisible = () => { },
-  setUpdateInvest = () => { },
+  setVisible = () => {},
+  setUpdateInvest = () => {},
   miraIndexInfo = {},
   ...props
 }) => {
-  const { walletConnected, walletAddress } = useWalletHook();
+  const { walletConnected, walletAddress, signAndSubmitTransaction } =
+    useWalletHook();
   const [visibleDeposit, setVisibleDeposit] = useState(false);
   const [visibleWithdraw, setVisibleWithdraw] = useState(false);
   const [isFriend, setIsFriend] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setHovered] = useState(false);
   const [isMore, setMoreBtn] = useState(false);
+  const [estimateAmount, setEstimateAmount] = React.useState<string>("0.00");
+  const [showPrice, setShowPrice] = React.useState<boolean>(false);
+  const [isInvest, setInvest] = React.useState<boolean>(true);
   const [dataRange, setDataRange] = useState("1D");
   const [chartData, setChartData] = useState([]);
   const [depositAmount, setDepositAmount] = useState<number>(0);
@@ -81,27 +92,31 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   }, [walletConnected, walletAddress]);
 
   const getIndexDeposit = async () => {
-    const client = new AptosClient(NODE_URL)
-    let deposit_amnt = 0
-    let withdraw_amnt = 0
-    
-    if(!walletAddress) return;
+    const client = new AptosClient(NODE_URL);
+    let deposit_amnt = 0;
+    let withdraw_amnt = 0;
+
+    if (!walletAddress) return;
 
     try {
       let events = await client.getEventsByEventHandle(
         MODULE_ADDR,
         `${MODULE_ADDR}::mira::MiraStatus`,
         "deposit_pool_events"
-      )
-      
+      );
+
       for (let ev of events) {
         let e: DepositPoolEvent = ev.data;
-        
-        if(e.pool_name != miraIndexInfo.poolName || walletAddress != e.investor) continue
-        deposit_amnt = e ? e.amount / DECIMAL : 0
+
+        if (
+          e.pool_name != miraIndexInfo.poolName ||
+          walletAddress != e.investor
+        )
+          continue;
+        deposit_amnt = e ? e.amount / DECIMAL : 0;
       }
     } catch (error) {
-      console.log("get index deposit error", error)
+      console.log("get index deposit error", error);
     }
 
     try {
@@ -109,29 +124,33 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
         MODULE_ADDR,
         `${MODULE_ADDR}::mira::MiraStatus`,
         "withdraw_pool_events"
-      )
-      
+      );
+
       for (let ev of events) {
         let e: DepositPoolEvent = ev.data;
-        
-        if(e.pool_name != miraIndexInfo.poolName || walletAddress != e.investor) continue
-        withdraw_amnt = e ? e.amount / DECIMAL : 0
+
+        if (
+          e.pool_name != miraIndexInfo.poolName ||
+          walletAddress != e.investor
+        )
+          continue;
+        withdraw_amnt = e ? e.amount / DECIMAL : 0;
       }
     } catch (error) {
-      console.log("get index deposit error", error)
+      console.log("get index deposit error", error);
     }
 
-    setDepositAmount(deposit_amnt - withdraw_amnt)
-  }
+    setDepositAmount(deposit_amnt - withdraw_amnt);
+  };
 
   const getAccountBalance = async () => {
-    const client = new AptosClient(NODE_URL)
-    const aptos_account = new AptosAccount(undefined, walletAddress)
-    const coin_client = new CoinClient(client)
+    const client = new AptosClient(NODE_URL);
+    const aptos_account = new AptosAccount(undefined, walletAddress);
+    const coin_client = new CoinClient(client);
 
-    let balance = await coin_client.checkBalance(aptos_account)
-    setAccountBalance(parseInt(balance.toString()) / DECIMAL)
-  }
+    let balance = await coin_client.checkBalance(aptos_account);
+    setAccountBalance(parseInt(balance.toString()) / DECIMAL);
+  };
 
   const data = [
     { name: "WORM", value: 350 },
@@ -231,21 +250,70 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
 
   const onPieLeave = () => setHovered(false);
 
+  const deposit = async () => {
+    if (!walletConnected) return;
+    const transaction = {
+      type: "entry_function_payload",
+      function: `${MODULE_ADDR}::mira::invest`,
+      type_arguments: [],
+      arguments: [
+        miraIndexInfo.poolName,
+        miraIndexInfo.poolOwner,
+        estimateAmount,
+      ],
+    };
+    const result = await signAndSubmitTransaction(transaction);
+  };
+
+  const withdraw = async () => {
+    if (!walletConnected) return;
+    const transaction = {
+      type: "entry_function_payload",
+      function: `${MODULE_ADDR}::mira::withdraw`,
+      type_arguments: [],
+      arguments: [
+        miraIndexInfo.poolName,
+        miraIndexInfo.poolOwner,
+        estimateAmount,
+      ],
+    };
+    const result = await signAndSubmitTransaction(transaction);
+  };
   const CustomizedTick2 = ({ x, y, payload }) => {
-    return <text style={{ fontSize: "12px", float: "right", textAlign: "right", fill: "#fff" }} x={x - 24} y={y} textAnchor="top" dominantBaseline="hanging">
-      {payload.value}
-    </text>
-  }
+    return (
+      <text
+        style={{
+          fontSize: "12px",
+          float: "right",
+          textAlign: "right",
+          fill: "#fff",
+        }}
+        x={x - 24}
+        y={y}
+        textAnchor="top"
+        dominantBaseline="hanging"
+      >
+        {payload.value}
+      </text>
+    );
+  };
 
   const renderTooltip = (props) => {
     if (props && props.payload[0]) {
       return (
-        <div style={{ padding: "12px", background: "#222129", color: "#ffffff", fontSize: "12px" }}>
+        <div
+          style={{
+            padding: "12px",
+            background: "#222129",
+            color: "#ffffff",
+            fontSize: "12px",
+          }}
+        >
           <div>Value: {props.payload[0].payload.value}</div>
         </div>
-      )
+      );
     }
-  }
+  };
 
   const args = {
     chartData: data2,
@@ -255,20 +323,20 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
     tickFormatter: null,
     renderTooltip: renderTooltip,
     uniqueId: 2,
-  }
+  };
   useEffect(() => {
     getChartData();
-  }, [dataRange])
+  }, [dataRange]);
   const getChartData = () => {
     var arrTmp = [];
-    for(var i = 0; i < 7; i++) {
-      if(dataRange == "3D" && i > 2) {
+    for (var i = 0; i < 7; i++) {
+      if (dataRange == "3D" && i > 2) {
         continue;
       }
       var m = "";
-      switch(dataRange) {
+      switch (dataRange) {
         case "1D":
-          m = `${(i+1)*2}:00`;
+          m = `${(i + 1) * 2}:00`;
           break;
         case "3D":
           m = `10/${i + 4}`;
@@ -282,11 +350,11 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
       }
       arrTmp.push({
         month: m,
-        value: 100 + Math.floor(Math.random() * (500 - 100))
-      })
+        value: 100 + Math.floor(Math.random() * (500 - 100)),
+      });
     }
-    setChartData(arrTmp)
-  }
+    setChartData(arrTmp);
+  };
 
   return (
     <>
@@ -309,11 +377,18 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
           </Flex>
           {visibleDeposit && (
             <DepositModalBody
+              setEstimateAmount={setEstimateAmount}
+              setShowPrice={setShowPrice}
               setVisible={setVisibleDeposit}
-              setUpdateInvest={setUpdateInvest}
             />
           )}
-          {visibleWithdraw && <WithdrawModalBody />}
+          {visibleWithdraw && (
+            <WithdrawModalBody
+              setEstimateAmount={setEstimateAmount}
+              setShowPrice={setShowPrice}
+              setVisible={setVisibleWithdraw}
+            />
+          )}
         </>
       ) : (
         <Flex py={"20px"} width={"100%"} gridGap={"16px"} minWidth={"80vw"}>
@@ -327,7 +402,9 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
               pb={"6px"}
               borderBottom={"1px solid #34383b"}
             >
-              <Flex color={"#70e094"}>{miraIndexInfo.poolName + " by " + miraIndexInfo.ownerName}</Flex>
+              <Flex color={"#70e094"}>
+                {miraIndexInfo.poolName + " by " + miraIndexInfo.ownerName}
+              </Flex>
               <Flex
                 ml={"auto"}
                 mt={"auto"}
@@ -352,7 +429,7 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
                   <PieChart
                     width={300}
                     height={300}
-                  //style={{ cursor: cursor }}
+                    //style={{ cursor: cursor }}
                   >
                     <Tooltip content={<CustomizedTooltip />} />
                     <Pie
@@ -384,42 +461,75 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
                 <Flex ml={"auto"} gridGap={"4px"}>
                   {isMore ? (
                     <>
-                      <NormalBtn onClick={()=>setDataRange("1D")}>1D</NormalBtn>
-                      <NormalBtn onClick={()=>setDataRange("3D")}>3D</NormalBtn>
-                      <NormalBtn onClick={()=>setDataRange("1W")}>1W</NormalBtn>
-                      <NormalBtn onClick={()=>setDataRange("2W")}>2W</NormalBtn>
-                      <NormalBtn onClick={()=>setDataRange("1M")}>1M</NormalBtn>
-                      <NormalBtn onClick={()=>setDataRange("3M")}>3M</NormalBtn>
-                      <NormalBtn onClick={()=>setDataRange("6M")}>6M</NormalBtn>
-                      <NormalBtn onClick={()=>setDataRange("1Y")}>1Y</NormalBtn>
-                      <NormalBtn onClick={()=>setDataRange("YTD")}>YTD</NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("1D")}>
+                        1D
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("3D")}>
+                        3D
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("1W")}>
+                        1W
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("2W")}>
+                        2W
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("1M")}>
+                        1M
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("3M")}>
+                        3M
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("6M")}>
+                        6M
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("1Y")}>
+                        1Y
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("YTD")}>
+                        YTD
+                      </NormalBtn>
                     </>
-                  ):(
+                  ) : (
                     <>
-                      <NormalBtn onClick={()=>setDataRange("1D")}>1D</NormalBtn>
-                      <NormalBtn onClick={()=>setDataRange("1W")}>1W</NormalBtn>
-                      <NormalBtn onClick={()=>setDataRange("1M")}>1M</NormalBtn>
-                      <NormalBtn onClick={()=>setDataRange("YTD")}>YTD</NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("1D")}>
+                        1D
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("1W")}>
+                        1W
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("1M")}>
+                        1M
+                      </NormalBtn>
+                      <NormalBtn onClick={() => setDataRange("YTD")}>
+                        YTD
+                      </NormalBtn>
                     </>
                   )}
                   <AddBtn
-                    onClick={() => isMore ? setMoreBtn(false) : setMoreBtn(true)}
+                    onClick={() =>
+                      isMore ? setMoreBtn(false) : setMoreBtn(true)
+                    }
                   >
                     {isMore ? "-" : "+"}
                   </AddBtn>
                 </Flex>
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={chartData}
-                    margin={{ top: 20, right: 10, left: -30, bottom: 0 }}>
+                  <AreaChart
+                    data={chartData}
+                    margin={{ top: 20, right: 10, left: -30, bottom: 0 }}
+                  >
                     <defs>
-                      <linearGradient id={"colorUv" + args.uniqueId} x1="0" y1="0" x2="0" y2="1">
+                      <linearGradient
+                        id={"colorUv" + args.uniqueId}
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
                         <stop offset="100%" stopColor={args.gradientColor} />
                       </linearGradient>
                     </defs>
-                    <XAxis
-                      dataKey="month"
-                      tick={args.customizedTick}
-                    />
+                    <XAxis dataKey="month" tick={args.customizedTick} />
                     <YAxis
                       width={80}
                       tick={args.customizedTick}
@@ -428,9 +538,21 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
                       domain={[1, 15]}
                       tickFormatter={args.tickFormatter}
                     />
-                    <CartesianGrid strokeDasharray="5 5" fill="#222129" horizontal={false} vertical={false} />
+                    <CartesianGrid
+                      strokeDasharray="5 5"
+                      fill="#222129"
+                      horizontal={false}
+                      vertical={false}
+                    />
                     <Tooltip content={args.renderTooltip} />
-                    <Area dot={{ fill: args.gradientColor, fillOpacity: 1 }} type="monotone" dataKey="value" stroke={args.gradientColor} fillOpacity={0.1} fill={"url(#colorUv" + args.uniqueId + ")"} />
+                    <Area
+                      dot={{ fill: args.gradientColor, fillOpacity: 1 }}
+                      type="monotone"
+                      dataKey="value"
+                      stroke={args.gradientColor}
+                      fillOpacity={0.1}
+                      fill={"url(#colorUv" + args.uniqueId + ")"}
+                    />
                   </AreaChart>
                 </ResponsiveContainer>
               </Flex>
