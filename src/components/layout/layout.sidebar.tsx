@@ -19,7 +19,7 @@ const LayoutSidebar = () => {
       col
       spaceBetween
       bg={"#222129"}
-      p={"5px"}
+      p={visibleSidebar ? "5px" : "5px 0px"}
       minWidth={visibleSidebar ? "220px" : "0px"}
       borderRight={"1px solid #333334"}
       transition={"200ms"}
@@ -68,6 +68,12 @@ const LayoutSidebar = () => {
             border={"1px solid #333334"}
             borderRadius={"4px"}
             cursor={"pointer"}
+            position={"absolute"}
+            style={visibleSidebar ? {
+              left: "175px"
+            } : {
+              left: "0px"
+            }}
             onClick={() => {
               setVisibleSidebar(!visibleSidebar);
             }}

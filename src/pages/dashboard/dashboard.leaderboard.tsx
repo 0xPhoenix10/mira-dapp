@@ -373,6 +373,17 @@ const DashboardLeaderBoard = () => {
                 </Th>
                 <Th>
                   <SortBtn
+                    value={"portfolioManager"}
+                    sortDir={sortDir}
+                    setSortValue={setSortValue}
+                    sortValue={sortValue}
+                    setSortDir={setSortDir}
+                  >
+                    Manager
+                  </SortBtn>
+                </Th>
+                <Th>
+                  <SortBtn
                     value={"-"}
                     sortDir={sortDir}
                     setSortValue={setSortValue}
@@ -522,6 +533,7 @@ const DashboardLeaderBoard = () => {
                             setProfile({
                               username: miraIndex.poolName,
                               owner: miraIndex.ownerName,
+                              owner_address: miraIndex.poolOwner
                             })
                             setProfileModalVisible(true)
                           }}
@@ -537,6 +549,17 @@ const DashboardLeaderBoard = () => {
                           {miraIndex.poolName}
                         </Flex>
                       </Td>
+                      <Td 
+                        cursor={"pointer"}
+                        onClick={() => {
+                          setProfile({
+                            username: miraIndex.poolName,
+                            owner: miraIndex.ownerName,
+                            owner_address: miraIndex.poolOwner
+                          })
+                          setProfileModalVisible(true)
+                        }}
+                      >{miraIndex.ownerName}</Td>
                       <Td 
                         cursor={"pointer"}
                         onClick={() => {

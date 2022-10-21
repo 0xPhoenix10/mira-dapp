@@ -1755,7 +1755,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
                             onClick={() => {
                               setProfile({
                                 username: miraIndex.poolName,
-                                owner: miraIndex.poolOwner,
+                                owner: miraIndex.poolOwner
                               });
                               setVisibleProfile(true);
                             }}
