@@ -22,6 +22,7 @@ import {
   WarningIcon,
   IconNarrow,
   SortDirIcon,
+  PencilIcon,
 } from "components/icons";
 import { ModalParent } from "components/modal";
 import { CustomTooltip } from "components/elements/tooptip";
@@ -376,6 +377,8 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   const [openMoreSetting, setOpenMoreSetting] = useState(false);
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [isHovered, setHovered] = React.useState(false);
+  const [isRebalancingMore, setRebalancingMoreBtn] = useState(false);
+  const [isMinWithdrawalMore, setMinWithdrawalMoreBtn] = useState(false);
 
   const COLORS = [
     "#5a9e47",
@@ -565,13 +568,61 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
             {type === "modify" && "Modify My Index"}
             {type === "create" && "Create My Index"}
           </Flex>
-          <Flex justifyCenter gridGap={"16px"}>
+          <Flex
+            col
+            justifyCenter
+            gridGap={"1px"}
+            background={"#302d38"}
+            p={"20px"}
+            border={"1px solid #34383b"}
+            borderRadius={"20px"}
+            {...props}
+          >
             <Flex
               col
-              background={"#302d38"}
-              p={"20px"}
-              border={"1px solid #34383b"}
-              borderRadius={"20px"}
+              gridGap={"12px"}
+              {...props}
+            >
+              <Flex justifyCenter gridGap={"16px"} alignCenter>
+                <Flex
+                  col
+                  gridGap={"4px"}
+                  minWidth={"395px"}
+                  justifyCenter
+                >
+                  <Flex
+                    alignCenter
+                    gridGap={"4px"}
+                    background={"#0005"}
+                    p={"8px 16px"}
+                    border={"1px solid #34383b"}
+                    borderRadius={"8px"}
+                  >
+                    <Input
+                      border={"none"}
+                      background={"transparent"}
+                      color={"white"}
+                      placeholder={"Pick a name"}
+                      placeColor={"#70e094"}
+                      fontSize={"24px"}
+                      readOnly={type === "modify"}
+                      width={"100%"}
+                      onChange={(e) => {
+                        setNameValue(e.target.value);
+                      }}
+                    />
+                    <Flex
+                      cursor={"pointer"}
+                      // onClick={() => changeMiraAccountName()}
+                    >
+                      <PencilIcon />
+                    </Flex>
+                  </Flex>
+                </Flex>
+              </Flex>
+            </Flex>
+            <Flex
+              col
               gridGap={"12px"}
               {...props}
             >
@@ -666,29 +717,6 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                     <Tbody>
                       <Tr>
                         <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          Name :
-                        </Td>
-                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          <Flex
-                            alignCenter
-                            p={"4px"}
-                            borderBottom={"1px solid #34383b"}
-                          >
-                            <Input
-                              border={"none"}
-                              background={"transparent"}
-                              color={"white"}
-                              placeholder={"input here..."}
-                              readOnly={type === "modify"}
-                              onChange={(e) => {
-                                setNameValue(e.target.value);
-                              }}
-                            />
-                          </Flex>
-                        </Td>
-                      </Tr>
-                      <Tr>
-                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
                           Deposit amount :
                         </Td>
                         <Td px={"4px"} py={"2px"} borderBottom={"none"}>
@@ -716,34 +744,6 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                       </Tr>
                       <Tr>
                         <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          Management fee :
-                        </Td>
-                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
-                          <Flex
-                            alignCenter
-                            p={"4px"}
-                            borderBottom={"1px solid #34383b"}
-                          >
-                            <Input
-                              flex={"1"}
-                              type={"number"}
-                              border={"none"}
-                              background={"transparent"}
-                              color={"white"}
-                              placeholder={"input here..."}
-                              max={"100"}
-                              min={"0"}
-                              readOnly={type === "modify"}
-                              onChange={(e) => {
-                                setManagementFee(parseInt(e.target.value));
-                              }}
-                            />
-                            %
-                          </Flex>
-                        </Td>
-                      </Tr>
-                      <Tr>
-                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
                           Rebalancing :
                         </Td>
                         <Td px={"4px"} py={"2px"} borderBottom={"none"}>
@@ -753,18 +753,82 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                             py={"1px"}
                             borderBottom={"1px solid #34383b"}
                           >
-                            <CustomSelect
-                              flex={"1"}
-                              onChange={(e: number) => {
-                                setRebalancingPeriod(e);
-                              }}
+                            {isRebalancingMore ? (
+                              <>
+                                <NormalBtn ml={"0px"} background={rebalancingPeriod == 1 ? "#565656" : "#302d38"} onClick={() => setRebalancingPeriod(1)}>
+                                  1D
+                                </NormalBtn>
+                                <NormalBtn ml={"0px"} background={rebalancingPeriod == 7 ? "#565656" : "#302d38"} onClick={() => setRebalancingPeriod(7)}>
+                                  1W
+                                </NormalBtn>
+                                <NormalBtn ml={"0px"} background={rebalancingPeriod == 14 ? "#565656" : "#302d38"}  onClick={() => setRebalancingPeriod(14)}>
+                                  2W
+                                </NormalBtn>
+                                <NormalBtn ml={"0px"} background={rebalancingPeriod == 30 ? "#565656" : "#302d38"}  onClick={() => setRebalancingPeriod(30)}>
+                                  1M
+                                </NormalBtn>
+                                <NormalBtn ml={"0px"} background={rebalancingPeriod == 60 ? "#565656" : "#302d38"}  onClick={() => setRebalancingPeriod(60)}>
+                                  2M
+                                </NormalBtn>
+                              </>
+                            ) : (
+                              <>
+                                <NormalBtn ml={"0px"} background={rebalancingPeriod == 1 ? "#565656" : "#302d38"}  onClick={() => setRebalancingPeriod(1)}>
+                                  1D
+                                </NormalBtn>
+                                <NormalBtn ml={"0px"} background={rebalancingPeriod == 7 ? "#565656" : "#302d38"}  onClick={() => setRebalancingPeriod(7)}>
+                                  1W
+                                </NormalBtn>
+                                <NormalBtn ml={"0px"} background={rebalancingPeriod == 30 ? "#565656" : "#302d38"}  onClick={() => setRebalancingPeriod(30)}>
+                                  1M
+                                </NormalBtn>
+                              </>
+                            )}
+                            <AddBtn
+                              onClick={() =>
+                                isRebalancingMore ? setRebalancingMoreBtn(false) : setRebalancingMoreBtn(true)
+                              }
+                              ml={"0px"}
                             >
-                              <SmOption value="1">1 Day</SmOption>
-                              <SmOption value="7">1 Week</SmOption>
-                              <SmOption value="14">2 Weeks</SmOption>
-                              <SmOption value="30">1 Month</SmOption>
-                              <SmOption value="60">2 Months</SmOption>
-                            </CustomSelect>
+                              {isRebalancingMore ? "-" : "+"}
+                            </AddBtn>
+                          </Flex>
+                        </Td>
+                      </Tr>
+                      <Tr>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          Management fee :
+                        </Td>
+                        <Td px={"4px"} py={"2px"} borderBottom={"none"}>
+                          <Flex
+                            alignCenter
+                            p={"4px"}
+                            borderBottom={"1px solid #34383b"}
+                          >
+                            <NormalBtn ml={"0px"} background={managementFee == 1 ? "#565656" : "#302d38"} onClick={() => setManagementFee(1)}>
+                              1%
+                            </NormalBtn>
+                            <NormalBtn ml={"0px"} background={managementFee == 2 ? "#565656" : "#302d38"} onClick={() => setManagementFee(2)}>
+                              2%
+                            </NormalBtn>
+                            <NormalBtn ml={"0px"} background={managementFee == 5 ? "#565656" : "#302d38"} onClick={() => setManagementFee(5)}>
+                              5%
+                            </NormalBtn>
+                            <Input
+                              flex={"1"}
+                              type={"number"}
+                              border={"none"}
+                              background={"transparent"}
+                              color={"white"}
+                              placeholder={"..."}
+                              max={"100"}
+                              min={"0"}
+                              ml={"10px"}
+                              readOnly={type === "modify"}
+                              onChange={(e) => {
+                                setManagementFee(parseInt(e.target.value));
+                              }}
+                            />
                           </Flex>
                         </Td>
                       </Tr>
@@ -780,12 +844,22 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                 p={"4px"}
                                 borderBottom={"1px solid #34383b"}
                               >
+                                <NormalBtn ml={"0px"} background={minimumContribution == 1 ? "#565656" : "#302d38"} onClick={() => setMiniumContribution(1)}>
+                                  $1
+                                </NormalBtn>
+                                <NormalBtn ml={"0px"} background={minimumContribution == 5 ? "#565656" : "#302d38"} onClick={() => setMiniumContribution(5)}>
+                                  $5
+                                </NormalBtn>
+                                <NormalBtn ml={"0px"} background={minimumContribution == 10 ? "#565656" : "#302d38"} onClick={() => setMiniumContribution(10)}>
+                                  $10
+                                </NormalBtn>
                                 <Input
                                   flex={"1"}
                                   border={"none"}
                                   background={"transparent"}
                                   color={"white"}
-                                  placeholder={"input here..."}
+                                  placeholder={"..."}
+                                  ml={"10px"}
                                   readOnly={type === "modify"}
                                   onChange={(e) => {
                                     setMiniumContribution(
@@ -807,18 +881,45 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                 py={"1px"}
                                 borderBottom={"1px solid #34383b"}
                               >
-                                <CustomSelect
-                                  flex={"1"}
-                                  onChange={(e: number) => {
-                                    setMiniumWithdrawal(e);
-                                  }}
+                                {isMinWithdrawalMore ? (
+                                  <>
+                                    <NormalBtn ml={"0px"} background={miniumWithdrawal == 1 ? "#565656" : "#302d38"} onClick={() => setMiniumWithdrawal(1)}>
+                                      1D
+                                    </NormalBtn>
+                                    <NormalBtn ml={"0px"} background={miniumWithdrawal == 7 ? "#565656" : "#302d38"} onClick={() => setMiniumWithdrawal(7)}>
+                                      1W
+                                    </NormalBtn>
+                                    <NormalBtn ml={"0px"} background={miniumWithdrawal == 14 ? "#565656" : "#302d38"} onClick={() => setMiniumWithdrawal(14)}>
+                                      2W
+                                    </NormalBtn>
+                                    <NormalBtn ml={"0px"} background={miniumWithdrawal == 30 ? "#565656" : "#302d38"} onClick={() => setMiniumWithdrawal(30)}>
+                                      1M
+                                    </NormalBtn>
+                                    <NormalBtn ml={"0px"} background={miniumWithdrawal == 60 ? "#565656" : "#302d38"} onClick={() => setMiniumWithdrawal(60)}>
+                                      2M
+                                    </NormalBtn>
+                                  </>
+                                ) : (
+                                  <>
+                                    <NormalBtn ml={"0px"} background={miniumWithdrawal == 1 ? "#565656" : "#302d38"} onClick={() => setMiniumWithdrawal(1)}>
+                                      1D
+                                    </NormalBtn>
+                                    <NormalBtn ml={"0px"} background={miniumWithdrawal == 7 ? "#565656" : "#302d38"} onClick={() => setMiniumWithdrawal(7)}>
+                                      1W
+                                    </NormalBtn>
+                                    <NormalBtn ml={"0px"} background={miniumWithdrawal == 30 ? "#565656" : "#302d38"} onClick={() => setMiniumWithdrawal(30)}>
+                                      1M
+                                    </NormalBtn>
+                                  </>
+                                )}
+                                <AddBtn
+                                  onClick={() =>
+                                    isMinWithdrawalMore ? setMinWithdrawalMoreBtn(false) : setMinWithdrawalMoreBtn(true)
+                                  }
+                                  ml={"0px"}
                                 >
-                                  <SmOption value="1">1 Day</SmOption>
-                                  <SmOption value="7">1 Week</SmOption>
-                                  <SmOption value="14">2 Weeks</SmOption>
-                                  <SmOption value="30">1 Month</SmOption>
-                                  <SmOption value="60">2 Months</SmOption>
-                                </CustomSelect>
+                                  {isMinWithdrawalMore ? "-" : "+"}
+                                </AddBtn>
                               </Flex>
                             </Td>
                           </Tr>
@@ -861,7 +962,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                               </Flex>
                             </Td>
                           </Tr>
-                          <Tr>
+                          {/* <Tr>
                             <Td px={"4px"} py={"2px"} borderBottom={"none"}>
                               Referral Rewards :
                             </Td>
@@ -884,7 +985,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                 />
                               </Flex>
                             </Td>
-                          </Tr>
+                          </Tr> */}
                         </>
                       )}
 
@@ -2160,6 +2261,19 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
 
   return (
     <>
+      <ModalParent
+        visible={allocVisible}
+        setVisible={setAllocVisible}
+        zIndex={"1004"}
+      >
+        <IndexAllocationModalBody
+          flex={1}
+          allocationData={indexAllocation}
+          setAllocationData={setIndexAllocation}
+          setVisible={setAllocVisible}
+          poolInfo={myPoolInfo}
+        />
+      </ModalParent>
       {visibleDeposit || visibleWithdraw ? (
         <>
           <Flex
@@ -2211,22 +2325,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
                 </Flex>
               </Flex>
             </Flex>
-            <Flex p={"20px"}>
-              {allocVisible && (
-                <ModalParent
-                  visible={allocVisible}
-                  setVisible={setAllocVisible}
-                  zIndex={"1004"}
-                >
-                  <IndexAllocationModalBody
-                    flex={1}
-                    allocationData={indexAllocation}
-                    setAllocationData={setIndexAllocation}
-                    setVisible={setAllocVisible}
-                    poolInfo={myPoolInfo}
-                  />
-                </ModalParent>
-              )}
+            <Flex px={"20px"} pt={"20px"}>
               <Flex col flex={3} width={"0px"} p={"20px"} aspectRatio={"2"}>
                 <ResponsiveContainer>
                   {indexAllocation && Array.isArray(indexAllocation) && (
@@ -2264,50 +2363,6 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
                     </PieChart>
                   )}
                 </ResponsiveContainer>
-
-                <div>
-                  <Flex
-                    mt={"1em"}
-                    fontSize={"15px"}
-                    alignCenter
-                    justifyContent={"space-around"}
-                  >
-                    <Flex
-                      cursor={"pointer"}
-                      onClick={() => setRealAlloc(true)}
-                      color={isReal ? "#70e094" : "#fafafa"}
-                    >
-                      Strategy Allocation
-                    </Flex>
-                    <Link
-                      m={"auto 0px"}
-                      fontSize={"2em"}
-                      transform={"rotate(90deg)"}
-                      onClick={() =>
-                        isReal ? setRealAlloc(false) : setRealAlloc(true)
-                      }
-                    >
-                      <ExchangeIcon />
-                    </Link>
-                    <Flex
-                      cursor={"pointer"}
-                      onClick={() => setRealAlloc(false)}
-                      color={!isReal ? "#70e094" : "#fafafa"}
-                    >
-                      Real Allocation
-                    </Flex>
-                    <Flex cursor={"pointer"}>
-                      <CustomTooltip
-                        title="changes the portfolio above from viewing the strategy to the current allocation"
-                        arrow
-                        disableInteractive
-                        placement="top"
-                      >
-                        <span>ⓘ</span>
-                      </CustomTooltip>
-                    </Flex>
-                  </Flex>
-                </div>
               </Flex>
               <Flex col flex={5} width={"0px"} aspectRatio={"2"}>
                 <Flex ml={"auto"} gridGap={"4px"}>
@@ -2384,6 +2439,56 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
                 </ResponsiveContainer>
               </Flex>
             </Flex>
+            <Flex>
+              <Flex col flex={3} width={"0px"}>
+                <ResponsiveContainer>
+                  <div>
+                    <Flex
+                      fontSize={"15px"}
+                      alignCenter
+                      justifyContent={"space-around"}
+                    >
+                      <Flex
+                        cursor={"pointer"}
+                        onClick={() => setRealAlloc(true)}
+                        color={isReal ? "#70e094" : "#fafafa"}
+                      >
+                        Strategy Allocation
+                      </Flex>
+                      <Link
+                        m={"auto 0px"}
+                        fontSize={"2em"}
+                        transform={"rotate(90deg)"}
+                        onClick={() =>
+                          isReal ? setRealAlloc(false) : setRealAlloc(true)
+                        }
+                      >
+                        <ExchangeIcon />
+                      </Link>
+                      <Flex
+                        cursor={"pointer"}
+                        onClick={() => setRealAlloc(false)}
+                        color={!isReal ? "#70e094" : "#fafafa"}
+                      >
+                        Real Allocation
+                      </Flex>
+                      <Flex cursor={"pointer"}>
+                        <CustomTooltip
+                          title="changes the portfolio above from viewing the strategy to the current allocation"
+                          arrow
+                          disableInteractive
+                          placement="top"
+                        >
+                          <span>ⓘ</span>
+                        </CustomTooltip>
+                      </Flex>
+                    </Flex>
+                  </div>
+                </ResponsiveContainer>
+              </Flex>
+              <Flex col flex={3} width={"0px"}>
+              </Flex>
+            </Flex>
             <Flex mt={"24px"} col>
               <Flex
                 fontFamily={"art"}
@@ -2458,7 +2563,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
       border={"1px solid #34383b"}
       borderRadius={"20px"}
     >
-      <Flex fontFamily={"art"} fontSize={"20px"} fontWeight={"bold"}>
+      <Flex fontFamily={"art"} fontSize={"20px"} fontWeight={"bold"} justifyCenter>
         Update
       </Flex>
       <Flex
