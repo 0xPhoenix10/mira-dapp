@@ -67,6 +67,7 @@ const LayoutHeader = () => {
       gridGap={"16px"}
     >
       <Box
+        cursor={"pointer"}
         onClick={() => {
           navigate("/");
         }}

@@ -808,6 +808,7 @@ const ProfilePage = () => {
                           setProfile({
                             pool_name: item.poolName,
                             owner: item.ownerName,
+                            owner_address: item.poolOwner
                           })
                           setProfileModalVisible(true)
                         }}
@@ -873,6 +874,7 @@ const ProfilePage = () => {
                           setProfile({
                             username: item.poolName,
                             owner: item.ownerName,
+                            owner_address: item.poolOwner
                           })
                           setProfileModalVisible(true)
                         }}
