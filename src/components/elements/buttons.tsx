@@ -42,10 +42,10 @@ export const ArtButton: React.FC<ArtButtonProps> = ({
 };
 
 const ArtButtonBase = styled(Box)<ArtButtonProps>`
-  box-shadow: -5px -3px 10px 0px #fff2, 5px 3px 10px 0px #0006;
+  // box-shadow: -5px -3px 10px 0px #fff2, 5px 3px 10px 0px #0006;
   cursor: pointer;
   & > div {
-    background: ${(p) => `${p.btnColor}33`};
+    background: ${(p) => `${p.btnColor}`};
     /* box-shadow: 3px 3px 10px 0px ${(p) =>
       `${p.btnColor}88`} inset, -6px -6px 10px 0px ${(p) =>
       `${p.btnColor}88`} inset,

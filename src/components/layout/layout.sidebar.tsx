@@ -137,8 +137,8 @@ const SideBarBtn: React.FC<SideBarBtnProps> = ({
         <Flex
           alignCenter
           gridGap={"8px"}
-          color={active ? "#74bd7b" : "#fff"}
-          opacity={active ? "1" : "0.5"}
+          color={active ? "#74bd7b" : "#dedede"}
+          opacity={active ? "1" : ".8"}
         >
           <Flex fontSize={"20px"}>{icon}</Flex>
           <Flex fontSize={"16px"}>{title}</Flex>

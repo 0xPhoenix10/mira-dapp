@@ -2294,7 +2294,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
                     <Flex
                       cursor={"pointer"}
                       onClick={() => setRealAlloc(true)}
-                      color={isReal ? "#d15151" : "#fafafa"}
+                      color={isReal ? "#70e094" : "#fafafa"}
                     >
                       Strategy Allocation
                     </Flex>
@@ -2311,7 +2311,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
                     <Flex
                       cursor={"pointer"}
                       onClick={() => setRealAlloc(false)}
-                      color={!isReal ? "#d15151" : "#fafafa"}
+                      color={!isReal ? "#70e094" : "#fafafa"}
                     >
                       Real Allocation
                     </Flex>
@@ -2487,6 +2487,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
         justifyContent={"space-around"}
       >
         <ArtButton
+          btnColor={"#3c3a45"}
           mt={"24px"}
           mx={"auto"}
           minWidth={"150px"}
@@ -2506,6 +2507,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
         justifyContent={"space-around"}
       >
         <ArtButton
+          btnColor={"#3c3a45"}
           mt={"24px"}
           mx={"auto"}
           minWidth={"150px"}
@@ -2524,7 +2526,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
         <Flex
           cursor={"pointer"}
           onClick={() => setInvest(true)}
-          color={isInvest ? "#d15151" : "#fafafa"}
+          color={isInvest ? "#70e094" : "#fafafa"}
         >
           Add Funds
         </Flex>
@@ -2539,7 +2541,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
         <Flex
           cursor={"pointer"}
           onClick={() => setInvest(false)}
-          color={!isInvest ? "#d15151" : "#fafafa"}
+          color={!isInvest ? "#70e094" : "#fafafa"}
         >
           Remove Funds
         </Flex>
@@ -2548,6 +2550,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
 
       {walletConnected ? (
         <ArtButton
+          btnColor={"#3c3a45"}
           mt={"24px"}
           mx={"auto"}
           minWidth={"150px"}
@@ -2561,6 +2564,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
         </ArtButton>
       ) : (
         <ArtButton
+          btnColor={"#3c3a45"}
           mt={"24px"}
           mx={"auto"}
           minWidth={"150px"}
@@ -2756,7 +2760,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
             setInvest(true);
             setMaxValue();
           }}
-          color={isInvest ? "#d15151" : "#fafafa"}
+          color={isInvest ? "#70e094" : "#fafafa"}
         >
           Invest
         </Flex>
@@ -2777,7 +2781,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
             setInvest(false);
             setMaxValue();
           }}
-          color={!isInvest ? "#d15151" : "#fafafa"}
+          color={!isInvest ? "#70e094" : "#fafafa"}
         >
           Withdraw
         </Flex>
@@ -2841,6 +2845,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
 
       {walletConnected ? (
         <ArtButton
+          btnColor={"#3c3a45"}
           mt={"24px"}
           mx={"auto"}
           minWidth={"150px"}
@@ -2852,6 +2857,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
         </ArtButton>
       ) : (
         <ArtButton
+          btnColor={"#3c3a45"}
           mt={"24px"}
           mx={"auto"}
           minWidth={"150px"}

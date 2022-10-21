@@ -107,7 +107,6 @@ const LayoutHeader = () => {
           width={"40px"}
           height={"40px"}
           border={"3px solid #272c2e"}
-          boxShadow={"-5px -3px 10px 0px #fff2, 5px 3px 10px 0px #0006"}
           cursor={"pointer"}
           onClick={() => {
             navigate("/profile");
