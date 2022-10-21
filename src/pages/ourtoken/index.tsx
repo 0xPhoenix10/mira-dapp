@@ -1,33 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Box, Link, Table, Tbody, Td, Th, Thead, Tr } from "components/base";
-import { ChartBox, BuySellSection, BlankCard } from "pages/components";
+import { Box } from "components/base";
+import { ChartBox, BlankCard } from "pages/components";
 import { Flex } from "components/base/container";
-import DepositModalBody from "../dashboard/deposit.modal.body";
-import WithdrawModalBody from "../dashboard/withdraw.modal.body";
 import { PortfolioModalBody } from "../dashboard/portfolio.modal.body";
 
-import {
-  CartesianGrid,
-  Cell,
-  Legend,
-  Area,
-  AreaChart,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
-import { CustomSelect, SmOption } from "components/form";
-import { ArrowIcon, ExchangeIcon } from "components/icons";
-import { ArtButton, NormalBtn, AddBtn } from "components/elements/buttons";
 import { useWalletHook } from "common/hooks/wallet";
-import { renderActiveShape } from "../../common/recharts/piechart";
 import { ModalParent } from "components/modal";
 import { ProfileModalBody } from "../otherprofile";
 import { IndexAllocation } from '../../utils/types'
-import { BsInfoCircle } from "react-icons/bs";
 import "./ourtoken.css";
 import { styled } from "@mui/material/styles";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
@@ -108,35 +88,16 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 
 const OurTokenPage: React.FC = () => {
   const { walletAddress, walletConnected } = useWalletHook()
-  const firstModalFlag = localStorage.getItem("sawFirstModal");
   const [showPortfolio, setPortfolioModal] = useState<boolean>(false);
   const [portfolioTitle, setTitle] = useState("???");
   const [profile, setProfile] = useState({});
   const [profileModalVisible, setProfileModalVisible] = useState(false);
-  const [showStartup, setStartupModalVisible] = useState(
-    firstModalFlag === "true" ? false : true
-  );
 
   const [expanded, setExpanded] = React.useState<string | false>("panel1");
   const [miraIndexes, setMiraIndexes] = useState<MiraIndex[]>([])
   const [selectIndexInfo, setSelectIndexInfo] = useState<MiraIndex | null>(
     null
   );
-  const [createModalVisible, setCreateModalVisible] = useState(false)
-  const [
-    indexAllocationModalVisible,
-    setIndexAllocationModalVisible,
-  ] = useState(false)
-  const [allocationData, setAllocationData] = useState<IndexAllocation[]>([
-    {
-      name: 'BTC',
-      value: 50,
-    },
-    {
-      name: 'USDT',
-      value: 50,
-    },
-  ])
   
   useEffect(() => {
     if (walletAddress) {
@@ -284,8 +245,7 @@ const OurTokenPage: React.FC = () => {
                         <ChartBox
                           key={index}
                           flex={1}
-                          width={'0px'}
-                          maxWidth={'70%'}
+                          width={'100%'}
                           title={item.poolName}
                           owner={item.ownerName}
                           indexAllocation={item.indexAllocation}
@@ -354,8 +314,7 @@ const OurTokenPage: React.FC = () => {
                         <ChartBox
                           key={index}
                           flex={1}
-                          width={'0px'}
-                          maxWidth={'70%'}
+                          width={'100%'}
                           title={item.poolName}
                           owner={item.ownerName}
                           indexAllocation={item.indexAllocation}
@@ -424,8 +383,7 @@ const OurTokenPage: React.FC = () => {
                         <ChartBox
                           key={index}
                           flex={1}
-                          width={'0px'}
-                          maxWidth={'70%'}
+                          width={'100%'}
                           title={item.poolName}
                           owner={item.ownerName}
                           indexAllocation={item.indexAllocation}
@@ -481,75 +439,7 @@ const OurTokenPage: React.FC = () => {
           />
         </ModalParent>
       }
-      {
-        <ModalParent visible={showStartup} setVisible={setStartupModalVisible}>
-          <StartupModalBody flex={1} setVisible={setStartupModalVisible} />
-        </ModalParent>
-      }
     </>
-  );
-};
-
-const StartupModalBody: React.FC<{ [index: string]: any }> = ({
-  title = "???",
-  setVisible = () => {},
-  ...props
-}) => {
-  localStorage.setItem("sawFirstModal", "true");
-
-  return (
-    <Flex
-      py={"20px"}
-      width={"100%"}
-      gridGap={"16px"}
-      className={"ourTokenContainer"}
-    >
-      <Flex flex={1} col>
-        {/* <Flex
-          mt={"4px"}
-          fontFamily={"art"}
-          fontSize={"20px"}
-          fontWeight={"bold"}
-          px={"10px"}
-          pb={"6px"}
-          borderBottom={"1px solid #34383b"}
-        >
-          xHack Startup Index (XSI)
-        </Flex> */}
-        <Flex p={"20px"} className={"tokenBody"}>
-          <Flex
-            flex={5}
-            p={"20px"}
-            fontFamily={"art"}
-            fontSize={"18px"}
-            fontWeight={"600"}
-            letterSpacing={"0.1em"}
-            aspectRatio={"8"}
-            width={"0px"}
-            alignCenter
-            className={"tokenContent"}
-          >
-            <Flex
-              flex={5}
-              p={"20px"}
-              fontFamily={"art"}
-              fontSize={"60px"}
-              fontWeight={"600"}
-              letterSpacing={"0.1em"}
-              className={"infoIcon"}
-            >
-              <BsInfoCircle />
-            </Flex>
-            <Flex>
-              Thanks for checking out our Beta app. Keep in mind, this is a
-              rough version of our product. We work hard and move fast, so
-              you'll probably encounter some bugs. Bear with us while we iron
-              them out.
-            </Flex>
-          </Flex>
-        </Flex>
-      </Flex>
-    </Flex>
   );
 };
 
