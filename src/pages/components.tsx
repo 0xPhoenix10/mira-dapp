@@ -916,7 +916,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                 <NormalBtn
                                   ml={'0px'}
                                   background={
-                                    minimumContribution == 1
+                                    minimumContribution == 0.1
                                       ? '#565656'
                                       : '#302d38'
                                   }
@@ -927,7 +927,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                 <NormalBtn
                                   ml={'0px'}
                                   background={
-                                    minimumContribution == 5
+                                    minimumContribution == 0.5
                                       ? '#565656'
                                       : '#302d38'
                                   }
@@ -938,7 +938,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                 <NormalBtn
                                   ml={'0px'}
                                   background={
-                                    minimumContribution == 10
+                                    minimumContribution == 1
                                       ? '#565656'
                                       : '#302d38'
                                   }
@@ -1243,22 +1243,22 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
   const { walletConnected, signAndSubmitTransaction } = useWalletHook()
 
   const [nameValue, setNameValue] = useState<string>(
-    poolInfo.poolName ? poolInfo.poolName.trim() : '',
+    poolInfo.poolName ? poolInfo.poolName.trim() : ''
   )
   const [rebalancingPeriod, setRebalancingPeriod] = useState<number>(
-    poolInfo.settings.rebalancing_period * 1,
+    poolInfo.settings.rebalancing_period * 1
   )
   const [minimumContribution, setMiniumContribution] = useState<number>(
-    poolInfo.settings.minimum_contribution / DECIMAL,
+    poolInfo.settings.minimum_contribution / DECIMAL
   )
   const [miniumWithdrawal, setMiniumWithdrawal] = useState<number>(
-    poolInfo.settings.minimum_withdrawal_period * 1,
+    poolInfo.settings.minimum_withdrawal_period * 1
   )
   const [privateAllocation, setPrivateAlloation] = useState<number>(
-    poolInfo.settings.privacy_allocation,
+    poolInfo.settings.privacy_allocation
   )
   const [referralReward, setReferralReward] = useState<number>(
-    poolInfo.settings.referral_reward / DECIMAL,
+    poolInfo.settings.referral_reward / DECIMAL
   )
   const [showPrice, setShowPrice] = useState(false)
   const [openMoreSetting, setOpenMoreSetting] = useState(false)
@@ -1459,7 +1459,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                             <NormalBtn
                               ml={'0px'}
                               background={
-                                minimumContribution == 1 ? '#565656' : '#302d38'
+                                minimumContribution == 0.1 ? '#565656' : '#302d38'
                               }
                               onClick={() => setMiniumContribution(0.1)}
                             >
@@ -1468,7 +1468,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                             <NormalBtn
                               ml={'0px'}
                               background={
-                                minimumContribution == 5 ? '#565656' : '#302d38'
+                                minimumContribution == 0.5 ? '#565656' : '#302d38'
                               }
                               onClick={() => setMiniumContribution(0.5)}
                             >
@@ -1477,7 +1477,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                             <NormalBtn
                               ml={'0px'}
                               background={
-                                minimumContribution == 10
+                                minimumContribution == 1
                                   ? '#565656'
                                   : '#302d38'
                               }

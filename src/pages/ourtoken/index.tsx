@@ -424,6 +424,7 @@ const OurTokenPage: React.FC = () => {
             flex={1}
             title={portfolioTitle}
             setVisible={showPortfolio}
+            miraIndexInfo={selectIndexInfo}
           />
         </ModalParent>
       }
