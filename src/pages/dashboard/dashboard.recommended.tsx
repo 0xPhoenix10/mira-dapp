@@ -48,15 +48,6 @@ interface MiraIndex {
   settings: MiraPoolSettings
 }
 
-interface MiraRecommendedIndex {
-  poolName: string
-  poolAddress: string
-  poolOwner: string
-  managementFee: string
-  founded: string
-  ownerName: string
-}
-
 interface CreatePoolEvent {
   pool_name: string
   pool_address: string
@@ -158,7 +149,7 @@ const DashboardRecommended = () => {
       let create_pool_events: MiraIndex[] = []
       for (let ev of events) {
         let e: CreatePoolEvent = ev.data
-        if (walletAddress != e.pool_owner) continue
+        if (walletAddress !== e.pool_owner) continue
 
         let resource = await client.getAccountResource(
           e.pool_owner,
@@ -227,7 +218,7 @@ const DashboardRecommended = () => {
       let deposit_pool_events: MiraInvest[] = []
       for (let ev of events) {
         let e: DepositPoolEvent = ev.data
-        if (walletAddress != e.investor) continue
+        if (walletAddress !== e.investor) continue
 
         try {
           let res = await client.getAccountResource(
@@ -296,7 +287,7 @@ const DashboardRecommended = () => {
       let create_pool_events: MiraIndex[] = []
       for (let ev of events) {
         let e: CreatePoolEvent = ev.data
-        if (e.privacy_allocation == 1 || walletAddress == e.pool_owner) continue
+        if (e.privacy_allocation === 1 || walletAddress === e.pool_owner) continue
 
         let resource = await client.getAccountResource(
           e.pool_owner,
@@ -365,7 +356,7 @@ const DashboardRecommended = () => {
             flex={1}
             setVisible={setPortfolioModalVisible}
             setUpdateInvest={setUpdateInvest}
-            miraIndexInfo={(isInvest && recommendType == 1) ? selectInvestInfo : selectIndexInfo}
+            miraIndexInfo={(isInvest && recommendType === 1) ? selectInvestInfo : selectIndexInfo}
           />
         </ModalParent>
       }
@@ -505,7 +496,7 @@ const DashboardRecommended = () => {
             position={'relative'}
           >
             {
-              (recommendedIndexes.length > 0 || (currentTab == 1 && miraMyIndexes.length > 0) || (currentTab == 0 && miraMyInvests.length > 0)) && 
+              (recommendedIndexes.length > 0 || (currentTab === 1 && miraMyIndexes.length > 0) || (currentTab === 0 && miraMyInvests.length > 0)) && 
               <Link
                 p={'8px 16px'}
                 border={carouselStop ? '1px solid #70E094' : '1px solid #fff4'}

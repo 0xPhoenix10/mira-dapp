@@ -23,9 +23,7 @@ import { AptosClient } from "aptos";
 import { Carousel3D } from "../common/comp.carousel";
 import { MODULE_ADDR, NODE_URL } from "../../config";
 import { IndexAllocation } from "../../utils/types";
-// import {Simulate} from "react-dom/test-utils";
-// import input = Simulate.input;
-import { getFormatedDate, stringToHex, getStringFee } from "../../utils";
+import { getFormatedDate, getStringFee } from "../../utils";
 import { FriendStatus, getFriendData } from "../../utils/graphql";
 import FriendListModalBody from "../../components/modal/friend.list.modal.body";
 
@@ -102,12 +100,11 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
   profile = {},
   ...props
 }) => {
-  const { walletConnected, walletAddress, signAndSubmitTransaction, wallet } =
+  const { walletConnected, walletAddress } =
     useWalletHook();
 
   const [miraAccountProps, setMiraAccountProps] =
     useState<MiraAccountProps | null>(null);
-  const [inputNameValue, setInputNameValue] = useState<string>("");
   const [friendDataList, setFriendDataList] = useState<FriendData[]>([]);
   const [showFriendModal, setShowFriendModal] = useState<boolean>(false);
   const [portfolioModalVisible, setPortfolioModalVisible] = useState(false);
@@ -150,7 +147,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
           account_name: string;
           created: number;
         };
-        setInputNameValue(data?.account_name);
+
         setMiraAccountProps({
           name: data?.account_name,
           created: getFormatedDate(data?.created),
@@ -209,7 +206,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
     let create_pool_events: MiraIndex[] = [];
     for (let ev of events) {
       let e: CreatePoolEvent = ev.data;
-      if (profile.owner_address != e.pool_owner) continue;
+      if (profile.owner_address !== e.pool_owner) continue;
 
       let resource = await client.getAccountResource(
         e.pool_owner,
@@ -274,7 +271,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
     let deposit_pool_events: MiraInvest[] = [];
     for (let ev of events) {
       let e: DepositPoolEvent = ev.data;
-      if (profile.owner_address != e.investor) continue;
+      if (profile.owner_address !== e.investor) continue;
 
       try {
         let res = await client.getAccountResource(
@@ -858,6 +855,7 @@ const ImgUpload: React.FC<{
         style={{
           borderRadius: "20px",
         }}
+        alt={"profile avatar"}
       />
       {/* <label htmlFor="photo-upload">
         <Flex

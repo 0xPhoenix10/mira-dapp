@@ -138,7 +138,4 @@ const LinkIcon = styled.a`
   text-decoration: none;
   color: #fafafa;
 `;
-const Link = styled.a`
-  text-decoration: none;
-`;
 export default Layout;

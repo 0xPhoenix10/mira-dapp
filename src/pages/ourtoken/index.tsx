@@ -52,11 +52,6 @@ interface CreatePoolEvent {
   founded: number
 }
 
-interface IData {
-  name: string;
-  value: string | number;
-}
-
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
@@ -87,9 +82,8 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 const OurTokenPage: React.FC = () => {
-  const { walletAddress, walletConnected } = useWalletHook()
+  const { walletAddress } = useWalletHook()
   const [showPortfolio, setPortfolioModal] = useState<boolean>(false);
-  const [portfolioTitle, setTitle] = useState("???");
   const [profile, setProfile] = useState({});
   const [profileModalVisible, setProfileModalVisible] = useState(false);
 
@@ -124,7 +118,7 @@ const OurTokenPage: React.FC = () => {
       let create_pool_events: MiraIndex[] = []
       for (let ev of events) {
         let e: CreatePoolEvent = ev.data
-        if (MODULE_ADDR != e.pool_owner) continue
+        if (MODULE_ADDR !== e.pool_owner) continue
 
         let resource = await client.getAccountResource(
           e.pool_owner,
@@ -422,7 +416,6 @@ const OurTokenPage: React.FC = () => {
         <ModalParent visible={showPortfolio} setVisible={setPortfolioModal}>
           <PortfolioModalBody
             flex={1}
-            title={portfolioTitle}
             setVisible={showPortfolio}
             miraIndexInfo={selectIndexInfo}
           />
