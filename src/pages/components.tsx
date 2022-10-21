@@ -2193,7 +2193,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
               pb={"6px"}
               borderBottom={"1px solid #34383b"}
             >
-              Modify My Index
+              Modify "{miraIndexInfo.poolName}"
               <Flex
                 ml={"auto"}
                 mt={"auto"}
