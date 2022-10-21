@@ -2161,6 +2161,19 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
 
   return (
     <>
+      <ModalParent
+        visible={allocVisible}
+        setVisible={setAllocVisible}
+        zIndex={"1004"}
+      >
+        <IndexAllocationModalBody
+          flex={1}
+          allocationData={indexAllocation}
+          setAllocationData={setIndexAllocation}
+          setVisible={setAllocVisible}
+          poolInfo={myPoolInfo}
+        />
+      </ModalParent>
       {visibleDeposit || visibleWithdraw ? (
         <>
           <Flex
@@ -2212,22 +2225,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
                 </Flex>
               </Flex>
             </Flex>
-            <Flex p={"20px"}>
-              {allocVisible && (
-                <ModalParent
-                  visible={allocVisible}
-                  setVisible={setAllocVisible}
-                  zIndex={"1004"}
-                >
-                  <IndexAllocationModalBody
-                    flex={1}
-                    allocationData={indexAllocation}
-                    setAllocationData={setIndexAllocation}
-                    setVisible={setAllocVisible}
-                    poolInfo={myPoolInfo}
-                  />
-                </ModalParent>
-              )}
+            <Flex px={"20px"} pt={"20px"}>
               <Flex col flex={3} width={"0px"} p={"20px"} aspectRatio={"2"}>
                 <ResponsiveContainer>
                   {indexAllocation && Array.isArray(indexAllocation) && (
@@ -2265,50 +2263,6 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
                     </PieChart>
                   )}
                 </ResponsiveContainer>
-
-                <div>
-                  <Flex
-                    mt={"1em"}
-                    fontSize={"15px"}
-                    alignCenter
-                    justifyContent={"space-around"}
-                  >
-                    <Flex
-                      cursor={"pointer"}
-                      onClick={() => setRealAlloc(true)}
-                      color={isReal ? "#70e094" : "#fafafa"}
-                    >
-                      Strategy Allocation
-                    </Flex>
-                    <Link
-                      m={"auto 0px"}
-                      fontSize={"2em"}
-                      transform={"rotate(90deg)"}
-                      onClick={() =>
-                        isReal ? setRealAlloc(false) : setRealAlloc(true)
-                      }
-                    >
-                      <ExchangeIcon />
-                    </Link>
-                    <Flex
-                      cursor={"pointer"}
-                      onClick={() => setRealAlloc(false)}
-                      color={!isReal ? "#70e094" : "#fafafa"}
-                    >
-                      Real Allocation
-                    </Flex>
-                    <Flex cursor={"pointer"}>
-                      <CustomTooltip
-                        title="changes the portfolio above from viewing the strategy to the current allocation"
-                        arrow
-                        disableInteractive
-                        placement="top"
-                      >
-                        <span>ⓘ</span>
-                      </CustomTooltip>
-                    </Flex>
-                  </Flex>
-                </div>
               </Flex>
               <Flex col flex={5} width={"0px"} aspectRatio={"2"}>
                 <Flex ml={"auto"} gridGap={"4px"}>
@@ -2385,6 +2339,56 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
                 </ResponsiveContainer>
               </Flex>
             </Flex>
+            <Flex>
+              <Flex col flex={3} width={"0px"}>
+                <ResponsiveContainer>
+                  <div>
+                    <Flex
+                      fontSize={"15px"}
+                      alignCenter
+                      justifyContent={"space-around"}
+                    >
+                      <Flex
+                        cursor={"pointer"}
+                        onClick={() => setRealAlloc(true)}
+                        color={isReal ? "#70e094" : "#fafafa"}
+                      >
+                        Strategy Allocation
+                      </Flex>
+                      <Link
+                        m={"auto 0px"}
+                        fontSize={"2em"}
+                        transform={"rotate(90deg)"}
+                        onClick={() =>
+                          isReal ? setRealAlloc(false) : setRealAlloc(true)
+                        }
+                      >
+                        <ExchangeIcon />
+                      </Link>
+                      <Flex
+                        cursor={"pointer"}
+                        onClick={() => setRealAlloc(false)}
+                        color={!isReal ? "#70e094" : "#fafafa"}
+                      >
+                        Real Allocation
+                      </Flex>
+                      <Flex cursor={"pointer"}>
+                        <CustomTooltip
+                          title="changes the portfolio above from viewing the strategy to the current allocation"
+                          arrow
+                          disableInteractive
+                          placement="top"
+                        >
+                          <span>ⓘ</span>
+                        </CustomTooltip>
+                      </Flex>
+                    </Flex>
+                  </div>
+                </ResponsiveContainer>
+              </Flex>
+              <Flex col flex={3} width={"0px"}>
+              </Flex>
+            </Flex>
             <Flex mt={"24px"} col>
               <Flex
                 fontFamily={"art"}
@@ -2459,7 +2463,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
       border={"1px solid #34383b"}
       borderRadius={"20px"}
     >
-      <Flex fontFamily={"art"} fontSize={"20px"} fontWeight={"bold"}>
+      <Flex fontFamily={"art"} fontSize={"20px"} fontWeight={"bold"} justifyCenter>
         Update
       </Flex>
       <Flex
