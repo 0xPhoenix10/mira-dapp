@@ -183,6 +183,24 @@ Input.defaultProps = {
   outline: "none",
 };
 
+interface TextAreaProps extends AllProps {
+  outline?: string;
+  placeColor?: string;
+}
+export const TextArea = styled.textarea<TextAreaProps>`
+  ${allCompose}
+  &::-webkit-inner-spin-button {
+    display: none;
+  }
+  &::placeholder {
+    color: ${(p) => (p.placeColor ? p.placeColor : "unset")};
+  }
+  resize: none;
+`;
+TextArea.defaultProps = {
+  outline: "none",
+};
+
 export const Image = styled.img<AllProps>`
   ${allCompose}
 `;
