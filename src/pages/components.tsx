@@ -305,7 +305,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
           </CustomTooltip>
         </Flex>
       </Flex>
-      <Box fontSize={"16px"} fontWeight={"bold"}>
+      <Box fontSize={"16px"} fontWeight={"bold"} color={"#fff"}>
         {title}
       </Box>
     </Flex>
