@@ -28,133 +28,492 @@ import { ProfileModalBody } from "../otherprofile";
 
 import { BsInfoCircle } from "react-icons/bs";
 import "./ourtoken.css";
+
+import { styled } from "@mui/material/styles";
+import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
+import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
+import MuiAccordionSummary, {
+  AccordionSummaryProps,
+} from "@mui/material/AccordionSummary";
+import MuiAccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+
 interface IData {
   name: string;
   value: string | number;
 }
 
+const Accordion = styled((props: AccordionProps) => (
+  <MuiAccordion disableGutters elevation={0} square {...props} />
+))(({ theme }) => ({
+  backgroundColor: "transparent",
+  "&:before": {
+    display: "none",
+  },
+}));
+
+const AccordionSummary = styled((props: AccordionSummaryProps) => (
+  <MuiAccordionSummary
+    {...props}
+  />
+))(({ theme }) => ({
+  backgroundColor: "transparent",
+  flexDirection: "row-reverse",
+  "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
+    transform: "rotate(90deg)",
+  },
+  "& .MuiAccordionSummary-content": {
+    margin: "0px",
+  },
+}));
+
+const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
+  padding: "1px",
+  // borderTop: "1px solid rgba(0, 0, 0, .125)",
+}));
+
 const OurTokenPage: React.FC = () => {
-  const firstModalFlag = localStorage.getItem('sawFirstModal');
+  const firstModalFlag = localStorage.getItem("sawFirstModal");
   const [showPortfolio, setPortfolioModal] = useState<boolean>(false);
   const [portfolioTitle, setTitle] = useState("???");
   const [profile, setProfile] = useState({});
   const [profileModalVisible, setProfileModalVisible] = useState(false);
-  const [showStartup, setStartupModalVisible] = useState(firstModalFlag === "true" ? false : true);
+  const [showStartup, setStartupModalVisible] = useState(
+    firstModalFlag === "true" ? false : true
+  );
+
+  const [expanded, setExpanded] = React.useState<string | false>("panel1");
+
+  const handleChange =
+    (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+      setExpanded(newExpanded ? panel : false);
+    };
 
   return (
     <>
-      <Box
-        py={"20px"}
-        px={"32px"}
-        display={"grid"}
-        gridTemplateColumns={"auto auto auto"}
-        justifyItems={"center"}
-        alignItems={"center"}
-        gridGap={"18px"}
-        width={"100%"}
-      >
-        <ChartBox
-          width={"100%"}
-          title={"xHack Startup Index"}
-          cursorAll={"pointer"}
-          onClickPieChart={() => {
-            setPortfolioModal(true);
-            setTitle("xHack Startup Index");
-          }}
-          onClickTitle={() => {
-            setProfile({
-              username: 'Mira',
-              owner: '0x',
-            });
-            setProfileModalVisible(true);
-          }}
-        />
-        <ChartBox
-          width={"100%"}
-          title={"L1 Exposure Index"}
-          cursorAll={"pointer"}
-          onClickPieChart={() => {
-            setPortfolioModal(true);
-            setTitle("L1 Exposure Index");
-          }}
-          onClickTitle={() => {
-            setProfile({
-              username: 'Mira',
-              owner: '0x',
-            });
-            setProfileModalVisible(true);
-          }}
-        />
-        <ChartBox
-          width={"100%"}
-          title={"Broad DeFi Index"}
-          cursorAll={"pointer"}
-          onClickPieChart={() => {
-            setPortfolioModal(true);
-            setTitle("Broad DeFi Index");
-          }}
-          onClickTitle={() => {
-            setProfile({
-              username: 'Mira',
-              owner: '0x',
-            });
-            setProfileModalVisible(true);
-          }}
-        />
-        <ChartBox
-          width={"100%"}
-          title={"Broad Wireless Index"}
-          cursorAll={"pointer"}
-          onClickPieChart={() => {
-            setPortfolioModal(true);
-            setTitle("Broad Wireless Index");
-          }}
-          onClickTitle={() => {
-            setProfile({
-              username: 'Mira',
-              owner: '0x',
-            });
-            setProfileModalVisible(true);
-          }}
-        />
-        <ChartBox
-          width={"100%"}
-          title={"Broad Web3 Index"}
-          cursorAll={"pointer"}
-          onClickPieChart={() => {
-            setPortfolioModal(true);
-            setTitle("Broad Web3 Index");
-          }}
-          onClickTitle={() => {
-            setProfile({
-              username: 'Mira',
-              owner: '0x',
-            });
-            setProfileModalVisible(true);
-          }}
-        />
-        <ChartBox
-          width={"100%"}
-          title={"Broad Gaming Index"}
-          cursorAll={"pointer"}
-          onClickPieChart={() => {
-            setPortfolioModal(true);
-            setTitle("Broad Gaming Index");
-          }}
-          onClickTitle={() => {
-            setProfile({
-              username: 'Mira',
-              owner: '0x',
-            });
-            setProfileModalVisible(true);
-          }}
-        />
+      <Box width={"100%"}>
+        <Box>
+          <Flex py={"20px"}
+            px={"32px"}>
+            <Flex
+              fontFamily={"art"}
+              fontSize={"24px"}
+              fontWeight={"bold"}
+              borderBottom={"1px solid"}
+              p={"10px 30px"}
+            >
+              Mira's in-house Index Funds
+            </Flex>
+          </Flex>
+        </Box>
+        <Box>
+          <Flex
+            col
+            py={"20px"}
+            px={"32px"}
+            gridGap={"20px"}
+            overflow={"auto"}
+            width={"100%"}
+          >
+            <Accordion
+              expanded={expanded === "panel1"}
+              onChange={handleChange("panel1")}
+            >
+              <AccordionSummary
+                aria-controls="panel1d-content"
+                id="panel1d-header"
+              >
+                <Flex
+                  fontSize={"20px"}
+                  borderBottom={"1px solid"}
+                  p={"10px 30px"}
+                  color={"#fff"}
+                  alignCenter
+                  minWidth={"300px"}
+                  spaceBetween
+                >
+                  Broad Crypto
+                  <ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem", color: "#fff" }} />
+                </Flex>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box
+                  py={"20px"}
+                  px={"32px"}
+                  display={"grid"}
+                  gridTemplateColumns={"auto auto auto"}
+                  justifyItems={"center"}
+                  alignItems={"center"}
+                  gridGap={"18px"}
+                  width={"100%"}
+                >
+                  <ChartBox
+                    width={"100%"}
+                    title={"xHack Startup Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("xHack Startup Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                  <ChartBox
+                    width={"100%"}
+                    title={"L1 Exposure Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("L1 Exposure Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                  <ChartBox
+                    width={"100%"}
+                    title={"Broad DeFi Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("Broad DeFi Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                  <ChartBox
+                    width={"100%"}
+                    title={"Broad Wireless Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("Broad Wireless Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                  <ChartBox
+                    width={"100%"}
+                    title={"Broad Web3 Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("Broad Web3 Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                  <ChartBox
+                    width={"100%"}
+                    title={"Broad Gaming Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("Broad Gaming Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion
+              expanded={expanded === "panel2"}
+              onChange={handleChange("panel2")}
+            >
+              <AccordionSummary
+                aria-controls="panel2d-content"
+                id="panel2d-header"
+              >
+                <Flex
+                  fontSize={"20px"}
+                  borderBottom={"1px solid"}
+                  p={"10px 30px"}
+                  color={"#fff"}
+                  alignCenter
+                  minWidth={"300px"}
+                  spaceBetween
+                >
+                  Aptos
+                  <ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem", color: "#fff" }} />
+                </Flex>
+              </AccordionSummary>
+              <AccordionDetails>
+              <Box
+                  py={"20px"}
+                  px={"32px"}
+                  display={"grid"}
+                  gridTemplateColumns={"auto auto auto"}
+                  justifyItems={"center"}
+                  alignItems={"center"}
+                  gridGap={"18px"}
+                  width={"100%"}
+                >
+                  <ChartBox
+                    width={"100%"}
+                    title={"xHack Startup Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("xHack Startup Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                  <ChartBox
+                    width={"100%"}
+                    title={"L1 Exposure Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("L1 Exposure Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                  <ChartBox
+                    width={"100%"}
+                    title={"Broad DeFi Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("Broad DeFi Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                  <ChartBox
+                    width={"100%"}
+                    title={"Broad Wireless Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("Broad Wireless Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                  <ChartBox
+                    width={"100%"}
+                    title={"Broad Web3 Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("Broad Web3 Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                  <ChartBox
+                    width={"100%"}
+                    title={"Broad Gaming Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("Broad Gaming Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion
+              expanded={expanded === "panel3"}
+              onChange={handleChange("panel3")}
+            >
+              <AccordionSummary
+                aria-controls="panel3d-content"
+                id="panel3d-header"
+              >
+                <Flex
+                  fontSize={"20px"}
+                  borderBottom={"1px solid"}
+                  p={"10px 30px"}
+                  color={"#fff"}
+                  alignCenter
+                  minWidth={"300px"}
+                  spaceBetween
+                >
+                  Sui
+                  <ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem", color: "#fff" }} />
+                </Flex>
+              </AccordionSummary>
+              <AccordionDetails>
+              <Box
+                  py={"20px"}
+                  px={"32px"}
+                  display={"grid"}
+                  gridTemplateColumns={"auto auto auto"}
+                  justifyItems={"center"}
+                  alignItems={"center"}
+                  gridGap={"18px"}
+                  width={"100%"}
+                >
+                  <ChartBox
+                    width={"100%"}
+                    title={"xHack Startup Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("xHack Startup Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                  <ChartBox
+                    width={"100%"}
+                    title={"L1 Exposure Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("L1 Exposure Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                  <ChartBox
+                    width={"100%"}
+                    title={"Broad DeFi Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("Broad DeFi Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                  <ChartBox
+                    width={"100%"}
+                    title={"Broad Wireless Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("Broad Wireless Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                  <ChartBox
+                    width={"100%"}
+                    title={"Broad Web3 Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("Broad Web3 Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                  <ChartBox
+                    width={"100%"}
+                    title={"Broad Gaming Index"}
+                    cursorAll={"pointer"}
+                    onClickPieChart={() => {
+                      setPortfolioModal(true);
+                      setTitle("Broad Gaming Index");
+                    }}
+                    onClickTitle={() => {
+                      setProfile({
+                        username: "Mira",
+                        owner: "0x",
+                      });
+                      setProfileModalVisible(true);
+                    }}
+                  />
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          </Flex>
+        </Box>
       </Box>
+
       {
-        <ModalParent
-          visible={showPortfolio}
-          setVisible={setPortfolioModal}
-        >
+        <ModalParent visible={showPortfolio} setVisible={setPortfolioModal}>
           <PortfolioModalBody
             flex={1}
             title={portfolioTitle}
@@ -175,14 +534,8 @@ const OurTokenPage: React.FC = () => {
         </ModalParent>
       }
       {
-        <ModalParent
-          visible={showStartup}
-          setVisible={setStartupModalVisible}
-        >
-          <StartupModalBody
-            flex={1}
-            setVisible={setStartupModalVisible}
-          />
+        <ModalParent visible={showStartup} setVisible={setStartupModalVisible}>
+          <StartupModalBody flex={1} setVisible={setStartupModalVisible} />
         </ModalParent>
       }
     </>
@@ -191,13 +544,13 @@ const OurTokenPage: React.FC = () => {
 
 const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   title = "???",
-  setVisible = () => { },
+  setVisible = () => {},
   miraIndexInfo = {},
   ...props
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setHovered] = useState(false);
-  const [isMore, setMoreBtn] = useState(false)
+  const [isMore, setMoreBtn] = useState(false);
   const [visibleDeposit, setVisibleDeposit] = useState(false);
   const [visibleWithdraw, setVisibleWithdraw] = useState(false);
   const [dataRange, setDataRange] = useState("1D");
@@ -289,20 +642,40 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   ];
 
   const CustomizedTick2 = ({ x, y, payload }) => {
-    return <text style={{ fontSize: "12px", float: "right", textAlign: "right", fill: "#fff" }} x={x - 24} y={y} textAnchor="top" dominantBaseline="hanging">
-      {payload.value}
-    </text>
-  }
+    return (
+      <text
+        style={{
+          fontSize: "12px",
+          float: "right",
+          textAlign: "right",
+          fill: "#fff",
+        }}
+        x={x - 24}
+        y={y}
+        textAnchor="top"
+        dominantBaseline="hanging"
+      >
+        {payload.value}
+      </text>
+    );
+  };
 
   const renderTooltip = (props) => {
     if (props && props.payload[0]) {
       return (
-        <div style={{ padding: "12px", background: "#222129", color: "#ffffff", fontSize: "12px" }}>
+        <div
+          style={{
+            padding: "12px",
+            background: "#222129",
+            color: "#ffffff",
+            fontSize: "12px",
+          }}
+        >
           <div>Value: {props.payload[0].payload.value}</div>
         </div>
-      )
+      );
     }
-  }
+  };
 
   const args = {
     chartData: data2,
@@ -312,7 +685,7 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
     tickFormatter: null,
     renderTooltip: renderTooltip,
     uniqueId: 2,
-  }
+  };
   useEffect(() => {
     getChartData();
   }, [dataRange]);
@@ -365,9 +738,7 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
             <ArrowIcon dir={"left"} />
           </Flex>
           {visibleDeposit && (
-            <DepositModalBody
-              setVisible={setVisibleDeposit}
-            />
+            <DepositModalBody setVisible={setVisibleDeposit} />
           )}
           {visibleWithdraw && <WithdrawModalBody />}
         </>
@@ -408,7 +779,7 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
                   <PieChart
                     width={300}
                     height={300}
-                  //style={{ cursor: cursor }}
+                    //style={{ cursor: cursor }}
                   >
                     <Tooltip content={<CustomizedTooltip />} />
                     <Pie
@@ -486,23 +857,30 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
                     </>
                   )}
                   <AddBtn
-                    onClick={() => isMore ? setMoreBtn(false) : setMoreBtn(true)}
+                    onClick={() =>
+                      isMore ? setMoreBtn(false) : setMoreBtn(true)
+                    }
                   >
                     {isMore ? "-" : "+"}
                   </AddBtn>
                 </Flex>
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={chartData}
-                    margin={{ top: 20, right: 10, left: -30, bottom: 0 }}>
+                  <AreaChart
+                    data={chartData}
+                    margin={{ top: 20, right: 10, left: -30, bottom: 0 }}
+                  >
                     <defs>
-                      <linearGradient id={"colorUv" + args.uniqueId} x1="0" y1="0" x2="0" y2="1">
+                      <linearGradient
+                        id={"colorUv" + args.uniqueId}
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
                         <stop offset="100%" stopColor={args.gradientColor} />
                       </linearGradient>
                     </defs>
-                    <XAxis
-                      dataKey="month"
-                      tick={args.customizedTick}
-                    />
+                    <XAxis dataKey="month" tick={args.customizedTick} />
                     <YAxis
                       width={80}
                       tick={args.customizedTick}
@@ -511,9 +889,21 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
                       domain={[1, 15]}
                       tickFormatter={args.tickFormatter}
                     />
-                    <CartesianGrid strokeDasharray="5 5" fill="#222129" horizontal={false} vertical={false} />
+                    <CartesianGrid
+                      strokeDasharray="5 5"
+                      fill="#222129"
+                      horizontal={false}
+                      vertical={false}
+                    />
                     <Tooltip content={args.renderTooltip} />
-                    <Area dot={{ fill: args.gradientColor, fillOpacity: 1 }} type="monotone" dataKey="value" stroke={args.gradientColor} fillOpacity={0.1} fill={"url(#colorUv" + args.uniqueId + ")"} />
+                    <Area
+                      dot={{ fill: args.gradientColor, fillOpacity: 1 }}
+                      type="monotone"
+                      dataKey="value"
+                      stroke={args.gradientColor}
+                      fillOpacity={0.1}
+                      fill={"url(#colorUv" + args.uniqueId + ")"}
+                    />
                   </AreaChart>
                 </ResponsiveContainer>
               </Flex>
@@ -556,9 +946,7 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
               </Flex>
             </Flex>
           </Flex>
-          <BuySellSection
-            miraInfo={miraIndexInfo}
-          />
+          <BuySellSection miraInfo={miraIndexInfo} />
           {/* <SwapSection /> */}
         </Flex>
       )}
@@ -568,13 +956,18 @@ const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
 
 const StartupModalBody: React.FC<{ [index: string]: any }> = ({
   title = "???",
-  setVisible = () => { },
+  setVisible = () => {},
   ...props
 }) => {
-  localStorage.setItem('sawFirstModal', "true");
+  localStorage.setItem("sawFirstModal", "true");
 
   return (
-    <Flex py={"20px"} width={"100%"} gridGap={"16px"} className={"ourTokenContainer"}>
+    <Flex
+      py={"20px"}
+      width={"100%"}
+      gridGap={"16px"}
+      className={"ourTokenContainer"}
+    >
       <Flex flex={1} col>
         {/* <Flex
           mt={"4px"}
@@ -608,8 +1001,15 @@ const StartupModalBody: React.FC<{ [index: string]: any }> = ({
               fontWeight={"600"}
               letterSpacing={"0.1em"}
               className={"infoIcon"}
-            ><BsInfoCircle /></Flex>
-            <Flex>Thanks for checking out our Beta app. Keep in mind, this is a rough version of our product. We work hard and move fast, so you'll probably encounter some bugs. Bear with us while we iron them out.</Flex>
+            >
+              <BsInfoCircle />
+            </Flex>
+            <Flex>
+              Thanks for checking out our Beta app. Keep in mind, this is a
+              rough version of our product. We work hard and move fast, so
+              you'll probably encounter some bugs. Bear with us while we iron
+              them out.
+            </Flex>
           </Flex>
         </Flex>
       </Flex>
@@ -701,7 +1101,9 @@ const SwapBox = () => {
         </Flex>
         <Flex bg={"#302d38"} borderRadius={"8px"}>
           <CustomSelect>
-            <SmOption value={"APTOS"} selected>APTOS</SmOption>
+            <SmOption value={"APTOS"} selected>
+              APTOS
+            </SmOption>
             <SmOption value={"XSI"}>XSI</SmOption>
           </CustomSelect>
         </Flex>

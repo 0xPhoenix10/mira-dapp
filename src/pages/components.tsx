@@ -2675,7 +2675,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
     walletAddress,
   } = useWalletHook();
   const [isInvest, setInvest] = useState(true);
-  const [amount, setAmount] = useState<number>(0.0);
+  const [amount, setAmount] = useState('0.0');
   const [max, setMax] = useState(0);
 
   useEffect(() => {
@@ -2693,7 +2693,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
   const invest = async () => {
     if (!walletConnected) return;
 
-    let amnt = amount * DECIMAL;
+    let amnt = Number(amount) * DECIMAL;
 
     if (amnt < DECIMAL) return;
 
@@ -2713,7 +2713,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
   const withdraw = async () => {
     if (!walletConnected) return;
 
-    let amnt = amount * DECIMAL;
+    let amnt = Number(amount) * DECIMAL;
     if (amnt <= 0) return;
 
     try {
@@ -2728,6 +2728,23 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
       console.log("deposit error", error);
     }
   };
+  const txtAmountChange = (e: any) => {
+    let input = e.target.value
+    var val = isNaN(parseFloat(input)) ? 0 : parseFloat(input);
+
+    if (val < 0) {
+      setAmount('0.0')
+      return;
+    }
+
+    if (input.match(/^([0-9]{1,})?(\.)?([0-9]{1,})?$/)) {
+      if (input[input.length - 1] == '.') {
+        setAmount(input)
+      } else {
+        setAmount(val.toString())
+      }
+    }
+  }
 
   return (
     <Flex
@@ -2798,6 +2815,12 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
         <Flex alignCenter justifyContent={"space-between"}>
           <Flex col>
             <Flex>
+              <Flex
+                fontSize={"1.4em"}
+                fontWeight={"bold"}
+                background={"transparent"}
+                color={"#70e094"}
+              >$</Flex>
               <Input
                 flex={"1"}
                 border={"none"}
@@ -2805,17 +2828,16 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
                 fontSize={"1.4em"}
                 fontWeight={"bold"}
                 background={"transparent"}
+                paddingTop={"5px"}
                 color={"#70e094"}
                 placeholder={"0.0"}
                 placeColor={"#70e094"}
                 value={amount}
                 type={"number"}
-                onChange={(e) => {
-                  setAmount(Number(e.target.value));
-                }}
+                onChange={txtAmountChange}
               />
             </Flex>
-            <Flex>$0.0</Flex>
+            <Flex>0</Flex>
           </Flex>
           <Flex bg={"#302d38"} borderRadius={"8px"}>
             <CustomSelect>
@@ -2835,7 +2857,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
             bg={"#26242f"}
             borderRadius={"4px"}
             onClick={() => {
-              setAmount(max);
+              setAmount(max.toString());
             }}
           >
             Max
