@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Flex } from "../../components/base/container";
-import { Link, Table, Tbody, Td, Tr, Th, Thead } from "../../components/base";
+import { Table, Tbody, Td, Tr, Th, Thead } from "../../components/base";
 import DepositModalBody from "./deposit.modal.body";
 import WithdrawModalBody from "./withdraw.modal.body";
 import { useWalletHook } from "../../common/hooks/wallet";
@@ -12,7 +12,6 @@ import {
 import {
   CartesianGrid,
   Cell,
-  Legend,
   Area,
   AreaChart,
   Pie,
@@ -24,14 +23,11 @@ import {
 } from "recharts";
 import { renderActiveShape } from "../../common/recharts/piechart";
 
-import { CustomSelect, SmOption } from "components/form";
 import {
-  ArtButton,
   NormalBtn,
   AddBtn,
-  SwipeBtn,
 } from "components/elements/buttons";
-import { ArrowIcon, ExchangeIcon } from "components/icons";
+import { ArrowIcon } from "components/icons";
 import { MODULE_ADDR, NODE_URL, DECIMAL } from "../../config";
 import { BuySellSection } from "pages/components";
 import { AptosClient, AptosAccount, CoinClient } from "aptos";
@@ -64,7 +60,6 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
   const [isMore, setMoreBtn] = useState(false);
   const [estimateAmount, setEstimateAmount] = React.useState<string>("0.00");
   const [showPrice, setShowPrice] = React.useState<boolean>(false);
-  const [isInvest, setInvest] = React.useState<boolean>(true);
   const [dataRange, setDataRange] = useState("1D");
   const [chartData, setChartData] = useState([]);
   const [depositAmount, setDepositAmount] = useState<number>(0);
@@ -109,8 +104,8 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
         let e: DepositPoolEvent = ev.data;
 
         if (
-          e.pool_name != miraIndexInfo.poolName ||
-          walletAddress != e.investor
+          e.pool_name !== miraIndexInfo.poolName ||
+          walletAddress !== e.investor
         )
           continue;
         deposit_amnt = e ? e.amount / DECIMAL : 0;
@@ -130,8 +125,8 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
         let e: DepositPoolEvent = ev.data;
 
         if (
-          e.pool_name != miraIndexInfo.poolName ||
-          walletAddress != e.investor
+          e.pool_name !== miraIndexInfo.poolName ||
+          walletAddress !== e.investor
         )
           continue;
         withdraw_amnt = e ? e.amount / DECIMAL : 0;
