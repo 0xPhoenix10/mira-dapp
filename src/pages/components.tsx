@@ -1046,7 +1046,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
         fontWeight={"500"}
         borderBottom={"1px solid #34383b"}
       >
-        Update Settings
+        Update Settings for "{nameValue}"
       </Flex>
       <Flex justifyCenter gridGap={"16px"}>
         <Flex
@@ -1237,22 +1237,6 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                   alignCenter
                   gridGap={"4px"}
                   ml={"auto"}
-                  padding={"8px 16px"}
-                  background={"#0005"}
-                  p={"8px 16px"}
-                  border={"1px solid #34383b"}
-                  borderRadius={"8px"}
-                  cursor="pointer"
-                  onClick={() => {
-                    updatePool();
-                  }}
-                >
-                  <CheckIcon size={"1.2em"} />
-                  Save
-                </Flex>
-                <Flex
-                  alignCenter
-                  gridGap={"4px"}
                   padding={"8px 16px"}
                   background={"#0005"}
                   p={"8px 16px"}
