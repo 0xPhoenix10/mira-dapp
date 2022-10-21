@@ -28,52 +28,46 @@ export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = ({
   const updatePool = async () => {
     if (!walletConnected) return;
 
-    let pool_name = poolInfo.poolName.trim();
-    let rebalancing_period = poolInfo.settings.rebalancing_period * 1;
-    let minimum_contribution = poolInfo.settings.minimum_contribution;
-    let minimum_withdrawal_period =
-      poolInfo.settings.minimum_withdrawal_period * 1;
-    let referral_reward = poolInfo.settings.referral_reward;
-    let privacy_allocation = poolInfo.settings.privacy_allocation;
+    if(poolInfo.poolName) {
+      let pool_name = poolInfo.poolName.trim();
+      let rebalancing_period = poolInfo.settings.rebalancing_period * 1;
+      let minimum_contribution = poolInfo.settings.minimum_contribution;
+      let minimum_withdrawal_period =
+        poolInfo.settings.minimum_withdrawal_period * 1;
+      let referral_reward = poolInfo.settings.referral_reward;
+      let privacy_allocation = poolInfo.settings.privacy_allocation;
 
-    let index_allocation_key: string[] = [];
-    let index_allocation_value: number[] = [];
-    let sum = 0;
-    allocationData.forEach((data: any) => {
-      index_allocation_key.push(data.name);
-      index_allocation_value.push(data.value);
-      sum += data.value;
-    });
-    if (sum !== 100) return;
+      let index_allocation_key: string[] = [];
+      let index_allocation_value: number[] = [];
+      let sum = 0;
+      allocationData.forEach((data: any) => {
+        index_allocation_key.push(data.name);
+        index_allocation_value.push(data.value);
+        sum += data.value;
+      });
+      if (sum !== 100) return;
 
-    console.log(
-      pool_name,
-      rebalancing_period,
-      minimum_contribution,
-      minimum_withdrawal_period,
-      referral_reward,
-      index_allocation_key,
-      index_allocation_value,
-      privacy_allocation
-    );
-    const transaction = {
-      type: "entry_function_payload",
-      function: `${MODULE_ADDR}::mira::update_pool`,
-      arguments: [
-        pool_name,
-        rebalancing_period,
-        minimum_contribution,
-        minimum_withdrawal_period,
-        referral_reward,
-        index_allocation_key,
-        index_allocation_value,
-        privacy_allocation,
-      ],
-      type_arguments: [],
-    };
-    const result = await signAndSubmitTransaction(transaction);
+      const transaction = {
+        type: "entry_function_payload",
+        function: `${MODULE_ADDR}::mira::update_pool`,
+        arguments: [
+          pool_name,
+          rebalancing_period,
+          minimum_contribution,
+          minimum_withdrawal_period,
+          referral_reward,
+          index_allocation_key,
+          index_allocation_value,
+          privacy_allocation,
+        ],
+        type_arguments: [],
+      };
+      const result = await signAndSubmitTransaction(transaction);
 
-    if (result) {
+      if (result) {
+        setVisible(false);
+      }
+    } else {
       setVisible(false);
     }
   };
