@@ -88,7 +88,7 @@ interface DepositPoolEvent {
 
 const DashboardRecommended = () => {
   const { walletAddress, walletConnected } = useWalletHook()
-  const [createMmodalVisible, setCreateModalVisible] = useState(false)
+  const [createModalVisible, setCreateModalVisible] = useState(false)
   const [updateModalVisible, setUpdateModalVisible] = useState(false)
   const [modifyModalVisible, setModifyModalVisible] = useState(false)
   const [recommendedModalVisible, setRecommendedModalVisible] = useState(false)
@@ -384,7 +384,7 @@ const DashboardRecommended = () => {
 
       {
         <ModalParent
-          visible={createMmodalVisible}
+          visible={createModalVisible}
           setVisible={setCreateModalVisible}
         >
           <IndexModalBody
@@ -527,7 +527,7 @@ const DashboardRecommended = () => {
                 stop={
                   portfolioModalVisible ||
                   modifyModalVisible ||
-                  createMmodalVisible ||
+                  createModalVisible ||
                   carouselStop
                 }
               >
@@ -636,7 +636,7 @@ const DashboardRecommended = () => {
                     stop={
                       portfolioModalVisible ||
                       modifyModalVisible ||
-                      createMmodalVisible ||
+                      createModalVisible ||
                       carouselStop
                     }
                   >
@@ -682,7 +682,7 @@ const DashboardRecommended = () => {
                   stop={
                     portfolioModalVisible ||
                     modifyModalVisible ||
-                    createMmodalVisible ||
+                    createModalVisible ||
                     carouselStop
                   }
                 >
