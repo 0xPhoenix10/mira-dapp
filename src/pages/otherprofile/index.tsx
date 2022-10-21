@@ -1,22 +1,38 @@
 import { useWalletHook } from "common/hooks/wallet";
-import { Box, Input, Table, Tbody, Td, Th, Thead, Tr } from "components/base";
+import {
+  Box,
+  Input,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  TextArea,
+} from "components/base";
 import { Flex } from "components/base/container";
 import { ArrowIcon, PencilIcon } from "components/icons";
 import { ModalParent } from "components/modal";
-import { ChartBox, IndexListModalBody, UpdateModalBody, ModifyModalBody, BlankCard } from "pages/components";
+import {
+  ChartBox,
+  IndexListModalBody,
+  UpdateModalBody,
+  ModifyModalBody,
+  BlankCard,
+} from "pages/components";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AptosClient } from "aptos";
 import { Carousel3D } from "../common/comp.carousel";
 import { MODULE_ADDR, NODE_URL } from "../../config";
-import { IndexAllocation } from '../../utils/types'
+import { IndexAllocation } from "../../utils/types";
 // import {Simulate} from "react-dom/test-utils";
 // import input = Simulate.input;
 import { getFormatedDate, stringToHex, getStringFee } from "../../utils";
 import { FriendStatus, getFriendData } from "../../utils/graphql";
 import FriendListModalBody from "../../components/modal/friend.list.modal.body";
-import { IndexAllocationModalBody } from 'pages/index.allocation.modal'
-import { PortfolioModalBody } from 'pages/dashboard/portfolio.modal.body'
+import { IndexAllocationModalBody } from "pages/index.allocation.modal";
+import { PortfolioModalBody } from "pages/dashboard/portfolio.modal.body";
 
 interface MiraAccountProps {
   name: string;
@@ -31,26 +47,26 @@ interface FriendData {
 }
 
 interface MiraPoolSettings {
-  management_fee: number
-  rebalancing_period: number
-  minimum_contribution: number
-  minimum_withdrawal_period: number
-  referral_reward: number
-  privacy_allocation: number
+  management_fee: number;
+  rebalancing_period: number;
+  minimum_contribution: number;
+  minimum_withdrawal_period: number;
+  referral_reward: number;
+  privacy_allocation: number;
 }
 
 interface MiraIndex {
-  poolName: string
-  poolAddress: string
-  poolOwner: string
-  managementFee: string
-  founded: string
-  ownerName: string
-  rebalancingGas: number
-  indexAllocation: Array<IndexAllocation>
-  amount: number
-  gasPool: number
-  settings: MiraPoolSettings
+  poolName: string;
+  poolAddress: string;
+  poolOwner: string;
+  managementFee: string;
+  founded: string;
+  ownerName: string;
+  rebalancingGas: number;
+  indexAllocation: Array<IndexAllocation>;
+  amount: number;
+  gasPool: number;
+  settings: MiraPoolSettings;
 }
 
 interface CreatePoolEvent {
@@ -63,25 +79,29 @@ interface CreatePoolEvent {
 }
 
 interface MiraInvest {
-  poolName: string
-  investor: string
-  poolAddress: string
-  poolOwner: string
-  amount: number
-  ownerName: string
-  rebalancingGas: number
-  indexAllocation: Array<IndexAllocation>
-  gasPool: number
-  settings: MiraPoolSettings
+  poolName: string;
+  investor: string;
+  poolAddress: string;
+  poolOwner: string;
+  amount: number;
+  ownerName: string;
+  rebalancingGas: number;
+  indexAllocation: Array<IndexAllocation>;
+  gasPool: number;
+  settings: MiraPoolSettings;
 }
 
 interface DepositPoolEvent {
-  pool_name: string
-  investor: string
-  amount: number
-  pool_address: string
+  pool_name: string;
+  investor: string;
+  amount: number;
+  pool_address: string;
 }
 
+interface IUploadFile {
+  file: string;
+  imagePreviewUrl: string;
+}
 export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
   setVisible = () => {},
   profile = {},
@@ -103,16 +123,22 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
   const [selectIndexInfo, setSelectIndexInfo] = useState<MiraIndex | null>(
     null
   );
-  const [selectInvestInfo, setSelectInvestInfo] = useState<MiraInvest | null>(null);
+  const [selectInvestInfo, setSelectInvestInfo] = useState<MiraInvest | null>(
+    null
+  );
   const [otherProfile, setProfile] = useState({});
   const [profileModalVisible, setProfileModalVisible] = useState(false);
-  const [updateModalVisible, setUpdateModalVisible] = useState(false)
-  const [
-    indexAllocationModalVisible,
-    setIndexAllocationModalVisible,
-  ] = useState(false)
-  
+  const [updateModalVisible, setUpdateModalVisible] = useState(false);
+  const [indexAllocationModalVisible, setIndexAllocationModalVisible] =
+    useState(false);
+
   const navigate = useNavigate();
+
+  const [uploadFile, setUploadFile] = useState<IUploadFile>({
+    file: "",
+    imagePreviewUrl: require("assets/icon/258705.jpg"),
+  });
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     if (walletAddress) {
@@ -197,37 +223,37 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
     for (let ev of events) {
       let e: CreatePoolEvent = ev.data;
       if (profile.owner_address != e.pool_owner) continue;
-      
+
       let resource = await client.getAccountResource(
         e.pool_owner,
         `${MODULE_ADDR}::mira::MiraAccount`
       );
-      
+
       let resource_data = resource?.data as {
-        account_name: string
-      }
+        account_name: string;
+      };
 
       try {
         let res = await client.getAccountResource(
           e.pool_address,
-          `${MODULE_ADDR}::mira::MiraPool`,
-        )
-        
-        const data = res?.data as {
-          amount: number
-          gas_pool: number
-          index_allocation: Array<number>
-          index_list: Array<string>
-          rebalancing_gas: number
-          settings: MiraPoolSettings
-        }
+          `${MODULE_ADDR}::mira::MiraPool`
+        );
 
-        let allocation: IndexAllocation[] = []
+        const data = res?.data as {
+          amount: number;
+          gas_pool: number;
+          index_allocation: Array<number>;
+          index_list: Array<string>;
+          rebalancing_gas: number;
+          settings: MiraPoolSettings;
+        };
+
+        let allocation: IndexAllocation[] = [];
         for (let i = 0; i < data?.index_allocation.length; i++) {
           allocation.push({
             name: data?.index_list[i],
             value: data?.index_allocation[i] * 1,
-          })
+          });
         }
 
         create_pool_events.push({
@@ -241,10 +267,10 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
           indexAllocation: allocation,
           amount: data?.amount,
           gasPool: data?.gas_pool,
-          settings: data?.settings
-        })
+          settings: data?.settings,
+        });
       } catch (error) {
-        console.log('get mira pools error', error)
+        console.log("get mira pools error", error);
       }
     }
     setMiraMyIndexes(create_pool_events);
@@ -262,39 +288,39 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
     for (let ev of events) {
       let e: DepositPoolEvent = ev.data;
       if (profile.owner_address != e.investor) continue;
-      
+
       try {
         let res = await client.getAccountResource(
           e.pool_address,
-          `${MODULE_ADDR}::mira::MiraPool`,
-        )
-        
-        const data = res?.data as {
-          manager_addr: string
-          amount: number
-          gas_pool: number
-          index_allocation: Array<number>
-          index_list: Array<string>
-          rebalancing_gas: number
-          settings: MiraPoolSettings
-        }
+          `${MODULE_ADDR}::mira::MiraPool`
+        );
 
-        let allocation: IndexAllocation[] = []
+        const data = res?.data as {
+          manager_addr: string;
+          amount: number;
+          gas_pool: number;
+          index_allocation: Array<number>;
+          index_list: Array<string>;
+          rebalancing_gas: number;
+          settings: MiraPoolSettings;
+        };
+
+        let allocation: IndexAllocation[] = [];
         for (let i = 0; i < data?.index_allocation.length; i++) {
           allocation.push({
             name: data?.index_list[i],
             value: data?.index_allocation[i] * 1,
-          })
+          });
         }
 
         let resource = await client.getAccountResource(
           data?.manager_addr,
           `${MODULE_ADDR}::mira::MiraAccount`
         );
-        
+
         let resource_data = resource?.data as {
-          account_name: string
-        }
+          account_name: string;
+        };
 
         deposit_pool_events.push({
           poolName: e.pool_name,
@@ -306,13 +332,33 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
           rebalancingGas: data?.rebalancing_gas,
           indexAllocation: allocation,
           gasPool: data?.gas_pool,
-          settings: data?.settings
-        })
+          settings: data?.settings,
+        });
       } catch (error) {
-        console.log('get mira pools error', error)
+        console.log("get mira pools error", error);
       }
     }
     setMiraMyInvests(deposit_pool_events);
+  };
+
+  const onDescriptionChange = (e: any) => {
+    if (e.target.value.length <= 160) {
+      setDescription(e.target.value);
+    }
+  };
+
+  const photoUpload = (e) => {
+    console.log("photo");
+    e.preventDefault();
+    const reader = new FileReader();
+    const file = e.target.files[0];
+    reader.onloadend = () => {
+      setUploadFile({
+        file: file,
+        imagePreviewUrl: reader.result as string,
+      });
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -375,7 +421,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
         <ModalParent
           visible={updateModalVisible}
           setVisible={setUpdateModalVisible}
-          zIndex={'1002'}
+          zIndex={"1002"}
         >
           <UpdateModalBody flex={1} setVisible={setUpdateModalVisible} />
         </ModalParent>
@@ -384,7 +430,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
         <ModalParent
           visible={modifyModalVisible}
           setVisible={setModifyModalVisible}
-          zIndex={'1001'}
+          zIndex={"1001"}
         >
           <ModifyModalBody
             flex={1}
@@ -399,68 +445,120 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
         <ModalParent
           visible={indexAllocationModalVisible}
           setVisible={setIndexAllocationModalVisible}
-          zIndex={'1004'}
+          zIndex={"1004"}
         >
           <IndexAllocationModalBody
             flex={1}
-            type={'create'}
+            type={"create"}
             setVisible={setIndexAllocationModalVisible}
           />
         </ModalParent>
       }
-      <Flex
-        col
-        py={"20px"}
-        gridGap={"20px"}
-        height={"70vh"}
-        overflow={"auto"}
-      >
+      <Flex col py={"20px"} gridGap={"20px"} height={"70vh"} overflow={"auto"}>
         <Flex flex={1} col gridGap={"20px"}>
           <Flex height={"42px"}>
             <Flex fontFamily={"art"} fontSize={"24px"} fontWeight={"bold"}>
               {profile.owner}
             </Flex>
           </Flex>
-          <Flex alignCenter gridGap={"16px"}>
-            name :
-            <Flex
-              alignCenter
-              gridGap={"4px"}
-              background={"#0005"}
-              p={"8px 16px"}
-              border={"1px solid #34383b"}
-              borderRadius={"8px"}
-            >
-              <Input
-                border={"none"}
-                background={"transparent"}
-                color={"white"}
-                placeholder={"user_name"}
-                value={profile.owner}
-                readOnly={true}
-              />
-            </Flex>
-            {walletConnected && (
-              <Flex
-                center
-                background={"linear-gradient(90deg, #131313, #2b2b2b)"}
-                borderRadius={"50%"}
-                width={"100px"}
-                height={"40px"}
-                border={"3px solid #272c2e"}
-                boxShadow={"-5px -3px 10px 0px #fff2, 5px 3px 10px 0px #0006"}
-                cursor={"pointer"}
-                onClick={() => {
-                  setShowFriendModal(true);
-                }}
-              >
-                Friend List
+          <Flex gridGap={"20px"} px={"32px"}>
+            <Flex col gridGap={"16px"}>
+              <Flex>
+                <ImgUpload
+                  onChange={photoUpload}
+                  src={uploadFile.imagePreviewUrl}
+                />
               </Flex>
-            )}
-          </Flex>
-          <Flex gridGap={"16px"}>
-            date created :{" "}
-            <Flex fontWeight={"bold"}>{miraAccountProps?.created}</Flex>
+              <Flex alignCenter gridGap={"16px"}>
+                <Flex
+                  alignCenter
+                  gridGap={"4px"}
+                  background={"#0005"}
+                  p={"8px 16px"}
+                  border={"1px solid #34383b"}
+                  borderRadius={"8px"}
+                >
+                  <Input
+                    border={"none"}
+                    background={"transparent"}
+                    color={"white"}
+                    placeholder={"user_name"}
+                    value={profile.owner}
+                    readOnly={true}
+                  />
+                </Flex>
+                {walletConnected && (
+                  <Flex
+                    center
+                    background={"linear-gradient(90deg, #131313, #2b2b2b)"}
+                    borderRadius={"50%"}
+                    width={"100px"}
+                    height={"40px"}
+                    border={"3px solid #272c2e"}
+                    boxShadow={
+                      "-5px -3px 10px 0px #fff2, 5px 3px 10px 0px #0006"
+                    }
+                    cursor={"pointer"}
+                    onClick={() => {
+                      setShowFriendModal(true);
+                    }}
+                  >
+                    Friend List
+                  </Flex>
+                )}
+              </Flex>
+              <Flex alignCenter gridGap={"16px"}>
+                <Flex
+                  alignCenter
+                  gridGap={"4px"}
+                  background={"#0005"}
+                  p={"8px 16px"}
+                  border={"1px solid #34383b"}
+                  borderRadius={"8px"}
+                >
+                  <Input
+                    border={"none"}
+                    background={"transparent"}
+                    color={"white"}
+                    placeholder={"user_name"}
+                    value={"kazakhstan"}
+                    readOnly={true}
+                  />
+                </Flex>
+              </Flex>
+
+            </Flex>
+            <Flex
+              flexFull
+              col
+              background={"#302d38"}
+              p={"20px"}
+              border={"1px solid #34383b"}
+              borderRadius={"40px 10px"}
+              gridGap={"12px"}
+            >
+              <Flex
+                p={"10px"}
+                fontSize={"18px"}
+                fontWeight={"500"}
+                borderBottom={"1px solid #34383b"}
+              >
+                Investing since {"January 07, 2022"}
+                <Flex fontWeight={"bold"}>{miraAccountProps?.created}</Flex>
+              </Flex>
+              <Flex flexFull>
+                <TextArea
+                  width={"100%"}
+                  placeholder={"Max 160 chars"}
+                  placeColor={"#70e094"}
+                  color={"#fff"}
+                  border={"none"}
+                  backgroundColor={"transparent"}
+                  value={description}
+                  onChange={onDescriptionChange}
+                ></TextArea>
+              </Flex>
+            </Flex>
           </Flex>
         </Flex>
         <Flex p={"20px"}>
@@ -497,7 +595,11 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
                         color={"#70e094"}
                       >
                         20
-                        <Box fontSize={"0.7em"} opacity={"0.8"} color={"#70e094"}>
+                        <Box
+                          fontSize={"0.7em"}
+                          opacity={"0.8"}
+                          color={"#70e094"}
+                        >
                           %
                         </Box>
                       </Flex>
@@ -521,7 +623,11 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
                         color={"#70e094"}
                       >
                         20
-                        <Box fontSize={"0.7em"} opacity={"0.8"} color={"#70e094"}>
+                        <Box
+                          fontSize={"0.7em"}
+                          opacity={"0.8"}
+                          color={"#70e094"}
+                        >
                           %
                         </Box>
                       </Flex>
@@ -547,7 +653,11 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
                         color={"#70e094"}
                       >
                         20
-                        <Box fontSize={"0.7em"} opacity={"0.8"} color={"#70e094"}>
+                        <Box
+                          fontSize={"0.7em"}
+                          opacity={"0.8"}
+                          color={"#70e094"}
+                        >
                           %
                         </Box>
                       </Flex>
@@ -571,7 +681,11 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
                         color={"#70e094"}
                       >
                         20
-                        <Box fontSize={"0.7em"} opacity={"0.8"} color={"#70e094"}>
+                        <Box
+                          fontSize={"0.7em"}
+                          opacity={"0.8"}
+                          color={"#70e094"}
+                        >
                           %
                         </Box>
                       </Flex>
@@ -653,16 +767,16 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
                         indexAllocation={item.indexAllocation}
                         cursor={"pointer"}
                         onClickPieChart={() => {
-                          setModifyModalVisible(true)
-                          setSelectIndexInfo(item)
+                          setModifyModalVisible(true);
+                          setSelectIndexInfo(item);
                         }}
                         onClickTitle={() => {
                           setProfile({
                             pool_name: item.poolName,
                             owner: item.ownerName,
-                            owner_address: item.poolOwner
-                          })
-                          setProfileModalVisible(true)
+                            owner_address: item.poolOwner,
+                          });
+                          setProfileModalVisible(true);
                         }}
                       />
                     );
@@ -719,16 +833,16 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
                         indexAllocation={item.indexAllocation}
                         cursor={"pointer"}
                         onClickPieChart={() => {
-                          setPortfolioModalVisible(true)
-                          setSelectInvestInfo(item)
+                          setPortfolioModalVisible(true);
+                          setSelectInvestInfo(item);
                         }}
                         onClickTitle={() => {
                           setProfile({
                             username: item.poolName,
                             owner: item.ownerName,
-                            owner_address: item.poolOwner
-                          })
-                          setProfileModalVisible(true)
+                            owner_address: item.poolOwner,
+                          });
+                          setProfileModalVisible(true);
                         }}
                       />
                     );
@@ -799,5 +913,40 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
         </Flex>
       </Flex>
     </>
+  );
+};
+
+const ImgUpload: React.FC<{
+  onChange?: (arg: any) => void;
+  src?: string;
+}> = ({ onChange, src }) => {
+  return (
+    <Flex>
+      <img
+        src={src}
+        width={150}
+        style={{
+          borderRadius: "20px",
+        }}
+      />
+      {/* <label htmlFor="photo-upload">
+        <Flex
+          cursor={"pointer"}
+          position={"relative"}
+          top={"10px"}
+          left={"-35px"}
+          backgroundColor={"#000"}
+          fontSize={"26px"}
+        >
+          <PencilIcon />
+        </Flex>
+        <input
+          id="photo-upload"
+          type="file"
+          onChange={onChange}
+          style={{ display: "none" }}
+        />
+      </label> */}
+    </Flex>
   );
 };
