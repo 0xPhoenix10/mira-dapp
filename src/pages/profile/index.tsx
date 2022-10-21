@@ -103,7 +103,6 @@ const ProfilePage = () => {
   const [carouselStop, setCarouselStop] = useState(false);
   const [miraMyIndexes, setMiraMyIndexes] = useState<MiraIndex[]>([]);
   const [miraMyInvests, setMiraMyInvests] = useState<MiraInvest[]>([]);
-  const [description, setDescription] = useState("");
   const [selectIndexInfo, setSelectIndexInfo] = useState<MiraIndex | null>(
     null
   );
@@ -121,6 +120,7 @@ const ProfilePage = () => {
     file: '',
     imagePreviewUrl: require("assets/icon/258705.jpg"),
   });
+  const [description, setDescription] = useState("");
 
 
   useEffect(() => {
