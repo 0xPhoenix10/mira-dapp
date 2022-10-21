@@ -1,5 +1,5 @@
 import { useWalletHook } from "common/hooks/wallet";
-import { Box, Input, Table, Tbody, Td, Th, Thead, Tr } from "components/base";
+import { Box, Input, Table, Tbody, Td, Th, Thead, Tr, TextArea } from "components/base";
 import { Flex } from "components/base/container";
 import { ArrowIcon, PencilIcon } from "components/icons";
 import { ModalParent } from "components/modal";
@@ -18,6 +18,7 @@ import FriendListModalBody from "../../components/modal/friend.list.modal.body";
 import { PortfolioModalBody } from 'pages/dashboard/portfolio.modal.body'
 import { ProfileModalBody } from 'pages/otherprofile'
 import { IndexAllocationModalBody } from 'pages/index.allocation.modal'
+
 
 interface MiraAccountProps {
   name: string;
@@ -82,6 +83,11 @@ interface DepositPoolEvent {
   amount: number
   pool_address: string
 }
+interface IUploadFile {
+  file: string
+  imagePreviewUrl: string
+}
+
 
 const ProfilePage = () => {
   const { walletConnected, walletAddress, signAndSubmitTransaction, wallet } =
@@ -97,6 +103,7 @@ const ProfilePage = () => {
   const [carouselStop, setCarouselStop] = useState(false);
   const [miraMyIndexes, setMiraMyIndexes] = useState<MiraIndex[]>([]);
   const [miraMyInvests, setMiraMyInvests] = useState<MiraInvest[]>([]);
+  const [description, setDescription] = useState("");
   const [selectIndexInfo, setSelectIndexInfo] = useState<MiraIndex | null>(
     null
   );
@@ -108,8 +115,13 @@ const ProfilePage = () => {
     indexAllocationModalVisible,
     setIndexAllocationModalVisible,
   ] = useState(false)
-
   const navigate = useNavigate();
+
+  const [uploadFile, setUploadFile] = useState<IUploadFile>({
+    file: '',
+    imagePreviewUrl: 'https://github.com/OlgaKoplik/CodePen/blob/master/profile.jpg?raw=true',
+  });
+
 
   useEffect(() => {
     if (walletAddress) {
@@ -218,10 +230,10 @@ const ProfilePage = () => {
       let events = await client.getEventsByEventHandle(
         MODULE_ADDR,
         `${MODULE_ADDR}::mira::MiraStatus`,
-        'create_pool_events',
-        { limit: 1000 },
-      )
-      let create_pool_events: MiraIndex[] = []
+        "create_pool_events",
+        { limit: 1000 }
+      );
+      let create_pool_events: MiraIndex[] = [];
       for (let ev of events) {
         let e: CreatePoolEvent = ev.data
         if (walletAddress != e.pool_owner) continue
@@ -275,9 +287,9 @@ const ProfilePage = () => {
           console.log('get mira pools error', error)
         }
       }
-      setMiraMyIndexes(create_pool_events)
+      setMiraMyIndexes(create_pool_events);
     } catch (error) {
-      console.log('set mira indexes error', error)
+      console.log("set mira indexes error", error);
     }
   };
 
@@ -287,10 +299,10 @@ const ProfilePage = () => {
       let events = await client.getEventsByEventHandle(
         MODULE_ADDR,
         `${MODULE_ADDR}::mira::MiraStatus`,
-        'deposit_pool_events',
-        { limit: 1000 },
-      )
-      let deposit_pool_events: MiraInvest[] = []
+        "deposit_pool_events",
+        { limit: 1000 }
+      );
+      let deposit_pool_events: MiraInvest[] = [];
       for (let ev of events) {
         let e: DepositPoolEvent = ev.data
         if (walletAddress != e.investor) continue
@@ -344,10 +356,30 @@ const ProfilePage = () => {
           console.log('get mira pools error', error)
         }
       }
-      setMiraMyInvests(deposit_pool_events)
+      setMiraMyInvests(deposit_pool_events);
     } catch (error) {
-      console.log('set mira invests error', error)
+      console.log("set mira invests error", error);
     }
+  };
+
+  const onDescriptionChange = (e : any) => {
+    if(e.target.value.length <= 160) {
+      setDescription(e.target.value)
+    }
+  }
+
+  const photoUpload = (e) =>{
+    console.log("photo")
+    e.preventDefault();
+    const reader = new FileReader();
+    const file = e.target.files[0];
+    reader.onloadend = () => {
+      setUploadFile({
+        file: file,
+        imagePreviewUrl: reader.result as string
+      });
+    }
+    reader.readAsDataURL(file);
   }
 
   return (
@@ -468,51 +500,113 @@ const ProfilePage = () => {
               Back to Home
             </Flex>
           </Flex>
-          <Flex alignCenter gridGap={"16px"}>
-            name :
-            <Flex
-              alignCenter
-              gridGap={"4px"}
-              background={"#0005"}
-              p={"8px 16px"}
-              border={"1px solid #34383b"}
-              borderRadius={"8px"}
-            >
-              <Input
-                border={"none"}
-                background={"transparent"}
-                color={"white"}
-                placeholder={"user_name"}
-                value={inputNameValue}
-                onChange={(e) => {
-                  setInputNameValue(e.target.value);
-                }}
-              />
-              <Flex cursor={"pointer"} onClick={() => changeMiraAccountName()}>
-                <PencilIcon />
+
+          <Flex gridGap={"20px"}>
+            <Flex col gridGap={"16px"}>
+              <Flex justifyCenter>
+                <ImgUpload onChange={photoUpload} src={uploadFile.imagePreviewUrl}/>
+              </Flex>
+              <Flex gridGap={"16px"}>
+                <Flex alignCenter gridGap={"16px"}>
+                  <Flex
+                    alignCenter
+                    gridGap={"4px"}
+                    background={"#0005"}
+                    p={"8px 16px"}
+                    border={"1px solid #34383b"}
+                    borderRadius={"8px"}
+                  >
+                    <Input
+                      border={"none"}
+                      background={"transparent"}
+                      color={"white"}
+                      placeholder={"user_name"}
+                      value={inputNameValue}
+                      onChange={(e) => {
+                        setInputNameValue(e.target.value);
+                      }}
+                    />
+                    <Flex
+                      cursor={"pointer"}
+                      onClick={() => changeMiraAccountName()}
+                    >
+                      <PencilIcon />
+                    </Flex>
+                  </Flex>
+                  {walletConnected && (
+                    <Flex
+                      center
+                      background={"linear-gradient(90deg, #131313, #2b2b2b)"}
+                      borderRadius={"100%"}
+                      width={"100px"}
+                      height={"40px"}
+                      border={"3px solid #272c2e"}
+                      boxShadow={
+                        "-5px -3px 10px 0px #fff2, 5px 3px 10px 0px #0006"
+                      }
+                      cursor={"pointer"}
+                      onClick={() => {
+                        setShowFriendModal(true);
+                      }}
+                    >
+                      Friend List
+                    </Flex>
+                  )}
+                </Flex>
+              </Flex>
+              
+              <Flex gridGap={"16px"}>
+                <Flex alignCenter gridGap={"16px"}>
+                  <Flex
+                    alignCenter
+                    gridGap={"4px"}
+                    background={"#0005"}
+                    p={"8px 16px"}
+                    border={"1px solid #34383b"}
+                    borderRadius={"8px"}
+                  >
+                    <Input
+                      border={"none"}
+                      background={"transparent"}
+                      color={"white"}
+                      placeholder={"user_name"}
+                      value={"Kazakhstan"}
+                      onChange={(e) => {
+                        // setInputNameValue(e.target.value);
+                      }}
+                    />
+                    <Flex
+                      cursor={"pointer"}
+                      // onClick={() => changeMiraAccountName()}
+                    >
+                      <PencilIcon />
+                    </Flex>
+                  </Flex>
+                </Flex>
               </Flex>
             </Flex>
-            {walletConnected && (
+            <Flex
+              flexFull
+              col
+              background={"#302d38"}
+              p={"20px"}
+              border={"1px solid #34383b"}
+              borderRadius={"40px 10px"}
+              gridGap={"12px"}
+            >
               <Flex
-                center
-                background={"linear-gradient(90deg, #131313, #2b2b2b)"}
-                borderRadius={"100%"}
-                width={"40px"}
-                height={"40px"}
-                border={"3px solid #272c2e"}
-                boxShadow={"-5px -3px 10px 0px #fff2, 5px 3px 10px 0px #0006"}
-                cursor={"pointer"}
-                onClick={() => {
-                  setShowFriendModal(true);
-                }}
+                p={"10px"}
+                fontSize={"18px"}
+                fontWeight={"500"}
+                borderBottom={"1px solid #34383b"}
               >
-                Friend List
+                Investing since {"January 07, 2022"}
+                <Flex fontWeight={"bold"}>{miraAccountProps?.created}</Flex>
               </Flex>
-            )}
-          </Flex>
-          <Flex gridGap={"16px"}>
-            date created :{" "}
-            <Flex fontWeight={"bold"}>{miraAccountProps?.created}</Flex>
+              <Flex flexFull>
+                <TextArea width={"100%"} placeholder={"Max 160 chars"} placeColor={"#70e094"} color={"#fff"} border={"none"} backgroundColor={"transparent"} value={description} onChange={onDescriptionChange}></TextArea>
+              </Flex>
+            </Flex>
           </Flex>
         </Flex>
         <Flex flex={1} col gridGap={"20px"}>
@@ -855,5 +949,33 @@ const ProfilePage = () => {
     </>
   );
 };
+
+const ImgUpload: React.FC<{
+  onChange?: (arg: any) => void;
+  src?: string;
+}> = ({
+  onChange,
+  src
+}) => {
+  return (
+    <Flex>
+      <img src={src} width={150}/>
+      <label htmlFor="photo-upload">
+        <Flex
+          cursor={"pointer"}
+          position={"relative"}
+          top={"10px"}
+          left={"-35px"}
+          backgroundColor={"#000"}
+          fontSize={"26px"}
+        >
+          <PencilIcon />
+        </Flex>
+        <input id="photo-upload" type="file" onChange={onChange} style={{display: "none"}}/> 
+      </label>
+    </Flex>
+  )
+};
+
 
 export default ProfilePage;
