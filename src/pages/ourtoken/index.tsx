@@ -98,21 +98,6 @@ const OurTokenPage: React.FC = () => {
   const [selectIndexInfo, setSelectIndexInfo] = useState<MiraIndex | null>(
     null
   );
-  const [createModalVisible, setCreateModalVisible] = useState(false)
-  const [
-    indexAllocationModalVisible,
-    setIndexAllocationModalVisible,
-  ] = useState(false)
-  const [allocationData, setAllocationData] = useState<IndexAllocation[]>([
-    {
-      name: 'BTC',
-      value: 50,
-    },
-    {
-      name: 'USDT',
-      value: 50,
-    },
-  ])
   
   useEffect(() => {
     if (walletAddress) {
@@ -260,8 +245,7 @@ const OurTokenPage: React.FC = () => {
                         <ChartBox
                           key={index}
                           flex={1}
-                          width={'0px'}
-                          maxWidth={'70%'}
+                          width={'100%'}
                           title={item.poolName}
                           owner={item.ownerName}
                           indexAllocation={item.indexAllocation}
@@ -330,8 +314,7 @@ const OurTokenPage: React.FC = () => {
                         <ChartBox
                           key={index}
                           flex={1}
-                          width={'0px'}
-                          maxWidth={'70%'}
+                          width={'100%'}
                           title={item.poolName}
                           owner={item.ownerName}
                           indexAllocation={item.indexAllocation}
@@ -400,8 +383,7 @@ const OurTokenPage: React.FC = () => {
                         <ChartBox
                           key={index}
                           flex={1}
-                          width={'0px'}
-                          maxWidth={'70%'}
+                          width={'100%'}
                           title={item.poolName}
                           owner={item.ownerName}
                           indexAllocation={item.indexAllocation}
