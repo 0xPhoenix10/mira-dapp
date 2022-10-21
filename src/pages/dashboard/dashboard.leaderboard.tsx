@@ -3,6 +3,7 @@ import { Box, Input, Table, Tbody, Td, Th, Thead, Tr } from "components/base";
 import { CustomTooltip } from "components/elements/tooptip";
 import { Flex } from "components/base/container";
 import { FilterIcon, IconNarrow, SearchIcon } from "components/icons";
+import { FiShare } from 'react-icons/fi';
 import { ModalParent } from "components/modal";
 import { FilterItem, IndexListModalBody, SortBtn } from "pages/components";
 import { useEffect, useState } from "react";
@@ -511,12 +512,12 @@ const DashboardLeaderBoard = () => {
                           <Flex
                             justifyCenter
                             padding={"4px 8px"}
-                            background={"#0005"}
+                            background={"#3c3a45"}
                             border={"1px solid #34383b"}
                             borderRadius={"4px"}
                             cursor={"pointer"}
                           >
-                            Share with this
+                            <FiShare />
                           </Flex>
                         </Td>
                       )}
@@ -525,7 +526,7 @@ const DashboardLeaderBoard = () => {
                           <Flex
                             justifyCenter
                             padding={"4px 8px"}
-                            background={"#0005"}
+                            background={"#3c3a45"}
                             border={"1px solid #34383b"}
                             borderRadius={"4px"}
                             cursor={"pointer"}
@@ -534,11 +535,11 @@ const DashboardLeaderBoard = () => {
                               setShowDepositModal(true);
                             }}
                           >
-                            Deposit
+                            Invest
                           </Flex>
                         </Td>
                       )}
-                      {walletConnected && (
+                      {/* {walletConnected && (
                         <Td>
                           <Flex
                             justifyCenter
@@ -555,7 +556,7 @@ const DashboardLeaderBoard = () => {
                             Withdraw
                           </Flex>
                         </Td>
-                      )}
+                      )} */}
                     </Tr>
                   );
                 })}

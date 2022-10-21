@@ -40,18 +40,16 @@ interface IItem {
 }
 
 const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
-  background: "none",
-  boxShadow:
-    "-5px -3px 10px 0px #fff1, -5px 5px 10px 0px #fff1, 5px 3px 10px 0px #0006",
+  background: "#302d38",
   borderRadius: "10px 10px 0px 0px",
   border: "0px",
-  color: "#fff8",
+  color: "#dedede",
 
   "&:hover": {
-    background: "none",
-    boxShadow:
-      "-5px -3px 10px 0px #fff1, -5px 5px 10px 0px #fff1, 5px 3px 10px 0px #0006",
-    color: "#fff",
+    background: "#302d38",
+    // boxShadow:
+    //   "-5px -3px 10px 0px #fff1, -5px 5px 10px 0px #fff1, 5px 3px 10px 0px #0006",
+    // color: "#fff",
   },
 }));
 const CollapeButton = styled(Button)<ButtonProps>(({ theme }) => ({
@@ -672,14 +670,11 @@ const FooterBtn: React.FC<FooterBtnProps> = ({
 }) => {
   return (
     <FooterBtnBase
-      background={active ? "linear-gradient(#74BD7B, #70cee6)" : "none"}
-      boxShadow={`${
-        active ? `0px 0px 7px 0px black, ` : ``
-      }-5px -3px 10px 0px #fff1, -5px 5px 10px 0px #fff1, 5px 3px 10px 0px #0006`}
+      background={active ? "linear-gradient(#74BD7B, #70cee6)" : "#302d38"}
       borderRadius={"10px 10px 0px 0px"}
       border={active ? "2px solid white" : "0px"}
       borderBottom={"none"}
-      color={active ? "#27282c" : "#fff8"}
+      color={active ? "#27282c" : "#dedede"}
       onClick={onClick}
     >
       <Flex alignCenter gridGap={"8px"}>

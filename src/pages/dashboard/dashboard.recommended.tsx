@@ -358,7 +358,7 @@ const DashboardRecommended = () => {
                 gridGap={'4px'}
                 ml={'auto'}
                 padding={'8px 16px'}
-                background={'#27282c'}
+                background={'#302d38'}
                 p={'8px 16px'}
                 border={'1px solid #34383b'}
                 borderRadius={'8px'}
@@ -477,7 +477,7 @@ const DashboardRecommended = () => {
                   }}
                   transition={'100ms'}
                 >
-                  My Index Funds
+                  My Portfolios
                 </Box>
               </Flex>
               <Flex
