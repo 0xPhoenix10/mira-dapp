@@ -25,7 +25,30 @@ import { BsPause } from 'react-icons/bs'
 import { VscDebugStart } from 'react-icons/vsc'
 import { Link } from 'components/base'
 
+interface MiraPoolSettings {
+  management_fee: number
+  rebalancing_period: number
+  minimum_contribution: number
+  minimum_withdrawal_period: number
+  referral_reward: number
+  privacy_allocation: number
+}
+
 interface MiraIndex {
+  poolName: string
+  poolAddress: string
+  poolOwner: string
+  managementFee: string
+  founded: string
+  ownerName: string
+  rebalancingGas: number
+  indexAllocation: Array<IndexAllocation>
+  amount: number
+  gasPool: number
+  settings: MiraPoolSettings
+}
+
+interface MiraRecommendedIndex {
   poolName: string
   poolAddress: string
   poolOwner: string
@@ -46,14 +69,21 @@ interface CreatePoolEvent {
 interface MiraInvest {
   poolName: string
   investor: string
+  poolAddress: string
+  poolOwner: string
   amount: number
   ownerName: string
+  rebalancingGas: number
+  indexAllocation: Array<IndexAllocation>
+  gasPool: number
+  settings: MiraPoolSettings
 }
 
 interface DepositPoolEvent {
   pool_name: string
   investor: string
   amount: number
+  pool_address: string
 }
 
 const DashboardRecommended = () => {
@@ -71,6 +101,7 @@ const DashboardRecommended = () => {
   const [profile, setProfile] = useState({})
   const [currentTab, setCurrentTab] = useState(0)
   const [isInvest, setInvest] = useState(true)
+  const [recommendType, setRecommendType] = useState(0)
   const [
     indexAllocationModalVisible,
     setIndexAllocationModalVisible,
@@ -96,6 +127,7 @@ const DashboardRecommended = () => {
   const [selectIndexInfo, setSelectIndexInfo] = useState<MiraIndex | null>(
     null
   );
+  const [selectInvestInfo, setSelectInvestInfo] = useState<MiraInvest | null>(null);
 
   useEffect(() => {
     Carousel3D1?.current?.reset()
@@ -136,15 +168,46 @@ const DashboardRecommended = () => {
         let resource_data = resource?.data as {
           account_name: string
         }
-      
-        create_pool_events.push({
-          poolName: e.pool_name,
-          poolAddress: e.pool_address,
-          poolOwner: e.pool_owner,
-          managementFee: getStringFee(e.management_fee),
-          founded: getFormatedDate(e.founded),
-          ownerName: resource_data.account_name
-        })
+
+        try {
+          let res = await client.getAccountResource(
+            e.pool_address,
+            `${MODULE_ADDR}::mira::MiraPool`,
+          )
+          
+          const data = res?.data as {
+            amount: number
+            gas_pool: number
+            index_allocation: Array<number>
+            index_list: Array<string>
+            rebalancing_gas: number
+            settings: MiraPoolSettings
+          }
+
+          let allocation: IndexAllocation[] = []
+          for (let i = 0; i < data?.index_allocation.length; i++) {
+            allocation.push({
+              name: data?.index_list[i],
+              value: data?.index_allocation[i] * 1,
+            })
+          }
+
+          create_pool_events.push({
+            poolName: e.pool_name,
+            poolAddress: e.pool_address,
+            poolOwner: e.pool_owner,
+            managementFee: getStringFee(e.management_fee),
+            founded: getFormatedDate(e.founded),
+            ownerName: resource_data.account_name,
+            rebalancingGas: data?.rebalancing_gas,
+            indexAllocation: allocation,
+            amount: data?.amount,
+            gasPool: data?.gas_pool,
+            settings: data?.settings
+          })
+        } catch (error) {
+          console.log('get mira pools error', error)
+        }
       }
       setMiraMyIndexes(create_pool_events)
     } catch (error) {
@@ -166,21 +229,54 @@ const DashboardRecommended = () => {
         let e: DepositPoolEvent = ev.data
         if (walletAddress != e.investor) continue
 
-        let resource = await client.getAccountResource(
-          e.investor,
-          `${MODULE_ADDR}::mira::MiraAccount`
-        );
-        
-        let resource_data = resource?.data as {
-          account_name: string
-        }
+        try {
+          let res = await client.getAccountResource(
+            e.pool_address,
+            `${MODULE_ADDR}::mira::MiraPool`,
+          )
+          
+          const data = res?.data as {
+            manager_addr: string
+            amount: number
+            gas_pool: number
+            index_allocation: Array<number>
+            index_list: Array<string>
+            rebalancing_gas: number
+            settings: MiraPoolSettings
+          }
 
-        deposit_pool_events.push({
-          poolName: e.pool_name,
-          investor: e.investor,
-          amount: e.amount,
-          ownerName: resource_data.account_name
-        })
+          let allocation: IndexAllocation[] = []
+          for (let i = 0; i < data?.index_allocation.length; i++) {
+            allocation.push({
+              name: data?.index_list[i],
+              value: data?.index_allocation[i] * 1,
+            })
+          }
+
+          let resource = await client.getAccountResource(
+            data?.manager_addr,
+            `${MODULE_ADDR}::mira::MiraAccount`
+          );
+          
+          let resource_data = resource?.data as {
+            account_name: string
+          }
+
+          deposit_pool_events.push({
+            poolName: e.pool_name,
+            investor: e.investor,
+            poolAddress: e.pool_address,
+            poolOwner: data?.manager_addr,
+            amount: e.amount,
+            ownerName: resource_data.account_name,
+            rebalancingGas: data?.rebalancing_gas,
+            indexAllocation: allocation,
+            gasPool: data?.gas_pool,
+            settings: data?.settings
+          })
+        } catch (error) {
+          console.log('get mira pools error', error)
+        }
       }
       setMiraMyInvests(deposit_pool_events)
     } catch (error) {
@@ -211,14 +307,45 @@ const DashboardRecommended = () => {
           account_name: string
         }
 
-        create_pool_events.push({
-          poolName: e.pool_name,
-          poolAddress: e.pool_address,
-          poolOwner: e.pool_owner,
-          managementFee: getStringFee(e.management_fee),
-          founded: getFormatedDate(e.founded),
-          ownerName: resource_data.account_name
-        })
+        try {
+          let res = await client.getAccountResource(
+            e.pool_address,
+            `${MODULE_ADDR}::mira::MiraPool`,
+          )
+          
+          const data = res?.data as {
+            amount: number
+            gas_pool: number
+            index_allocation: Array<number>
+            index_list: Array<string>
+            rebalancing_gas: number
+            settings: MiraPoolSettings
+          }
+
+          let allocation: IndexAllocation[] = []
+          for (let i = 0; i < data?.index_allocation.length; i++) {
+            allocation.push({
+              name: data?.index_list[i],
+              value: data?.index_allocation[i] * 1,
+            })
+          }
+
+          create_pool_events.push({
+            poolName: e.pool_name,
+            poolAddress: e.pool_address,
+            poolOwner: e.pool_owner,
+            managementFee: getStringFee(e.management_fee),
+            founded: getFormatedDate(e.founded),
+            ownerName: resource_data.account_name,
+            rebalancingGas: data?.rebalancing_gas,
+            indexAllocation: allocation,
+            amount: data?.amount,
+            gasPool: data?.gas_pool,
+            settings: data?.settings
+          })
+        } catch (error) {
+          console.log('get mira pools error', error)
+        }
       }
 
       setRecommendedIndexes(create_pool_events)
@@ -238,7 +365,7 @@ const DashboardRecommended = () => {
             flex={1}
             setVisible={setPortfolioModalVisible}
             setUpdateInvest={setUpdateInvest}
-            miraIndexInfo={selectIndexInfo}
+            miraIndexInfo={(isInvest && recommendType == 1) ? selectInvestInfo : selectIndexInfo}
           />
         </ModalParent>
       }
@@ -413,8 +540,10 @@ const DashboardRecommended = () => {
                       maxWidth={'70%'}
                       title={item.poolName}
                       owner={item.ownerName}
+                      indexAllocation={item.indexAllocation}
                       cursor={'pointer'}
                       onClickPieChart={() => {
+                        setRecommendType(0)
                         setPortfolioModalVisible(true)
                         setSelectIndexInfo(item)
                       }}
@@ -519,14 +648,17 @@ const DashboardRecommended = () => {
                           maxWidth={'70%'}
                           title={item.poolName}
                           owner={item.ownerName}
+                          indexAllocation={item.indexAllocation}
                           cursor={'pointer'}
                           onClickPieChart={() => {
+                            setRecommendType(1)
                             setPortfolioModalVisible(true)
+                            setSelectInvestInfo(item)
                           }}
                           onClickTitle={() => {
                             setProfile({
                               username: item.poolName,
-                              owner: item.poolName,
+                              owner: item.ownerName,
                             })
                             setProfileModalVisible(true)
                           }}
@@ -561,8 +693,10 @@ const DashboardRecommended = () => {
                         maxWidth={'70%'}
                         title={item.poolName}
                         owner={item.ownerName}
+                        indexAllocation={item.indexAllocation}
                         cursor={'pointer'}
                         onClickPieChart={() => {
+                          setRecommendType(0)
                           setModifyModalVisible(true)
                           setSelectIndexInfo(item)
                         }}
