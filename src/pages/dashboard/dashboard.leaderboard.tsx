@@ -14,13 +14,29 @@ import DepositModalBody from "./deposit.modal.body";
 import WithdrawModalBody from "./withdraw.modal.body";
 import { PortfolioModalBody } from "./portfolio.modal.body";
 import { ProfileModalBody } from "../otherprofile"
+import { IndexAllocation } from '../../utils/types'
+
+interface MiraPoolSettings {
+  management_fee: number
+  rebalancing_period: number
+  minimum_contribution: number
+  minimum_withdrawal_period: number
+  referral_reward: number
+  privacy_allocation: number
+}
 
 interface MiraIndex {
-  poolName: string;
-  poolAddress: string;
-  poolOwner: string;
-  managementFee: string;
-  founded: string;
+  poolName: string
+  poolAddress: string
+  poolOwner: string
+  managementFee: string
+  founded: string
+  ownerName: string
+  rebalancingGas: number
+  indexAllocation: Array<IndexAllocation>
+  amount: number
+  gasPool: number
+  settings: MiraPoolSettings
 }
 
 interface CreatePoolEvent {
@@ -74,13 +90,55 @@ const DashboardLeaderBoard = () => {
         let e: CreatePoolEvent = ev.data;
 
         if (walletAddress != e.pool_owner && e.privacy_allocation == 1) continue;
-        create_pool_events.push({
-          poolName: e.pool_name,
-          poolAddress: e.pool_address,
-          poolOwner: e.pool_owner,
-          managementFee: getStringFee(e.management_fee),
-          founded: getFormatedDate(e.founded),
-        });
+        
+        let resource = await client.getAccountResource(
+          e.pool_owner,
+          `${MODULE_ADDR}::mira::MiraAccount`
+        );
+        
+        let resource_data = resource?.data as {
+          account_name: string
+        }
+
+        try {
+          let res = await client.getAccountResource(
+            e.pool_address,
+            `${MODULE_ADDR}::mira::MiraPool`,
+          )
+          
+          const data = res?.data as {
+            amount: number
+            gas_pool: number
+            index_allocation: Array<number>
+            index_list: Array<string>
+            rebalancing_gas: number
+            settings: MiraPoolSettings
+          }
+
+          let allocation: IndexAllocation[] = []
+          for (let i = 0; i < data?.index_allocation.length; i++) {
+            allocation.push({
+              name: data?.index_list[i],
+              value: data?.index_allocation[i] * 1,
+            })
+          }
+
+          create_pool_events.push({
+            poolName: e.pool_name,
+            poolAddress: e.pool_address,
+            poolOwner: e.pool_owner,
+            managementFee: getStringFee(e.management_fee),
+            founded: getFormatedDate(e.founded),
+            ownerName: resource_data.account_name,
+            rebalancingGas: data?.rebalancing_gas,
+            indexAllocation: allocation,
+            amount: data?.amount,
+            gasPool: data?.gas_pool,
+            settings: data?.settings
+          })
+        } catch (error) {
+          console.log('get mira pools error', error)
+        }
       }
       setMiraIndexes(create_pool_events);
     } catch (error) {
@@ -178,7 +236,10 @@ const DashboardLeaderBoard = () => {
           visible={portfolioModalVisible}
           setVisible={setPortfolioModalVisible}
         >
-          <PortfolioModalBody flex={1} miraIndexInfo={selectIndexInfo} />
+          <PortfolioModalBody 
+            flex={1} 
+            miraIndexInfo={selectIndexInfo} 
+          />
         </ModalParent>
       }
 
@@ -460,7 +521,7 @@ const DashboardLeaderBoard = () => {
                           onClick={() => {
                             setProfile({
                               username: miraIndex.poolName,
-                              owner: miraIndex.poolName,
+                              owner: miraIndex.ownerName,
                             })
                             setProfileModalVisible(true)
                           }}
@@ -480,18 +541,21 @@ const DashboardLeaderBoard = () => {
                         cursor={"pointer"}
                         onClick={() => {
                           setPortfolioModalVisible(true);
+                          setSelectIndexInfo(miraIndex);
                         }}
                       >-</Td>
                       <Td
                         cursor={"pointer"} 
                         onClick={() => {
                           setPortfolioModalVisible(true);
+                          setSelectIndexInfo(miraIndex);
                         }}
                       >-%</Td>
                       <Td 
                         cursor={"pointer"}
                         onClick={() => {
                           setPortfolioModalVisible(true);
+                          setSelectIndexInfo(miraIndex);
                         }}
                       >{miraIndex.founded}</Td>
                       {/*<Td>Dec 1, 2000</Td>*/}
@@ -499,12 +563,14 @@ const DashboardLeaderBoard = () => {
                         cursor={"pointer"}
                         onClick={() => {
                           setPortfolioModalVisible(true);
+                          setSelectIndexInfo(miraIndex);
                         }}
                       >{miraIndex.managementFee}%</Td>
                       <Td 
                         cursor={"pointer"}
                         onClick={() => {
                           setPortfolioModalVisible(true);
+                          setSelectIndexInfo(miraIndex);
                         }}
                       >No</Td>
                       {walletConnected && (

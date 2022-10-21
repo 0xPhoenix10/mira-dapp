@@ -152,12 +152,7 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
     setAccountBalance(parseInt(balance.toString()) / DECIMAL);
   };
 
-  const data = [
-    { name: "WORM", value: 350 },
-    { name: "PYTH", value: 300 },
-    { name: "CLOCK", value: 200 },
-    { name: "OTTER", value: 400 },
-  ];
+  const data = miraIndexInfo.indexAllocation
 
   const data2 = [
     { month: "9/28", value: 486 },
