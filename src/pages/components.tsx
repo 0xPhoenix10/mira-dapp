@@ -65,6 +65,7 @@ import { displayPartsToString } from "typescript";
 interface ChartBoxProps {
   title?: string;
   owner?: string;
+  indexAllocation?: any;
   [index: string]: any;
 }
 
@@ -76,6 +77,7 @@ interface IData {
 export const ChartBox: React.FC<ChartBoxProps> = ({
   title = "Chart Box",
   owner = "Mira",
+  indexAllocation = [],
   cursor = "revert",
   onClickPieChart = () => {},
   onClickTitle = () => {},
@@ -86,12 +88,8 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [isHovered, setHovered] = React.useState(false);
 
-  const data = [
-    { name: "WORM", value: 350 },
-    { name: "PYTH", value: 300 },
-    { name: "CLOCK", value: 200 },
-    { name: "OTTER", value: 400 },
-  ];
+  const data = indexAllocation;
+
   const COLORS = [
     "#5a9e47",
     "#23b5b5",
