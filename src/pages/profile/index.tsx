@@ -1,5 +1,5 @@
 import { useWalletHook } from "common/hooks/wallet";
-import { Box, Input, Table, Tbody, Td, Th, Thead, Tr } from "components/base";
+import { Box, Input, Table, Tbody, Td, Th, Thead, Tr, TextArea } from "components/base";
 import { Flex } from "components/base/container";
 import { ArrowIcon, PencilIcon } from "components/icons";
 import { ModalParent } from "components/modal";
@@ -14,6 +14,7 @@ import { MODULE_ADDR, NODE_URL } from "../../config";
 import { getFormatedDate, stringToHex, getStringFee } from "../../utils";
 import { FriendStatus, getFriendData } from "../../utils/graphql";
 import FriendListModalBody from "../../components/modal/friend.list.modal.body";
+
 
 interface MiraAccountProps {
   name: string;
@@ -70,6 +71,7 @@ const ProfilePage = () => {
   const [carouselStop, setCarouselStop] = useState(false);
   const [miraMyIndexes, setMiraMyIndexes] = useState<MiraIndex[]>([]);
   const [miraMyInvests, setMiraMyInvests] = useState<MiraInvest[]>([]);
+  const [description, setDescription] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -179,24 +181,24 @@ const ProfilePage = () => {
       let events = await client.getEventsByEventHandle(
         MODULE_ADDR,
         `${MODULE_ADDR}::mira::MiraStatus`,
-        'create_pool_events',
-        { limit: 1000 },
-      )
-      let create_pool_events: MiraIndex[] = []
+        "create_pool_events",
+        { limit: 1000 }
+      );
+      let create_pool_events: MiraIndex[] = [];
       for (let ev of events) {
-        let e: CreatePoolEvent = ev.data
-        if (walletAddress != e.pool_owner) continue
+        let e: CreatePoolEvent = ev.data;
+        if (walletAddress != e.pool_owner) continue;
         create_pool_events.push({
           poolName: e.pool_name,
           poolAddress: e.pool_address,
           poolOwner: e.pool_owner,
           managementFee: getStringFee(e.management_fee),
           founded: getFormatedDate(e.founded),
-        })
+        });
       }
-      setMiraMyIndexes(create_pool_events)
+      setMiraMyIndexes(create_pool_events);
     } catch (error) {
-      console.log('set mira indexes error', error)
+      console.log("set mira indexes error", error);
     }
   };
 
@@ -206,22 +208,28 @@ const ProfilePage = () => {
       let events = await client.getEventsByEventHandle(
         MODULE_ADDR,
         `${MODULE_ADDR}::mira::MiraStatus`,
-        'deposit_pool_events',
-        { limit: 1000 },
-      )
-      let deposit_pool_events: MiraInvest[] = []
+        "deposit_pool_events",
+        { limit: 1000 }
+      );
+      let deposit_pool_events: MiraInvest[] = [];
       for (let ev of events) {
-        let e: DepositPoolEvent = ev.data
-        if (walletAddress != e.investor) continue
+        let e: DepositPoolEvent = ev.data;
+        if (walletAddress != e.investor) continue;
         deposit_pool_events.push({
           poolName: e.pool_name,
           investor: e.investor,
           amount: e.amount,
-        })
+        });
       }
-      setMiraMyInvests(deposit_pool_events)
+      setMiraMyInvests(deposit_pool_events);
     } catch (error) {
-      console.log('set mira invests error', error)
+      console.log("set mira invests error", error);
+    }
+  };
+
+  const onDescriptionChange = (e : any) => {
+    if(e.target.value.length <= 160) {
+      setDescription(e.target.value)
     }
   }
 
@@ -282,51 +290,121 @@ const ProfilePage = () => {
               Back to Home
             </Flex>
           </Flex>
-          <Flex alignCenter gridGap={"16px"}>
-            name :
-            <Flex
-              alignCenter
-              gridGap={"4px"}
-              background={"#0005"}
-              p={"8px 16px"}
-              border={"1px solid #34383b"}
-              borderRadius={"8px"}
-            >
-              <Input
-                border={"none"}
-                background={"transparent"}
-                color={"white"}
-                placeholder={"user_name"}
-                value={inputNameValue}
-                onChange={(e) => {
-                  setInputNameValue(e.target.value);
-                }}
-              />
-              <Flex cursor={"pointer"} onClick={() => changeMiraAccountName()}>
-                <PencilIcon />
+
+          <Flex gridGap={"20px"}>
+            <Flex col gridGap={"16px"}>
+              <Flex>
+                x
+              </Flex>
+              <Flex gridGap={"16px"}>
+                <Flex alignCenter gridGap={"16px"}>
+                  name :
+                  <Flex
+                    alignCenter
+                    gridGap={"4px"}
+                    background={"#0005"}
+                    p={"8px 16px"}
+                    border={"1px solid #34383b"}
+                    borderRadius={"8px"}
+                  >
+                    <Input
+                      border={"none"}
+                      background={"transparent"}
+                      color={"white"}
+                      placeholder={"user_name"}
+                      value={inputNameValue}
+                      onChange={(e) => {
+                        setInputNameValue(e.target.value);
+                      }}
+                    />
+                    <Flex
+                      cursor={"pointer"}
+                      onClick={() => changeMiraAccountName()}
+                    >
+                      <PencilIcon />
+                    </Flex>
+                  </Flex>
+                  {walletConnected && (
+                    <Flex
+                      center
+                      background={"linear-gradient(90deg, #131313, #2b2b2b)"}
+                      borderRadius={"100%"}
+                      width={"40px"}
+                      height={"40px"}
+                      border={"3px solid #272c2e"}
+                      boxShadow={
+                        "-5px -3px 10px 0px #fff2, 5px 3px 10px 0px #0006"
+                      }
+                      cursor={"pointer"}
+                      onClick={() => {
+                        setShowFriendModal(true);
+                      }}
+                    >
+                      Friend List
+                    </Flex>
+                  )}
+                </Flex>
+              </Flex>
+              <Flex gridGap={"16px"}>
+                <Flex
+                  col
+                  flex={1}
+                  background={"#302d38"}
+                  p={"20px 40px"}
+                  border={"1px solid #34383b"}
+                  borderRadius={"10px 40px"}
+                  gridGap={"12px"}
+                >
+                  
+                </Flex>
+                <Flex
+                  col
+                  flex={1}
+                  background={"#302d38"}
+                  p={"20px 40px"}
+                  border={"1px solid #34383b"}
+                  borderRadius={"10px 40px"}
+                  gridGap={"12px"}
+                >
+                  <Flex width={"100%"}>something</Flex>
+                  <Flex
+                    width={"100%"}
+                    fontSize={"48px"}
+                    fontWeight={"500"}
+                    alignItems={"center"}
+                    gridGap={"8px"}
+                    color={"#70e094"}
+                  >
+                    20
+                    <Box fontSize={"0.7em"} opacity={"0.8"} color={"#70e094"}>
+                      %
+                    </Box>
+                  </Flex>
+                </Flex>
               </Flex>
             </Flex>
-            {walletConnected && (
+            <Flex
+              flexFull
+              col
+              background={"#302d38"}
+              p={"20px"}
+              border={"1px solid #34383b"}
+              borderRadius={"40px 10px"}
+              gridGap={"12px"}
+            >
               <Flex
-                center
-                background={"linear-gradient(90deg, #131313, #2b2b2b)"}
-                borderRadius={"100%"}
-                width={"40px"}
-                height={"40px"}
-                border={"3px solid #272c2e"}
-                boxShadow={"-5px -3px 10px 0px #fff2, 5px 3px 10px 0px #0006"}
-                cursor={"pointer"}
-                onClick={() => {
-                  setShowFriendModal(true);
-                }}
+                p={"10px"}
+                fontSize={"18px"}
+                fontWeight={"500"}
+                borderBottom={"1px solid #34383b"}
               >
-                Friend List
+                Investing since {" "}
+                <Flex fontWeight={"bold"}>{miraAccountProps?.created}</Flex>
               </Flex>
-            )}
-          </Flex>
-          <Flex gridGap={"16px"}>
-            date created :{" "}
-            <Flex fontWeight={"bold"}>{miraAccountProps?.created}</Flex>
+              <Flex flexFull>
+                <TextArea width={"100%"} placeholder={"Max 160 chars"} placeColor={"#70e094"} color={"#fff"} border={"none"} backgroundColor={"transparent"} value={description} onChange={onDescriptionChange}></TextArea>
+              </Flex>
+            </Flex>
           </Flex>
         </Flex>
         <Flex flex={1} col gridGap={"20px"}>
