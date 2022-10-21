@@ -11,17 +11,14 @@ import {
   TextArea,
 } from "components/base";
 import { Flex } from "components/base/container";
-import { ArrowIcon, PencilIcon } from "components/icons";
 import { ModalParent } from "components/modal";
 import {
   ChartBox,
   IndexListModalBody,
-  UpdateModalBody,
-  ModifyModalBody,
   BlankCard,
 } from "pages/components";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AptosClient } from "aptos";
 import { Carousel3D } from "../common/comp.carousel";
 import { MODULE_ADDR, NODE_URL } from "../../config";
@@ -31,8 +28,6 @@ import { IndexAllocation } from "../../utils/types";
 import { getFormatedDate, stringToHex, getStringFee } from "../../utils";
 import { FriendStatus, getFriendData } from "../../utils/graphql";
 import FriendListModalBody from "../../components/modal/friend.list.modal.body";
-import { IndexAllocationModalBody } from "pages/index.allocation.modal";
-import { PortfolioModalBody } from "pages/dashboard/portfolio.modal.body";
 
 interface MiraAccountProps {
   name: string;
@@ -120,16 +115,8 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
   const [carouselStop, setCarouselStop] = useState(false);
   const [miraMyIndexes, setMiraMyIndexes] = useState<MiraIndex[]>([]);
   const [miraMyInvests, setMiraMyInvests] = useState<MiraInvest[]>([]);
-  const [selectIndexInfo, setSelectIndexInfo] = useState<MiraIndex | null>(
-    null
-  );
-  const [selectInvestInfo, setSelectInvestInfo] = useState<MiraInvest | null>(
-    null
-  );
   const [otherProfile, setProfile] = useState({});
   const [profileModalVisible, setProfileModalVisible] = useState(false);
-  const [updateModalVisible, setUpdateModalVisible] = useState(false);
-  const [indexAllocationModalVisible, setIndexAllocationModalVisible] =
     useState(false);
 
   const navigate = useNavigate();
@@ -395,18 +382,6 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
       }
       {
         <ModalParent
-          visible={portfolioModalVisible}
-          setVisible={setPortfolioModalVisible}
-        >
-          <PortfolioModalBody
-            flex={1}
-            setVisible={setPortfolioModalVisible}
-            miraIndexInfo={selectInvestInfo}
-          />
-        </ModalParent>
-      }
-      {
-        <ModalParent
           visible={profileModalVisible}
           setVisible={setProfileModalVisible}
         >
@@ -414,43 +389,6 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
             flex={1}
             setVisible={setProfileModalVisible}
             profile={otherProfile}
-          />
-        </ModalParent>
-      }
-      {
-        <ModalParent
-          visible={updateModalVisible}
-          setVisible={setUpdateModalVisible}
-          zIndex={"1002"}
-        >
-          <UpdateModalBody flex={1} setVisible={setUpdateModalVisible} />
-        </ModalParent>
-      }
-      {
-        <ModalParent
-          visible={modifyModalVisible}
-          setVisible={setModifyModalVisible}
-          zIndex={"1001"}
-        >
-          <ModifyModalBody
-            flex={1}
-            setVisible={setModifyModalVisible}
-            setUpdateVisible={setUpdateModalVisible}
-            setAllocationVisible={setIndexAllocationModalVisible}
-            miraIndexInfo={selectIndexInfo}
-          />
-        </ModalParent>
-      }
-      {
-        <ModalParent
-          visible={indexAllocationModalVisible}
-          setVisible={setIndexAllocationModalVisible}
-          zIndex={"1004"}
-        >
-          <IndexAllocationModalBody
-            flex={1}
-            type={"create"}
-            setVisible={setIndexAllocationModalVisible}
           />
         </ModalParent>
       }
@@ -766,10 +704,6 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
                         owner={item.ownerName}
                         indexAllocation={item.indexAllocation}
                         cursor={"pointer"}
-                        onClickPieChart={() => {
-                          setModifyModalVisible(true);
-                          setSelectIndexInfo(item);
-                        }}
                         onClickTitle={() => {
                           setProfile({
                             pool_name: item.poolName,
@@ -832,10 +766,6 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
                         owner={item.ownerName}
                         indexAllocation={item.indexAllocation}
                         cursor={"pointer"}
-                        onClickPieChart={() => {
-                          setPortfolioModalVisible(true);
-                          setSelectInvestInfo(item);
-                        }}
                         onClickTitle={() => {
                           setProfile({
                             username: item.poolName,

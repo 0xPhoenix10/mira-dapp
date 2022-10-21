@@ -45,7 +45,6 @@ import { AptosClient, AptosAccount, CoinClient } from "aptos";
 import { FEE_DECIMAL, MODULE_ADDR, DECIMAL, NODE_URL } from "../config";
 import { useWalletHook } from "../common/hooks/wallet";
 import { UpdateIndexProviderContext } from "./dashboard";
-import { PortfolioModalBody } from "./dashboard/portfolio.modal.body";
 import DepositModalBody from "./dashboard/deposit.modal.body";
 import WithdrawModalBody from "./dashboard/withdraw.modal.body";
 import { renderActiveShape } from "../common/recharts/piechart";
@@ -496,7 +495,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
     const result = await signAndSubmitTransaction(transaction);
 
     if (result) {
-      setUpdateIndex(!updateIndex);
+      // setUpdateIndex(!updateIndex);
       setVisible(false);
     }
   };
