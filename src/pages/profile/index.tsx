@@ -119,7 +119,7 @@ const ProfilePage = () => {
 
   const [uploadFile, setUploadFile] = useState<IUploadFile>({
     file: '',
-    imagePreviewUrl: 'https://github.com/OlgaKoplik/CodePen/blob/master/profile.jpg?raw=true',
+    imagePreviewUrl: require("assets/icon/258705.jpg"),
   });
 
 
@@ -503,7 +503,7 @@ const ProfilePage = () => {
 
           <Flex gridGap={"20px"}>
             <Flex col gridGap={"16px"}>
-              <Flex justifyCenter>
+              <Flex >
                 <ImgUpload onChange={photoUpload} src={uploadFile.imagePreviewUrl}/>
               </Flex>
               <Flex gridGap={"16px"}>
@@ -957,7 +957,9 @@ const ImgUpload: React.FC<{
 }) => {
   return (
     <Flex>
-      <img src={src} width={150}/>
+      <img src={src} width={150} style={{
+        borderRadius: '20px',
+      }}/>
       <label htmlFor="photo-upload">
         <Flex
           cursor={"pointer"}
