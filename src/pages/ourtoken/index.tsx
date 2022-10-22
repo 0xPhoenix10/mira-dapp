@@ -185,7 +185,7 @@ const OurTokenPage: React.FC = () => {
               fontFamily={"art"}
               fontSize={"24px"}
               fontWeight={"bold"}
-              borderBottom={"1px solid"}
+              borderBottom={"1px solid #333334"}
               p={"10px 30px"}
             >
               Mira's in-house Index Funds
@@ -211,7 +211,7 @@ const OurTokenPage: React.FC = () => {
               >
                 <Flex
                   fontSize={"20px"}
-                  borderBottom={"1px solid"}
+                  borderBottom={"1px solid #333334"}
                   p={"10px 30px"}
                   color={"#fff"}
                   alignCenter
@@ -280,7 +280,7 @@ const OurTokenPage: React.FC = () => {
               >
                 <Flex
                   fontSize={"20px"}
-                  borderBottom={"1px solid"}
+                  borderBottom={"1px solid #333334"}
                   p={"10px 30px"}
                   color={"#fff"}
                   alignCenter
@@ -349,7 +349,7 @@ const OurTokenPage: React.FC = () => {
               >
                 <Flex
                   fontSize={"20px"}
-                  borderBottom={"1px solid"}
+                  borderBottom={"1px solid #333334"}
                   p={"10px 30px"}
                   color={"#fff"}
                   alignCenter

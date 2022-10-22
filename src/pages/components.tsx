@@ -545,15 +545,18 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
         </>
       ) : (
         <Flex col gridGap={'10px'}>
-          <Flex
-            py={'8px'}
-            fontSize={'18px'}
-            fontWeight={'500'}
-            borderBottom={'1px solid #34383b'}
-          >
-            {type === 'modify' && 'Modify My Index'}
-            {type === 'create' && 'Create My Index'}
-          </Flex>
+          {type === 'modify' && (
+            <Flex
+              py={'8px'}
+              fontSize={'18px'}
+              fontWeight={'500'}
+              borderBottom={'1px solid #34383b'}
+            >
+              {type === 'modify' && 'Modify My Index'}
+              {/* {type === 'create' && 'Create My Index'} */}
+            </Flex>
+          )}
+          
           <Flex
             col
             justifyCenter
@@ -591,7 +594,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                     <Flex
                       cursor={'pointer'}
                     >
-                      <PencilIcon />
+                      <PencilIcon size={'1.5em'}/>
                     </Flex>
                   </Flex>
                 </Flex>
@@ -601,7 +604,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
               <Flex justifyCenter gridGap={'16px'} alignCenter>
                 {(type === 'modify' || type === 'create') && (
                   <Flex col>
-                    <Flex width={'200px'} aspectRatio={'1'}>
+                    <Flex width={'300px'} aspectRatio={'1'}>
                       <ResponsiveContainer>
                         {allocationData && Array.isArray(allocationData) && (
                           <PieChart
@@ -640,6 +643,19 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                           </PieChart>
                         )}
                       </ResponsiveContainer>
+                      <div
+                        style={{
+                          position: "relative",
+                          top: '10px',
+                          right: '40px',
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => {
+                          setAllocationVisible(true)
+                        }}
+                      >
+                        <PencilIcon size={'1.5em'} />
+                      </div>
                     </Flex>
                     {type === 'modify' && (
                       <Flex justifyCenter gridGap={'8px'}>
@@ -686,7 +702,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                 >
                   <Table>
                     <Tbody>
-                      <Tr>
+                      <Tr fontSize={'16px'}>
                         <Td px={'4px'} py={'2px'} borderBottom={'none'}>
                           Deposit amount :
                         </Td>
@@ -713,7 +729,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                           </Flex>
                         </Td>
                       </Tr>
-                      <Tr>
+                      <Tr fontSize={'16px'}>
                         <Td px={'4px'} py={'2px'} borderBottom={'none'}>
                           Rebalancing :
                         </Td>
@@ -832,7 +848,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                           </Flex>
                         </Td>
                       </Tr>
-                      <Tr>
+                      <Tr fontSize={'16px'}>
                         <Td px={'4px'} py={'2px'} borderBottom={'none'}>
                           Management fee :
                         </Td>
@@ -889,7 +905,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                       </Tr>
                       {openMoreSetting && (
                         <>
-                          <Tr>
+                          <Tr fontSize={'16px'}>
                             <Td px={'4px'} py={'2px'} borderBottom={'none'}>
                               Minimum Contribution :
                             </Td>
@@ -949,7 +965,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                               </Flex>
                             </Td>
                           </Tr>
-                          <Tr>
+                          <Tr fontSize={'16px'}>
                             <Td px={'4px'} py={'2px'} borderBottom={'none'}>
                               Minimum Withdrawal Period :
                             </Td>
@@ -1068,7 +1084,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                               </Flex>
                             </Td>
                           </Tr>
-                          <Tr>
+                          <Tr fontSize={'16px'}>
                             <Td px={'4px'} py={'2px'} borderBottom={'none'}>
                               Privacy Allocation :
                             </Td>
@@ -1134,7 +1150,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                         </>
                       )}
 
-                      <Tr>
+                      <Tr fontSize={'16px'}>
                         <Td
                           px={'4px'}
                           py={'2px'}
@@ -1152,7 +1168,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                   <Flex gridGap={'8px'}>
                     {type === 'modify' ? (
                       <>
-                        <Flex
+                        {/* <Flex
                           alignCenter
                           gridGap={'4px'}
                           ml={'auto'}
@@ -1165,16 +1181,18 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                         >
                           <CheckIcon size={'1.2em'} />
                           Save
-                        </Flex>
+                        </Flex> */}
                         <Flex
                           alignCenter
                           gridGap={'4px'}
+                          ml={'auto'}
                           padding={'8px 16px'}
                           background={'#0005'}
                           p={'8px 16px'}
                           border={'1px solid #34383b'}
                           borderRadius={'8px'}
                           cursor="pointer"
+                          fontSize={'18px'}
                           onClick={() => {
                             setVisible(false)
                           }}
@@ -1194,10 +1212,11 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                         border={'1px solid #34383b'}
                         borderRadius={'8px'}
                         cursor="pointer"
+                        fontSize={"18px"}
                         onClick={() => show_price()}
                       >
                         <CreateIcon size={'1.2em'} />
-                        Publish
+                        Create
                       </Flex>
                     ) : (
                       <SwipeBtn
@@ -1318,7 +1337,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
             >
               <Table>
                 <Tbody>
-                  <Tr>
+                  <Tr fontSize={'16px'}>
                     <Td px={'4px'} py={'2px'} borderBottom={'none'}>
                       Rebalancing :
                     </Td>
@@ -1432,7 +1451,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                   </Tr>
                   {openMoreSetting && (
                     <>
-                      <Tr>
+                      <Tr fontSize={'16px'}>
                         <Td px={'4px'} py={'2px'} borderBottom={'none'}>
                           Minimum Contribution :
                         </Td>
@@ -1487,7 +1506,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                           </Flex>
                         </Td>
                       </Tr>
-                      <Tr>
+                      <Tr fontSize={'16px'}>
                         <Td px={'4px'} py={'2px'} borderBottom={'none'}>
                           Minimum Withdrawal Period :
                         </Td>
@@ -1617,7 +1636,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                           </Flex>
                         </Td>
                       </Tr>
-                      <Tr>
+                      <Tr fontSize={'16px'}>
                         <Td px={'4px'} py={'2px'} borderBottom={'none'}>
                           Privacy Allocation :
                         </Td>
@@ -1682,7 +1701,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                       </Tr> */}
                     </>
                   )}
-                  <Tr>
+                  <Tr fontSize={'16px'}>
                     <Td
                       px={'4px'}
                       py={'2px'}
@@ -1704,6 +1723,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                   ml={'auto'}
                   padding={'8px 16px'}
                   background={'#0005'}
+                  fontSize={'18px'}
                   p={'8px 16px'}
                   border={'1px solid #34383b'}
                   borderRadius={'8px'}
@@ -1722,6 +1742,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                     padding={'8px 16px'}
                     background={'#0005'}
                     p={'8px 16px'}
+                    fontSize={'18px'}
                     border={'1px solid #34383b'}
                     borderRadius={'8px'}
                     cursor="pointer"
