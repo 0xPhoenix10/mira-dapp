@@ -70,14 +70,11 @@ const DashboardLeaderBoard = () => {
   useEffect(() => {
     !walletAddress && setCurrentTab(0);
     
-    if(walletAddress) {
-      fetchIndexes();
-    }
+    fetchIndexes();
   }, [walletAddress]);
 
   const fetchIndexes = async () => {
     const client = new AptosClient(NODE_URL);
-    if (!walletAddress) return;
     try {
       let events = await client.getEventsByEventHandle(
         MODULE_ADDR,
