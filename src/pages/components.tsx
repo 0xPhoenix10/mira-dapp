@@ -698,7 +698,11 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                   gridGap={'4px'}
                   minWidth={'395px'}
                   minHeight={'310px'}
-                  justifyCenter
+                  justifyContent={'space-around'}
+                  border={"1px solid #5c6266"}
+                  borderRadius={"20px"}
+                  mt={"20px"}
+                  px={"20px"}
                 >
                   <Table>
                     <Tbody>
