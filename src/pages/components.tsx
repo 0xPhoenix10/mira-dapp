@@ -702,7 +702,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                   border={"1px solid #5c6266"}
                   borderRadius={"20px"}
                   mt={"20px"}
-                  px={"20px"}
+                  p={"20px"}
                 >
                   <Table>
                     <Tbody>
@@ -723,6 +723,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                               background={'transparent'}
                               color={'white'}
                               placeholder={'input here...'}
+                              fontSize={"16px"}
                               max={'100'}
                               min={'0'}
                               readOnly={type === 'modify'}
@@ -754,6 +755,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setRebalancingPeriod(1)}
+                                  fontSize={"16px"}
                                 >
                                   1D
                                 </NormalBtn>
@@ -765,6 +767,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setRebalancingPeriod(7)}
+                                  fontSize={"16px"}
                                 >
                                   1W
                                 </NormalBtn>
@@ -776,6 +779,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setRebalancingPeriod(14)}
+                                  fontSize={"16px"}
                                 >
                                   2W
                                 </NormalBtn>
@@ -787,6 +791,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setRebalancingPeriod(30)}
+                                  fontSize={"16px"}
                                 >
                                   1M
                                 </NormalBtn>
@@ -798,6 +803,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setRebalancingPeriod(60)}
+                                  fontSize={"16px"}
                                 >
                                   2M
                                 </NormalBtn>
@@ -812,6 +818,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setRebalancingPeriod(1)}
+                                  fontSize={"16px"}
                                 >
                                   1D
                                 </NormalBtn>
@@ -823,6 +830,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setRebalancingPeriod(7)}
+                                  fontSize={"16px"}
                                 >
                                   1W
                                 </NormalBtn>
@@ -834,6 +842,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setRebalancingPeriod(30)}
+                                  fontSize={"16px"}
                                 >
                                   1M
                                 </NormalBtn>
@@ -846,6 +855,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                   : setRebalancingMoreBtn(true)
                               }
                               ml={'0px'}
+                              fontSize={"16px"}
                             >
                               {isRebalancingMore ? '-' : '+'}
                             </AddBtn>
@@ -868,6 +878,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                 managementFee === 1 ? '#565656' : '#302d38'
                               }
                               onClick={() => setManagementFee(1)}
+                              fontSize={"16px"}
                             >
                               1%
                             </NormalBtn>
@@ -877,6 +888,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                 managementFee === 2 ? '#565656' : '#302d38'
                               }
                               onClick={() => setManagementFee(2)}
+                              fontSize={"16px"}
                             >
                               2%
                             </NormalBtn>
@@ -886,6 +898,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                 managementFee === 5 ? '#565656' : '#302d38'
                               }
                               onClick={() => setManagementFee(5)}
+                              fontSize={"16px"}
                             >
                               5%
                             </NormalBtn>
@@ -894,6 +907,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                               type={'number'}
                               border={'none'}
                               background={'transparent'}
+                              fontSize={"16px"}
                               color={'white'}
                               placeholder={'...'}
                               max={'100'}
@@ -927,6 +941,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setMiniumContribution(0.1)}
+                                  fontSize={"16px"}
                                 >
                                   $1
                                 </NormalBtn>
@@ -938,6 +953,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setMiniumContribution(0.5)}
+                                  fontSize={"16px"}
                                 >
                                   $5
                                 </NormalBtn>
@@ -949,6 +965,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setMiniumContribution(1)}
+                                  fontSize={"16px"}
                                 >
                                   $10
                                 </NormalBtn>
@@ -960,6 +977,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                   placeholder={'...'}
                                   ml={'10px'}
                                   readOnly={type === 'modify'}
+                                  fontSize={"16px"}
                                   onChange={(e) => {
                                     setMiniumContribution(
                                       parseFloat(e.target.value),
@@ -990,6 +1008,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                           : '#302d38'
                                       }
                                       onClick={() => setMiniumWithdrawal(1)}
+                                      fontSize={"16px"}
                                     >
                                       1D
                                     </NormalBtn>
@@ -1001,6 +1020,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                           : '#302d38'
                                       }
                                       onClick={() => setMiniumWithdrawal(7)}
+                                      fontSize={"16px"}
                                     >
                                       1W
                                     </NormalBtn>
@@ -1012,6 +1032,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                           : '#302d38'
                                       }
                                       onClick={() => setMiniumWithdrawal(14)}
+                                      fontSize={"16px"}
                                     >
                                       2W
                                     </NormalBtn>
@@ -1023,6 +1044,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                           : '#302d38'
                                       }
                                       onClick={() => setMiniumWithdrawal(30)}
+                                      fontSize={"16px"}
                                     >
                                       1M
                                     </NormalBtn>
@@ -1034,6 +1056,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                           : '#302d38'
                                       }
                                       onClick={() => setMiniumWithdrawal(60)}
+                                      fontSize={"16px"}
                                     >
                                       2M
                                     </NormalBtn>
@@ -1048,6 +1071,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                           : '#302d38'
                                       }
                                       onClick={() => setMiniumWithdrawal(1)}
+                                      fontSize={"16px"}
                                     >
                                       1D
                                     </NormalBtn>
@@ -1059,6 +1083,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                           : '#302d38'
                                       }
                                       onClick={() => setMiniumWithdrawal(7)}
+                                      fontSize={"16px"}
                                     >
                                       1W
                                     </NormalBtn>
@@ -1070,6 +1095,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                           : '#302d38'
                                       }
                                       onClick={() => setMiniumWithdrawal(30)}
+                                      fontSize={"16px"}
                                     >
                                       1M
                                     </NormalBtn>
@@ -1081,6 +1107,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       ? setMinWithdrawalMoreBtn(false)
                                       : setMinWithdrawalMoreBtn(true)
                                   }
+                                  fontSize={"16px"}
                                   ml={'0px'}
                                 >
                                   {isMinWithdrawalMore ? '-' : '+'}
