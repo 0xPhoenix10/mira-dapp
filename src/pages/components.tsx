@@ -3145,7 +3145,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
     }
   };
 
-  const invest = async () => {
+  const add = async () => {
     if (!walletConnected) return;
 
     let amnt = Number(amount) * DECIMAL;
@@ -3155,9 +3155,9 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
     try {
       const transaction = {
         type: "entry_function_payload",
-        function: `${MODULE_ADDR}::mira::invest`,
+        function: `${MODULE_ADDR}::mira::add_to_gas_pool`,
         type_arguments: [],
-        arguments: [poolInfo.poolName, poolInfo.managerAddress, amnt]
+        arguments: [poolInfo.poolName, amnt]
       };
       const result = await signAndSubmitTransaction(transaction);
     } catch (error) {
@@ -3174,9 +3174,9 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
     try {
       const transaction = {
         type: "entry_function_payload",
-        function: `${MODULE_ADDR}::mira::withdraw`,
+        function: `${MODULE_ADDR}::mira::withdraw_from_gas_pool`,
         type_arguments: [],
-        arguments: [poolInfo.poolName, poolInfo.managerAddress, amnt]
+        arguments: [poolInfo.poolName, amnt]
       };
       const result = await signAndSubmitTransaction(transaction);
     } catch (error) {
@@ -3350,7 +3350,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
           minWidth={"150px"}
           padding={"12px 24px"}
           textAlign={"center"}
-          onClick={() => (isInvest ? invest() : withdraw())}
+          onClick={() => (isInvest ? add() : withdraw())}
         >
           {isInvest ? "ADD" : "REMOVE"}
         </ArtButton>
