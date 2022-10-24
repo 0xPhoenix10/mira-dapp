@@ -1387,6 +1387,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                 rebalancingPeriod === 1 ? '#565656' : '#302d38'
                               }
                               onClick={() => setRebalancingPeriod(1)}
+                              fontSize={'16px'}
                             >
                               1D
                             </NormalBtn>
@@ -1396,6 +1397,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                 rebalancingPeriod === 7 ? '#565656' : '#302d38'
                               }
                               onClick={() => setRebalancingPeriod(7)}
+                              fontSize={'16px'}
                             >
                               1W
                             </NormalBtn>
@@ -1405,6 +1407,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                 rebalancingPeriod === 14 ? '#565656' : '#302d38'
                               }
                               onClick={() => setRebalancingPeriod(14)}
+                              fontSize={'16px'}
                             >
                               2W
                             </NormalBtn>
@@ -1414,6 +1417,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                 rebalancingPeriod === 30 ? '#565656' : '#302d38'
                               }
                               onClick={() => setRebalancingPeriod(30)}
+                              fontSize={'16px'}
                             >
                               1M
                             </NormalBtn>
@@ -1423,6 +1427,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                 rebalancingPeriod === 60 ? '#565656' : '#302d38'
                               }
                               onClick={() => setRebalancingPeriod(60)}
+                              fontSize={'16px'}
                             >
                               2M
                             </NormalBtn>
@@ -1435,6 +1440,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                 rebalancingPeriod === 0 ? '#565656' : '#302d38'
                               }
                               onClick={() => setRebalancingPeriod(0)}
+                              fontSize={'16px'}
                             >
                               none
                             </NormalBtn>
@@ -1444,6 +1450,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                 rebalancingPeriod === 1 ? '#565656' : '#302d38'
                               }
                               onClick={() => setRebalancingPeriod(1)}
+                              fontSize={'16px'}
                             >
                               1D
                             </NormalBtn>
@@ -1453,6 +1460,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                 rebalancingPeriod === 7 ? '#565656' : '#302d38'
                               }
                               onClick={() => setRebalancingPeriod(7)}
+                              fontSize={'16px'}
                             >
                               1W
                             </NormalBtn>
@@ -1462,6 +1470,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                 rebalancingPeriod === 30 ? '#565656' : '#302d38'
                               }
                               onClick={() => setRebalancingPeriod(30)}
+                              fontSize={'16px'}
                             >
                               1M
                             </NormalBtn>
@@ -1474,6 +1483,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                               : setRebalancingMoreBtn(true)
                           }
                           ml={'0px'}
+                          fontSize={'16px'}
                         >
                           {isRebalancingMore ? '-' : '+'}
                         </AddBtn>
@@ -1498,6 +1508,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                 minimumContribution === 0.1 ? '#565656' : '#302d38'
                               }
                               onClick={() => setMiniumContribution(0.1)}
+                              fontSize={'16px'}
                             >
                               $1
                             </NormalBtn>
@@ -1507,6 +1518,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                 minimumContribution === 0.5 ? '#565656' : '#302d38'
                               }
                               onClick={() => setMiniumContribution(0.5)}
+                              fontSize={'16px'}
                             >
                               $5
                             </NormalBtn>
@@ -1518,6 +1530,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                   : '#302d38'
                               }
                               onClick={() => setMiniumContribution(1)}
+                              fontSize={'16px'}
                             >
                               $10
                             </NormalBtn>
@@ -1528,6 +1541,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                               color={'white'}
                               placeholder={'...'}
                               ml={'10px'}
+                              fontSize={'16px'}
                               onChange={(e) => {
                                 setMiniumContribution(
                                   parseFloat(e.target.value),
@@ -1558,6 +1572,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setMiniumWithdrawal(1)}
+                                  fontSize={'16px'}
                                 >
                                   1D
                                 </NormalBtn>
@@ -1569,6 +1584,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setMiniumWithdrawal(7)}
+                                  fontSize={'16px'}
                                 >
                                   1W
                                 </NormalBtn>
@@ -1580,6 +1596,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setMiniumWithdrawal(14)}
+                                  fontSize={'16px'}
                                 >
                                   2W
                                 </NormalBtn>
@@ -1591,6 +1608,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setMiniumWithdrawal(30)}
+                                  fontSize={'16px'}
                                 >
                                   1M
                                 </NormalBtn>
@@ -1602,6 +1620,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setMiniumWithdrawal(60)}
+                                  fontSize={'16px'}
                                 >
                                   2M
                                 </NormalBtn>
@@ -1616,6 +1635,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setMiniumWithdrawal(0)}
+                                  fontSize={'16px'}
                                 >
                                   none
                                 </NormalBtn>
@@ -1627,6 +1647,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setMiniumWithdrawal(1)}
+                                  fontSize={'16px'}
                                 >
                                   1D
                                 </NormalBtn>
@@ -1638,6 +1659,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setMiniumWithdrawal(7)}
+                                  fontSize={'16px'}
                                 >
                                   1W
                                 </NormalBtn>
@@ -1649,6 +1671,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                       : '#302d38'
                                   }
                                   onClick={() => setMiniumWithdrawal(30)}
+                                  fontSize={'16px'}
                                 >
                                   1M
                                 </NormalBtn>
@@ -1661,6 +1684,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                   : setMinWithdrawalMoreBtn(true)
                               }
                               ml={'0px'}
+                              fontSize={'16px'}
                             >
                               {isMinWithdrawalMore ? '-' : '+'}
                             </AddBtn>
@@ -3129,6 +3153,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
           visible={updateModalVisible}
           setVisible={setUpdateModalVisible}
           zIndex={'1004'}
+          minWidth={"auto"}
         >
           <UpdateModalBody
             flex={1}
