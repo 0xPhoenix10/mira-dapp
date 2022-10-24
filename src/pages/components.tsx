@@ -3254,7 +3254,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
     if (walletConnected) {
       isInvest ? setMax(accountBalance) : setMax(depositAmnt)
     }
-  }, [walletConnected])
+  }, [walletConnected, accountBalance])
 
   const setMaxValue = () => {
     if (walletConnected) {
@@ -3288,6 +3288,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
     let amnt = Number(amount) * DECIMAL
     if (amnt <= 0) return
 
+    console.log(miraInfo)
     try {
       const transaction = {
         type: 'entry_function_payload',
@@ -3411,7 +3412,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
                 onChange={txtAmountChange}
               />
             </Flex>
-            <Flex>0</Flex>
+            <Flex>{amount}</Flex>
           </Flex>
           <Flex bg={'#302d38'} borderRadius={'8px'}>
             <CustomSelect>
