@@ -125,68 +125,68 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
   const [description, setDescription] = useState("");
 
   useEffect(() => {
-    if (walletAddress) {
+    // if (walletAddress) {
       fetchIndexes();
       fetchInvests();
-    }
+    // }
 
-    !walletConnected && navigate("/");
-    const initMiraAccountProps = async () => {
-      const client = new AptosClient(NODE_URL);
-      try {
-        let resource = await client.getAccountResource(
-          walletAddress,
-          `${MODULE_ADDR}::mira::MiraAccount`
-        );
-        if (!resource) {
-          navigate("/");
-          return;
-        }
+    // !walletConnected && navigate("/");
+    // const initMiraAccountProps = async () => {
+    //   const client = new AptosClient(NODE_URL);
+    //   try {
+    //     let resource = await client.getAccountResource(
+    //       walletAddress,
+    //       `${MODULE_ADDR}::mira::MiraAccount`
+    //     );
+    //     if (!resource) {
+    //       navigate("/");
+    //       return;
+    //     }
 
-        const data = resource?.data as {
-          account_name: string;
-          created: number;
-        };
+    //     const data = resource?.data as {
+    //       account_name: string;
+    //       created: number;
+    //     };
 
-        setMiraAccountProps({
-          name: data?.account_name,
-          created: getFormatedDate(data?.created),
-        });
-      } catch (error) {
-        navigate("/");
-        return;
-      }
-    };
+    //     setMiraAccountProps({
+    //       name: data?.account_name,
+    //       created: getFormatedDate(data?.created),
+    //     });
+    //   } catch (error) {
+    //     navigate("/");
+    //     return;
+    //   }
+    // };
 
-    const getFriendInfo = async (owner_addr: string) => {
-      const aptos_client = new AptosClient(NODE_URL);
-      let resource = await aptos_client.getAccountResource(
-        owner_addr,
-        `${MODULE_ADDR}::mira::MiraAccount`
-      );
-      if (!resource) {
-        return null;
-      }
-      const data = resource?.data as FriendData;
-      data.pool_owner = owner_addr;
-      return data;
-    };
+    // const getFriendInfo = async (owner_addr: string) => {
+    //   const aptos_client = new AptosClient(NODE_URL);
+    //   let resource = await aptos_client.getAccountResource(
+    //     owner_addr,
+    //     `${MODULE_ADDR}::mira::MiraAccount`
+    //   );
+    //   if (!resource) {
+    //     return null;
+    //   }
+    //   const data = resource?.data as FriendData;
+    //   data.pool_owner = owner_addr;
+    //   return data;
+    // };
 
-    const getFriendList = async () => {
-      if (!walletConnected) return;
-      let friends = await getFriendData(walletAddress);
-      friends.map(async (friend, index) => {
-        if (friend.status !== FriendStatus.Friend) return;
-        let f = await getFriendInfo(friend.receiveUser);
-        if (f) {
-          setFriendDataList([...friendDataList, f]);
-        }
-      });
-    };
+    // const getFriendList = async () => {
+    //   if (!walletConnected) return;
+    //   let friends = await getFriendData(walletAddress);
+    //   friends.map(async (friend, index) => {
+    //     if (friend.status !== FriendStatus.Friend) return;
+    //     let f = await getFriendInfo(friend.receiveUser);
+    //     if (f) {
+    //       setFriendDataList([...friendDataList, f]);
+    //     }
+    //   });
+    // };
 
-    initMiraAccountProps();
-    getFriendList();
-  }, [walletConnected, friendDataList, navigate, walletAddress]);
+    // initMiraAccountProps();
+    // getFriendList();
+  }, [walletConnected, navigate, walletAddress]);
 
   const [myIndexesModalVisible, setMyIndexesModalVisible] = useState(false);
   const [myInvestmentsModalVisible, setMyInvestmentsModalVisible] =
