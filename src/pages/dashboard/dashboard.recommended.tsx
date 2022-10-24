@@ -377,6 +377,7 @@ const DashboardRecommended = () => {
         <ModalParent
           visible={createModalVisible}
           setVisible={setCreateModalVisible}
+          minWidth={"auto"}
         >
           <IndexModalBody
             flex={1}
