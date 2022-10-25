@@ -29,6 +29,7 @@ interface FlexProps {
   alignCenter?: boolean;
   spaceBetween?: boolean;
   spaceAround?: boolean;
+  alignBaseline?: boolean;
 }
 export const Flex = styled(Box)<FlexProps>`
   flex-direction: ${(p) => (p.row ? "row" : p.col ? "column" : "")};
@@ -43,7 +44,14 @@ export const Flex = styled(Box)<FlexProps>`
       : p.spaceAround
       ? "space-around"
       : ""};
-  align-items: ${(p) => (p.center ? "center" : p.alignCenter ? "center" : "")};
+  align-items: ${(p) =>
+    p.center
+      ? "center"
+      : p.alignCenter
+      ? "center"
+      : p.alignBaseline
+      ? "baseline"
+      : ""};
 `;
 Flex.defaultProps = {
   display: "flex",

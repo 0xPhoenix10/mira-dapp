@@ -3157,7 +3157,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
       >
         <Flex alignCenter justifyContent={"space-between"}>
           <Flex col>
-            <Flex>
+            <Flex alignBaseline>
               <Flex
                 fontSize={"1.4em"}
                 fontWeight={"bold"}
@@ -3173,7 +3173,6 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
                 fontSize={"1.4em"}
                 fontWeight={"bold"}
                 background={"transparent"}
-                paddingTop={"5px"}
                 color={"#70e094"}
                 placeholder={"0.0"}
                 placeColor={"#70e094"}
