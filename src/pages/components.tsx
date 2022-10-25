@@ -524,6 +524,9 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
   const onPieLeave = () => setHovered(false);
 
   const [showPrice, setShowPrice] = useState(false);
+  const getBtnBg = (v1, v2) => {
+    return v1 == v2 ? "#8b8a8d" : "#514f56"
+  }
 
   return (
     <>
@@ -747,60 +750,40 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                             {isRebalancingMore ? (
                               <>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    rebalancingPeriod === 1
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(rebalancingPeriod, 1)}
                                   onClick={() => setRebalancingPeriod(1)}
                                   fontSize={"16px"}
                                 >
                                   1D
                                 </NormalBtn>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    rebalancingPeriod === 7
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(rebalancingPeriod, 7)}
                                   onClick={() => setRebalancingPeriod(7)}
                                   fontSize={"16px"}
                                 >
                                   1W
                                 </NormalBtn>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    rebalancingPeriod === 14
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(rebalancingPeriod, 14)}
                                   onClick={() => setRebalancingPeriod(14)}
                                   fontSize={"16px"}
                                 >
                                   2W
                                 </NormalBtn>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    rebalancingPeriod === 30
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(rebalancingPeriod, 30)}
                                   onClick={() => setRebalancingPeriod(30)}
                                   fontSize={"16px"}
                                 >
                                   1M
                                 </NormalBtn>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    rebalancingPeriod === 60
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(rebalancingPeriod, 60)}
                                   onClick={() => setRebalancingPeriod(60)}
                                   fontSize={"16px"}
                                 >
@@ -810,36 +793,24 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                             ) : (
                               <>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    rebalancingPeriod === 1
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(rebalancingPeriod, 1)}
                                   onClick={() => setRebalancingPeriod(1)}
                                   fontSize={"16px"}
                                 >
                                   1D
                                 </NormalBtn>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    rebalancingPeriod === 7
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(rebalancingPeriod, 7)}
                                   onClick={() => setRebalancingPeriod(7)}
                                   fontSize={"16px"}
                                 >
                                   1W
                                 </NormalBtn>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    rebalancingPeriod === 30
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(rebalancingPeriod, 30)}
                                   onClick={() => setRebalancingPeriod(30)}
                                   fontSize={"16px"}
                                 >
@@ -853,8 +824,10 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                   ? setRebalancingMoreBtn(false)
                                   : setRebalancingMoreBtn(true)
                               }
-                              ml={"0px"}
+                              ml={"2px"}
                               fontSize={"16px"}
+                              padding={"6px 12px"}
+                              borderRadius={"8px"}
                             >
                               {isRebalancingMore ? "-" : "+"}
                             </AddBtn>
@@ -872,30 +845,24 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                             borderBottom={"1px solid #34383b"}
                           >
                             <NormalBtn
-                              ml={"0px"}
-                              background={
-                                managementFee === 1 ? "#8b8a8d" : "#302d38"
-                              }
+                              ml={"2px"}
+                              background={getBtnBg(managementFee, 1)}
                               onClick={() => setManagementFee(1)}
                               fontSize={"16px"}
                             >
                               1%
                             </NormalBtn>
                             <NormalBtn
-                              ml={"0px"}
-                              background={
-                                managementFee === 2 ? "#8b8a8d" : "#302d38"
-                              }
+                              ml={"2px"}
+                              background={getBtnBg(managementFee, 2)}
                               onClick={() => setManagementFee(2)}
                               fontSize={"16px"}
                             >
                               2%
                             </NormalBtn>
                             <NormalBtn
-                              ml={"0px"}
-                              background={
-                                managementFee === 5 ? "#8b8a8d" : "#302d38"
-                              }
+                              ml={"2px"}
+                              background={getBtnBg(managementFee, 5)}
                               onClick={() => setManagementFee(5)}
                               fontSize={"16px"}
                             >
@@ -933,36 +900,24 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                 borderBottom={"1px solid #34383b"}
                               >
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    minimumContribution === 0.1
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(minimumContribution, 0.1)}
                                   onClick={() => setMiniumContribution(0.1)}
                                   fontSize={"16px"}
                                 >
                                   $1
                                 </NormalBtn>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    minimumContribution === 0.5
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(minimumContribution, 0.5)}
                                   onClick={() => setMiniumContribution(0.5)}
                                   fontSize={"16px"}
                                 >
                                   $5
                                 </NormalBtn>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    minimumContribution === 1
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(minimumContribution, 1)}
                                   onClick={() => setMiniumContribution(1)}
                                   fontSize={"16px"}
                                 >
@@ -1000,24 +955,16 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                 {isMinWithdrawalMore ? (
                                   <>
                                     <NormalBtn
-                                      ml={"0px"}
-                                      background={
-                                        miniumWithdrawal === 1
-                                          ? "#8b8a8d"
-                                          : "#302d38"
-                                      }
+                                      ml={"2px"}
+                                      background={getBtnBg(miniumWithdrawal, 1)}
                                       onClick={() => setMiniumWithdrawal(1)}
                                       fontSize={"16px"}
                                     >
                                       1D
                                     </NormalBtn>
                                     <NormalBtn
-                                      ml={"0px"}
-                                      background={
-                                        miniumWithdrawal === 7
-                                          ? "#8b8a8d"
-                                          : "#302d38"
-                                      }
+                                      ml={"2px"}
+                                      background={getBtnBg(miniumWithdrawal, 7)}
                                       onClick={() => setMiniumWithdrawal(7)}
                                       fontSize={"16px"}
                                     >
@@ -1025,35 +972,23 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                     </NormalBtn>
                                     <NormalBtn
                                       ml={"0px"}
-                                      background={
-                                        miniumWithdrawal === 14
-                                          ? "#8b8a8d"
-                                          : "#302d38"
-                                      }
+                                      background={getBtnBg(miniumWithdrawal, 14)}
                                       onClick={() => setMiniumWithdrawal(14)}
                                       fontSize={"16px"}
                                     >
                                       2W
                                     </NormalBtn>
                                     <NormalBtn
-                                      ml={"0px"}
-                                      background={
-                                        miniumWithdrawal === 30
-                                          ? "#8b8a8d"
-                                          : "#302d38"
-                                      }
+                                      ml={"2px"}
+                                      background={getBtnBg(miniumWithdrawal, 30)}
                                       onClick={() => setMiniumWithdrawal(30)}
                                       fontSize={"16px"}
                                     >
                                       1M
                                     </NormalBtn>
                                     <NormalBtn
-                                      ml={"0px"}
-                                      background={
-                                        miniumWithdrawal === 60
-                                          ? "#8b8a8d"
-                                          : "#302d38"
-                                      }
+                                      ml={"2px"}
+                                      background={getBtnBg(miniumWithdrawal, 60)}
                                       onClick={() => setMiniumWithdrawal(60)}
                                       fontSize={"16px"}
                                     >
@@ -1063,36 +998,24 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                 ) : (
                                   <>
                                     <NormalBtn
-                                      ml={"0px"}
-                                      background={
-                                        miniumWithdrawal === 1
-                                          ? "#8b8a8d"
-                                          : "#302d38"
-                                      }
+                                      ml={"2px"}
+                                      background={getBtnBg(miniumWithdrawal, 1)}
                                       onClick={() => setMiniumWithdrawal(1)}
                                       fontSize={"16px"}
                                     >
                                       1D
                                     </NormalBtn>
                                     <NormalBtn
-                                      ml={"0px"}
-                                      background={
-                                        miniumWithdrawal === 7
-                                          ? "#8b8a8d"
-                                          : "#302d38"
-                                      }
+                                      ml={"2px"}
+                                      background={getBtnBg(miniumWithdrawal, 7)}
                                       onClick={() => setMiniumWithdrawal(7)}
                                       fontSize={"16px"}
                                     >
                                       1W
                                     </NormalBtn>
                                     <NormalBtn
-                                      ml={"0px"}
-                                      background={
-                                        miniumWithdrawal === 30
-                                          ? "#8b8a8d"
-                                          : "#302d38"
-                                      }
+                                      ml={"2px"}
+                                      background={getBtnBg(miniumWithdrawal, 30)}
                                       onClick={() => setMiniumWithdrawal(30)}
                                       fontSize={"16px"}
                                     >
@@ -1106,8 +1029,10 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       ? setMinWithdrawalMoreBtn(false)
                                       : setMinWithdrawalMoreBtn(true)
                                   }
+                                  ml={"2px"}
+                                  padding={"6px 12px"}
+                                  borderRadius={"8px"}
                                   fontSize={"16px"}
-                                  ml={"0px"}
                                 >
                                   {isMinWithdrawalMore ? "-" : "+"}
                                 </AddBtn>
@@ -1336,6 +1261,9 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
       setVisible(false);
     }
   };
+  const getBtnBg = (v1, v2) => {
+    return v1 == v2 ? "#8b8a8d" : "#514f56"
+  }
 
   return (
     <Flex col gridGap={"10px"}>
@@ -1381,50 +1309,40 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                         {isRebalancingMore ? (
                           <>
                             <NormalBtn
-                              ml={"0px"}
-                              background={
-                                rebalancingPeriod === 1 ? "#8b8a8d" : "#302d38"
-                              }
+                              ml={"2px"}
+                              background={getBtnBg(rebalancingPeriod, 1)}
                               onClick={() => setRebalancingPeriod(1)}
                               fontSize={"16px"}
                             >
                               1D
                             </NormalBtn>
                             <NormalBtn
-                              ml={"0px"}
-                              background={
-                                rebalancingPeriod === 7 ? "#8b8a8d" : "#302d38"
-                              }
+                              ml={"2px"}
+                              background={getBtnBg(rebalancingPeriod, 7)}
                               onClick={() => setRebalancingPeriod(7)}
                               fontSize={"16px"}
                             >
                               1W
                             </NormalBtn>
                             <NormalBtn
-                              ml={"0px"}
-                              background={
-                                rebalancingPeriod === 14 ? "#8b8a8d" : "#302d38"
-                              }
+                              ml={"2px"}
+                              background={getBtnBg(rebalancingPeriod, 14)}
                               onClick={() => setRebalancingPeriod(14)}
                               fontSize={"16px"}
                             >
                               2W
                             </NormalBtn>
                             <NormalBtn
-                              ml={"0px"}
-                              background={
-                                rebalancingPeriod === 30 ? "#8b8a8d" : "#302d38"
-                              }
+                              ml={"2px"}
+                              background={getBtnBg(rebalancingPeriod, 30)}
                               onClick={() => setRebalancingPeriod(30)}
                               fontSize={"16px"}
                             >
                               1M
                             </NormalBtn>
                             <NormalBtn
-                              ml={"0px"}
-                              background={
-                                rebalancingPeriod === 60 ? "#8b8a8d" : "#302d38"
-                              }
+                              ml={"2px"}
+                              background={getBtnBg(rebalancingPeriod, 60)}
                               onClick={() => setRebalancingPeriod(60)}
                               fontSize={"16px"}
                             >
@@ -1434,40 +1352,32 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                         ) : (
                           <>
                             <NormalBtn
-                              ml={"0px"}
-                              background={
-                                rebalancingPeriod === 0 ? "#8b8a8d" : "#302d38"
-                              }
+                              ml={"2px"}
+                              background={getBtnBg(rebalancingPeriod, 0)}
                               onClick={() => setRebalancingPeriod(0)}
                               fontSize={"16px"}
                             >
                               none
                             </NormalBtn>
                             <NormalBtn
-                              ml={"0px"}
-                              background={
-                                rebalancingPeriod === 1 ? "#8b8a8d" : "#302d38"
-                              }
+                              ml={"2px"}
+                              background={getBtnBg(rebalancingPeriod, 1)}
                               onClick={() => setRebalancingPeriod(1)}
                               fontSize={"16px"}
                             >
                               1D
                             </NormalBtn>
                             <NormalBtn
-                              ml={"0px"}
-                              background={
-                                rebalancingPeriod === 7 ? "#8b8a8d" : "#302d38"
-                              }
+                              ml={"2px"}
+                              background={getBtnBg(rebalancingPeriod, 7)}
                               onClick={() => setRebalancingPeriod(7)}
                               fontSize={"16px"}
                             >
                               1W
                             </NormalBtn>
                             <NormalBtn
-                              ml={"0px"}
-                              background={
-                                rebalancingPeriod === 30 ? "#8b8a8d" : "#302d38"
-                              }
+                              ml={"2px"}
+                              background={getBtnBg(rebalancingPeriod, 30)}
                               onClick={() => setRebalancingPeriod(30)}
                               fontSize={"16px"}
                             >
@@ -1481,7 +1391,9 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                               ? setRebalancingMoreBtn(false)
                               : setRebalancingMoreBtn(true)
                           }
-                          ml={"0px"}
+                          ml={"2px"}
+                          padding={"6px 12px"}
+                          borderRadius={"8px"}
                           fontSize={"16px"}
                         >
                           {isRebalancingMore ? "-" : "+"}
@@ -1502,36 +1414,24 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                             borderBottom={"1px solid #34383b"}
                           >
                             <NormalBtn
-                              ml={"0px"}
-                              background={
-                                minimumContribution === 0.1
-                                  ? "#8b8a8d"
-                                  : "#302d38"
-                              }
+                              ml={"2px"}
+                              background={getBtnBg(minimumContribution, 0.1)}
                               onClick={() => setMiniumContribution(0.1)}
                               fontSize={"16px"}
                             >
                               $1
                             </NormalBtn>
                             <NormalBtn
-                              ml={"0px"}
-                              background={
-                                minimumContribution === 0.5
-                                  ? "#8b8a8d"
-                                  : "#302d38"
-                              }
+                              ml={"2px"}
+                              background={getBtnBg(minimumContribution, 0.5)}
                               onClick={() => setMiniumContribution(0.5)}
                               fontSize={"16px"}
                             >
                               $5
                             </NormalBtn>
                             <NormalBtn
-                              ml={"0px"}
-                              background={
-                                minimumContribution === 1
-                                  ? "#8b8a8d"
-                                  : "#302d38"
-                              }
+                              ml={"2px"}
+                              background={getBtnBg(minimumContribution, 1)}
                               onClick={() => setMiniumContribution(1)}
                               fontSize={"16px"}
                             >
@@ -1568,60 +1468,40 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                             {isMinWithdrawalMore ? (
                               <>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    miniumWithdrawal === 1
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(miniumWithdrawal, 1)}
                                   onClick={() => setMiniumWithdrawal(1)}
                                   fontSize={"16px"}
                                 >
                                   1D
                                 </NormalBtn>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    miniumWithdrawal === 7
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(miniumWithdrawal, 7)}
                                   onClick={() => setMiniumWithdrawal(7)}
                                   fontSize={"16px"}
                                 >
                                   1W
                                 </NormalBtn>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    miniumWithdrawal === 14
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(miniumWithdrawal, 14)}
                                   onClick={() => setMiniumWithdrawal(14)}
                                   fontSize={"16px"}
                                 >
                                   2W
                                 </NormalBtn>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    miniumWithdrawal === 30
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(miniumWithdrawal, 30)}
                                   onClick={() => setMiniumWithdrawal(30)}
                                   fontSize={"16px"}
                                 >
                                   1M
                                 </NormalBtn>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    miniumWithdrawal === 60
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(miniumWithdrawal, 60)}
                                   onClick={() => setMiniumWithdrawal(60)}
                                   fontSize={"16px"}
                                 >
@@ -1631,48 +1511,32 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                             ) : (
                               <>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    miniumWithdrawal === 0
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(miniumWithdrawal, 0)}
                                   onClick={() => setMiniumWithdrawal(0)}
                                   fontSize={"16px"}
                                 >
                                   none
                                 </NormalBtn>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    miniumWithdrawal === 1
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(miniumWithdrawal, 1)}
                                   onClick={() => setMiniumWithdrawal(1)}
                                   fontSize={"16px"}
                                 >
                                   1D
                                 </NormalBtn>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    miniumWithdrawal === 7
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(miniumWithdrawal, 7)}
                                   onClick={() => setMiniumWithdrawal(7)}
                                   fontSize={"16px"}
                                 >
                                   1W
                                 </NormalBtn>
                                 <NormalBtn
-                                  ml={"0px"}
-                                  background={
-                                    miniumWithdrawal === 30
-                                      ? "#8b8a8d"
-                                      : "#302d38"
-                                  }
+                                  ml={"2px"}
+                                  background={getBtnBg(miniumWithdrawal, 30)}
                                   onClick={() => setMiniumWithdrawal(30)}
                                   fontSize={"16px"}
                                 >
@@ -1686,7 +1550,9 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                   ? setMinWithdrawalMoreBtn(false)
                                   : setMinWithdrawalMoreBtn(true)
                               }
-                              ml={"0px"}
+                              ml={"2px"}
+                              padding={"6px 12px"}
+                              borderRadius={"8px"}
                               fontSize={"16px"}
                             >
                               {isMinWithdrawalMore ? "-" : "+"}
