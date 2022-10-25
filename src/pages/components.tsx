@@ -3405,7 +3405,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
       >
         <Flex alignCenter justifyContent={"space-between"}>
           <Flex col>
-            <Flex>
+            <Flex alignBaseline>
               <Flex
                 fontSize={"1.4em"}
                 fontWeight={"bold"}
