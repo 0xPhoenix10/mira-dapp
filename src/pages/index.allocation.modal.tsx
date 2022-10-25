@@ -59,10 +59,10 @@ export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = ({
   const updatePool = async () => {
     if (!walletConnected) return;
 
-    var sum = 0;
+    let sum = 0;
     let index_allocation_key: string[] = [];
     let index_allocation_value: number[] = [];
-    for (var i = 0; i < allocationData.length; i++) {
+    for (let i = 0; i < allocationData.length; i++) {
       if (allocationData[i].value == 0) {
         return;
       }
@@ -118,7 +118,7 @@ export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = ({
     "UNI",
   ];
   const getDefaultAddValue = () => {
-    for (var i = 0; i < arrCoins.length; i++) {
+    for (let i = 0; i < arrCoins.length; i++) {
       const isExist = allocationData.some((item) => arrCoins[i] === item.name);
       if (!isExist) {
         return arrCoins[i];

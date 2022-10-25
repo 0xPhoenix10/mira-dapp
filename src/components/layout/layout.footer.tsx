@@ -329,12 +329,12 @@ const LayoutFooter = () => {
   }, [currentChain]);
 
   useEffect(() => {
-    var menuList = JSON.parse(localStorage.getItem(`${currentChain}_menuList`));
+    let menuList = JSON.parse(localStorage.getItem(`${currentChain}_menuList`));
     if (items.length == 0) {
-      var moreMenuList = JSON.parse(
+      let moreMenuList = JSON.parse(
         localStorage.getItem(`${currentChain}_moreMenuList`)
       );
-      var removeMenuList = JSON.parse(
+      let removeMenuList = JSON.parse(
         localStorage.getItem(`${currentChain}_removeMenuList`)
       );
       if (menuList && menuList.length > 0) {
@@ -406,7 +406,7 @@ const LayoutFooter = () => {
   };
 
   const getIconComponent = (iconName: string) => {
-    var res = <CoinIcon />;
+    let res = <CoinIcon />;
     switch (iconName) {
       case "ManageIcon":
         res = <ManageIcon />;
@@ -446,7 +446,7 @@ const LayoutFooter = () => {
     setItems(items);
 
     if (removeItems.length === 0) {
-      var new_array: IItem[] = [];
+      let new_array: IItem[] = [];
       new_array.push(moreItems[index]);
       localStorage.setItem(
         `${currentChain}_removeMenuList`,
@@ -477,7 +477,7 @@ const LayoutFooter = () => {
       return;
     }
 
-    var filteredArray = items.filter(
+    let filteredArray = items.filter(
       (element: any) => element.id !== removeItems[index]["id"]
     );
     localStorage.setItem(
@@ -487,7 +487,7 @@ const LayoutFooter = () => {
     setItems(filteredArray);
 
     if (moreItems.length === 0) {
-      var new_array: IItem[] = [];
+      let new_array: IItem[] = [];
       new_array.push(removeItems[index]);
       localStorage.setItem(
         `${currentChain}_moreMenuList`,

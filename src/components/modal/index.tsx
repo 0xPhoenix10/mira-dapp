@@ -9,6 +9,7 @@ type ModalParentProps = {
   setVisible: (arg: boolean) => void;
   children?: React.ReactNode;
   zIndex?: string;
+  background?: string;
 };
 
 export const ModalParent: React.FC<ModalParentProps> = ({
@@ -18,6 +19,7 @@ export const ModalParent: React.FC<ModalParentProps> = ({
   setVisible,
   children,
   zIndex = "1000",
+  background = "#222129",
 }) => {
   const modalContainer = useRef<any>();
   return (
@@ -41,7 +43,7 @@ export const ModalParent: React.FC<ModalParentProps> = ({
           <Flex
             col
             margin={"auto"}
-            background={"#222129"}
+            background={background}
             padding={"20px"}
             border={"1px solid #34383b"}
             borderRadius={"20px"}
