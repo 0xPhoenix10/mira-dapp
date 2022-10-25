@@ -12,11 +12,7 @@ import {
 } from "components/base";
 import { Flex } from "components/base/container";
 import { ModalParent } from "components/modal";
-import {
-  ChartBox,
-  IndexListModalBody,
-  BlankCard,
-} from "pages/components";
+import { ChartBox, IndexListModalBody, BlankCard } from "pages/components";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AptosClient } from "aptos";
@@ -100,8 +96,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
   profile = {},
   ...props
 }) => {
-  const { walletConnected, walletAddress } =
-    useWalletHook();
+  const { walletConnected, walletAddress } = useWalletHook();
 
   const [miraAccountProps, setMiraAccountProps] =
     useState<MiraAccountProps | null>(null);
@@ -110,11 +105,15 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
   const [portfolioModalVisible, setPortfolioModalVisible] = useState(false);
   const [modifyModalVisible, setModifyModalVisible] = useState(false);
   const [carouselStop, setCarouselStop] = useState(false);
+
   const [miraMyIndexes, setMiraMyIndexes] = useState<MiraIndex[]>([]);
   const [miraMyInvests, setMiraMyInvests] = useState<MiraInvest[]>([]);
+  const [miraMyIndexLoading, setMiraMyIndexLoading] = useState(false);
+  const [miraMyInvestLoading, setMiraMyInvestLoading] = useState(false);
+
   const [otherProfile, setProfile] = useState({});
   const [profileModalVisible, setProfileModalVisible] = useState(false);
-    useState(false);
+  useState(false);
 
   const navigate = useNavigate();
 
@@ -126,8 +125,8 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
 
   useEffect(() => {
     // if (walletAddress) {
-      fetchIndexes();
-      fetchInvests();
+    fetchIndexes();
+    fetchInvests();
     // }
 
     // !walletConnected && navigate("/");
@@ -196,6 +195,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
   const Carousel3D3 = useRef(null);
 
   const fetchIndexes = async () => {
+    setMiraMyIndexLoading(true);
     const client = new AptosClient(NODE_URL);
     let events = await client.getEventsByEventHandle(
       MODULE_ADDR,
@@ -258,9 +258,11 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
       }
     }
     setMiraMyIndexes(create_pool_events);
+    setMiraMyIndexLoading(false);
   };
 
   const fetchInvests = async () => {
+    setMiraMyInvestLoading(true);
     const client = new AptosClient(NODE_URL);
     let events = await client.getEventsByEventHandle(
       MODULE_ADDR,
@@ -323,6 +325,7 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
       }
     }
     setMiraMyInvests(deposit_pool_events);
+    setMiraMyInvestLoading(false);
   };
 
   const onDescriptionChange = (e: any) => {
@@ -461,7 +464,6 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
                   />
                 </Flex>
               </Flex>
-
             </Flex>
             <Flex
               flexFull
@@ -677,7 +679,14 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
               </Box>
             </Flex>
             <Flex justifyCenter gridGap={"16px"}>
-              {miraMyIndexes.length > 0 ? (
+              {miraMyIndexLoading || miraMyIndexes.length == 0 ? (
+                <BlankCard
+                  flex={1}
+                  maxWidth={"70%"}
+                  minHeight={"245px"}
+                  type={miraMyIndexLoading ? "loading" : "index"}
+                />
+              ) : (
                 <Carousel3D
                   ref={Carousel3D3}
                   stop={
@@ -713,13 +722,6 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
                     );
                   })}
                 </Carousel3D>
-              ) : (
-                <BlankCard
-                  flex={1}
-                  maxWidth={"70%"}
-                  minHeight={"245px"}
-                  type={"index"}
-                />
               )}
             </Flex>
           </Flex>
@@ -739,7 +741,14 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
               </Box>
             </Flex>
             <Flex justifyCenter gridGap={"16px"}>
-              {miraMyInvests.length > 0 ? (
+              {miraMyInvestLoading || miraMyInvests.length == 0 ? (
+                <BlankCard
+                  flex={1}
+                  maxWidth={"70%"}
+                  minHeight={"245px"}
+                  type={miraMyInvestLoading ? "loading" : "index"}
+                />
+              ) : (
                 <Carousel3D
                   ref={Carousel3D2}
                   stop={
@@ -775,13 +784,6 @@ export const ProfileModalBody: React.FC<{ [index: string]: any }> = ({
                     );
                   })}
                 </Carousel3D>
-              ) : (
-                <BlankCard
-                  flex={1}
-                  maxWidth={"70%"}
-                  minHeight={"245px"}
-                  type={"index"}
-                />
               )}
             </Flex>
           </Flex>

@@ -10,10 +10,42 @@ import {
   Thead,
   Tr,
 } from "../components/base";
+import { CustomSelect, SmOption } from "components/form";
 import { MinusIcon, PlusIcon, SearchIcon } from "../components/icons";
 import { SwipeBtn } from "components/elements/buttons";
 import { useWalletHook } from "../common/hooks/wallet";
 import { FEE_DECIMAL, MODULE_ADDR, DECIMAL, NODE_URL } from "../config";
+
+import { styled } from "@mui/material/styles";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import NativeSelect from "@mui/material/NativeSelect";
+import InputBase from "@mui/material/InputBase";
+
+const CustomSelectInput = styled(InputBase)(({ theme }) => ({
+  width: "100%",
+  color: "#fff",
+  "label + &": {
+    marginTop: theme.spacing(3),
+  },
+  "& .MuiInputBase-input": {
+    position: "relative",
+    border: "1px solid #34383b",
+    fontSize: 14,
+    padding: "1px 26px",
+    fontFamily: ["art"].join(","),
+  },
+  "& .MuiSvgIcon-root": {
+    color: "#fff",
+  },
+}));
+const CustomMenuItem = styled(MenuItem)(({ theme }) => ({
+  "&:hover": {
+    backgroundColor: "#8888",
+  },
+}));
 
 export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = ({
   setVisible = () => {},
@@ -22,13 +54,25 @@ export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = ({
   poolInfo = {},
   ...props
 }) => {
-  const [showPrice, setShowPrice] = useState(false);
   const { walletConnected, signAndSubmitTransaction } = useWalletHook();
 
   const updatePool = async () => {
     if (!walletConnected) return;
 
-    if(poolInfo.poolName) {
+    var sum = 0;
+    let index_allocation_key: string[] = [];
+    let index_allocation_value: number[] = [];
+    for (var i = 0; i < allocationData.length; i++) {
+      if (allocationData[i].value == 0) {
+        return;
+      }
+      index_allocation_key.push(allocationData[i].name);
+      index_allocation_value.push(allocationData[i].value);
+      sum += allocationData[i].value;
+    }
+    if (sum !== 100) return;
+
+    if (poolInfo.poolName) {
       let pool_name = poolInfo.poolName.trim();
       let rebalancing_period = poolInfo.settings.rebalancing_period * 1;
       let minimum_contribution = poolInfo.settings.minimum_contribution;
@@ -36,16 +80,6 @@ export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = ({
         poolInfo.settings.minimum_withdrawal_period * 1;
       let referral_reward = poolInfo.settings.referral_reward;
       let privacy_allocation = poolInfo.settings.privacy_allocation;
-
-      let index_allocation_key: string[] = [];
-      let index_allocation_value: number[] = [];
-      let sum = 0;
-      allocationData.forEach((data: any) => {
-        index_allocation_key.push(data.name);
-        index_allocation_value.push(data.value);
-        sum += data.value;
-      });
-      if (sum !== 100) return;
 
       const transaction = {
         type: "entry_function_payload",
@@ -70,6 +104,27 @@ export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = ({
     } else {
       setVisible(false);
     }
+  };
+  const arrCoins = [
+    "APT",
+    "USDT",
+    "USDC",
+    "BTC",
+    "SOL",
+    "AVAX",
+    "DOT",
+    "ETH",
+    "MATIC",
+    "UNI",
+  ];
+  const getDefaultAddValue = () => {
+    for (var i = 0; i < arrCoins.length; i++) {
+      const isExist = allocationData.some((item) => arrCoins[i] === item.name);
+      if (!isExist) {
+        return arrCoins[i];
+      }
+    }
+    return "";
   };
 
   return (
@@ -142,7 +197,47 @@ export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = ({
                         width={"25px"}
                         height={"25px"}
                       ></Box>
-                      <Input
+                      <Select
+                        value={allocationData[index].name}
+                        onChange={(e) => {
+                          const isExist = allocationData.some(
+                            (item) => e.target.value === item.name
+                          );
+                          if (isExist) {
+                            return;
+                          }
+                          allocationData[index].name = e.target.value;
+                          setAllocationData([...allocationData]);
+                        }}
+                        input={<CustomSelectInput />}
+                        inputProps={{
+                          MenuProps: {
+                            sx: {
+                              "& .MuiPaper-root": {
+                                backgroundColor: "transparent",
+                              },
+                            },
+                            MenuListProps: {
+                              sx: {
+                                backgroundColor: "transparent",
+                                boxShadow: "1px 1px 10px -4px black",
+                                backdropFilter: "blur(10px)",
+                                borderRadius: "8px",
+                                color: "#fff",
+                              },
+                            },
+                          },
+                        }}
+                      >
+                        {arrCoins.map((coin, skey) => {
+                          return (
+                            <CustomMenuItem value={coin} key={skey}>
+                              {coin}
+                            </CustomMenuItem>
+                          );
+                        })}
+                      </Select>
+                      {/* <Input
                         border={"1px solid #34383b"}
                         padding={"5px"}
                         background={"transparent"}
@@ -154,7 +249,7 @@ export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = ({
                           allocationData[index].name = e.target.value;
                           setAllocationData([...allocationData]);
                         }}
-                      />
+                      /> */}
                     </Flex>
                   </Td>
                   <Td>20.2%</Td>
@@ -182,53 +277,6 @@ export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = ({
           </Tbody>
         </Table>
       </Flex>
-      <Flex height={"49px"} gridGap={"8px"}>
-        <Flex
-          ml={"auto"}
-          justifyCenter
-          alignCenter
-          gridGap={"8px"}
-          background={"#0005"}
-          p={"8px 16px"}
-          border={"1px solid #34383b"}
-          borderRadius={"8px"}
-          cursor="pointer"
-          onClick={() => {
-            setVisible(false);
-          }}
-          zIndex={"0"}
-        >
-          Cancel
-        </Flex>
-        {!showPrice ? (
-          <Flex
-            justifyCenter
-            alignCenter
-            gridGap={"8px"}
-            background={"#0005"}
-            p={"8px 16px"}
-            border={"1px solid #34383b"}
-            borderRadius={"8px"}
-            cursor="pointer"
-            onClick={() => {
-              setShowPrice(true);
-            }}
-            zIndex={"0"}
-          >
-            <PlusIcon size={"18px"} />
-            Add new Allocation
-          </Flex>
-        ) : (
-          <SwipeBtn
-            onClick={() => {
-              allocationData.push({ name: "", value: 0 });
-              setAllocationData([...allocationData]);
-            }}
-          >
-            $0.45
-          </SwipeBtn>
-        )}
-      </Flex>
       <Flex
         justifyCenter
         alignCenter
@@ -239,7 +287,11 @@ export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = ({
         borderRadius={"8px"}
         cursor="pointer"
         onClick={() => {
-          allocationData.push({ name: "", value: 0 });
+          const defaultName = getDefaultAddValue();
+          if (defaultName == "") {
+            return;
+          }
+          allocationData.push({ name: defaultName, value: 1 });
           setAllocationData([...allocationData]);
         }}
         zIndex={"0"}
