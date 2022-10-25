@@ -191,12 +191,12 @@ export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = ({
                   </Td>
                   <Td>
                     <Flex alignCenter gridGap={"10px"}>
-                      <Box
+                      <Flex><Box
                         background={"linear-gradient(90deg,#fceabb,#f8b500)"}
                         borderRadius={"100%"}
                         width={"25px"}
                         height={"25px"}
-                      ></Box>
+                      /></Flex>
                       <Select
                         value={allocationData[index].name}
                         onChange={(e) => {
@@ -231,25 +231,14 @@ export const IndexAllocationModalBody: React.FC<{ [index: string]: any }> = ({
                       >
                         {arrCoins.map((coin, skey) => {
                           return (
-                            <CustomMenuItem value={coin} key={skey}>
+                            <CustomMenuItem value={coin} key={skey} sx={{
+                              display: coin == allocationData[index].name ? "none" : "flex"
+                            }}>
                               {coin}
                             </CustomMenuItem>
                           );
                         })}
                       </Select>
-                      {/* <Input
-                        border={"1px solid #34383b"}
-                        padding={"5px"}
-                        background={"transparent"}
-                        color={"white"}
-                        placeholder={"input here..."}
-                        textAlign={"right"}
-                        value={allocData.name}
-                        onChange={(e) => {
-                          allocationData[index].name = e.target.value;
-                          setAllocationData([...allocationData]);
-                        }}
-                      /> */}
                     </Flex>
                   </Td>
                   <Td>20.2%</Td>
