@@ -280,7 +280,7 @@ const DashboardRecommended = () => {
     } catch (error) {
       console.log("set mira invests error", error);
     }
-    setMiraMyInvestLoading(true);
+    setMiraMyInvestLoading(false);
   };
 
   const getRecommendedIndexes = async () => {
@@ -353,9 +353,8 @@ const DashboardRecommended = () => {
     } catch (error) {
       console.log("set recommended mira indexes error", error);
     }
-    setRecommendIndexLoading(true);
+    setRecommendIndexLoading(false);
   };
-
   return (
     <>
       {
@@ -393,6 +392,7 @@ const DashboardRecommended = () => {
           visible={createModalVisible}
           setVisible={setCreateModalVisible}
           minWidth={"auto"}
+          background={"#302d38"}
         >
           <IndexModalBody
             flex={1}

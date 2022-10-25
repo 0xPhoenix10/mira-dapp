@@ -548,7 +548,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
           {visibleWithdraw && <WithdrawModalBody />}
         </>
       ) : (
-        <Flex col gridGap={"10px"}>
+        <Flex col gridGap={"10px"} >
           {type === "modify" && (
             <Flex
               py={"8px"}
@@ -565,9 +565,6 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
             col
             justifyCenter
             gridGap={"1px"}
-            background={"#302d38"}
-            p={"20px"}
-            border={"1px solid #34383b"}
             borderRadius={"20px"}
             {...props}
           >
@@ -753,7 +750,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                   ml={"0px"}
                                   background={
                                     rebalancingPeriod === 1
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setRebalancingPeriod(1)}
@@ -765,7 +762,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                   ml={"0px"}
                                   background={
                                     rebalancingPeriod === 7
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setRebalancingPeriod(7)}
@@ -777,7 +774,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                   ml={"0px"}
                                   background={
                                     rebalancingPeriod === 14
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setRebalancingPeriod(14)}
@@ -789,7 +786,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                   ml={"0px"}
                                   background={
                                     rebalancingPeriod === 30
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setRebalancingPeriod(30)}
@@ -801,7 +798,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                   ml={"0px"}
                                   background={
                                     rebalancingPeriod === 60
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setRebalancingPeriod(60)}
@@ -816,7 +813,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                   ml={"0px"}
                                   background={
                                     rebalancingPeriod === 1
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setRebalancingPeriod(1)}
@@ -828,7 +825,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                   ml={"0px"}
                                   background={
                                     rebalancingPeriod === 7
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setRebalancingPeriod(7)}
@@ -840,7 +837,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                   ml={"0px"}
                                   background={
                                     rebalancingPeriod === 30
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setRebalancingPeriod(30)}
@@ -877,7 +874,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                             <NormalBtn
                               ml={"0px"}
                               background={
-                                managementFee === 1 ? "#565656" : "#302d38"
+                                managementFee === 1 ? "#8b8a8d" : "#302d38"
                               }
                               onClick={() => setManagementFee(1)}
                               fontSize={"16px"}
@@ -887,7 +884,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                             <NormalBtn
                               ml={"0px"}
                               background={
-                                managementFee === 2 ? "#565656" : "#302d38"
+                                managementFee === 2 ? "#8b8a8d" : "#302d38"
                               }
                               onClick={() => setManagementFee(2)}
                               fontSize={"16px"}
@@ -897,7 +894,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                             <NormalBtn
                               ml={"0px"}
                               background={
-                                managementFee === 5 ? "#565656" : "#302d38"
+                                managementFee === 5 ? "#8b8a8d" : "#302d38"
                               }
                               onClick={() => setManagementFee(5)}
                               fontSize={"16px"}
@@ -939,7 +936,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                   ml={"0px"}
                                   background={
                                     minimumContribution === 0.1
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setMiniumContribution(0.1)}
@@ -951,7 +948,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                   ml={"0px"}
                                   background={
                                     minimumContribution === 0.5
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setMiniumContribution(0.5)}
@@ -963,7 +960,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                   ml={"0px"}
                                   background={
                                     minimumContribution === 1
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setMiniumContribution(1)}
@@ -1006,7 +1003,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       ml={"0px"}
                                       background={
                                         miniumWithdrawal === 1
-                                          ? "#565656"
+                                          ? "#8b8a8d"
                                           : "#302d38"
                                       }
                                       onClick={() => setMiniumWithdrawal(1)}
@@ -1018,7 +1015,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       ml={"0px"}
                                       background={
                                         miniumWithdrawal === 7
-                                          ? "#565656"
+                                          ? "#8b8a8d"
                                           : "#302d38"
                                       }
                                       onClick={() => setMiniumWithdrawal(7)}
@@ -1030,7 +1027,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       ml={"0px"}
                                       background={
                                         miniumWithdrawal === 14
-                                          ? "#565656"
+                                          ? "#8b8a8d"
                                           : "#302d38"
                                       }
                                       onClick={() => setMiniumWithdrawal(14)}
@@ -1042,7 +1039,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       ml={"0px"}
                                       background={
                                         miniumWithdrawal === 30
-                                          ? "#565656"
+                                          ? "#8b8a8d"
                                           : "#302d38"
                                       }
                                       onClick={() => setMiniumWithdrawal(30)}
@@ -1054,7 +1051,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       ml={"0px"}
                                       background={
                                         miniumWithdrawal === 60
-                                          ? "#565656"
+                                          ? "#8b8a8d"
                                           : "#302d38"
                                       }
                                       onClick={() => setMiniumWithdrawal(60)}
@@ -1069,7 +1066,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       ml={"0px"}
                                       background={
                                         miniumWithdrawal === 1
-                                          ? "#565656"
+                                          ? "#8b8a8d"
                                           : "#302d38"
                                       }
                                       onClick={() => setMiniumWithdrawal(1)}
@@ -1081,7 +1078,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       ml={"0px"}
                                       background={
                                         miniumWithdrawal === 7
-                                          ? "#565656"
+                                          ? "#8b8a8d"
                                           : "#302d38"
                                       }
                                       onClick={() => setMiniumWithdrawal(7)}
@@ -1093,7 +1090,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                                       ml={"0px"}
                                       background={
                                         miniumWithdrawal === 30
-                                          ? "#565656"
+                                          ? "#8b8a8d"
                                           : "#302d38"
                                       }
                                       onClick={() => setMiniumWithdrawal(30)}
@@ -1386,7 +1383,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                             <NormalBtn
                               ml={"0px"}
                               background={
-                                rebalancingPeriod === 1 ? "#565656" : "#302d38"
+                                rebalancingPeriod === 1 ? "#8b8a8d" : "#302d38"
                               }
                               onClick={() => setRebalancingPeriod(1)}
                               fontSize={"16px"}
@@ -1396,7 +1393,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                             <NormalBtn
                               ml={"0px"}
                               background={
-                                rebalancingPeriod === 7 ? "#565656" : "#302d38"
+                                rebalancingPeriod === 7 ? "#8b8a8d" : "#302d38"
                               }
                               onClick={() => setRebalancingPeriod(7)}
                               fontSize={"16px"}
@@ -1406,7 +1403,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                             <NormalBtn
                               ml={"0px"}
                               background={
-                                rebalancingPeriod === 14 ? "#565656" : "#302d38"
+                                rebalancingPeriod === 14 ? "#8b8a8d" : "#302d38"
                               }
                               onClick={() => setRebalancingPeriod(14)}
                               fontSize={"16px"}
@@ -1416,7 +1413,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                             <NormalBtn
                               ml={"0px"}
                               background={
-                                rebalancingPeriod === 30 ? "#565656" : "#302d38"
+                                rebalancingPeriod === 30 ? "#8b8a8d" : "#302d38"
                               }
                               onClick={() => setRebalancingPeriod(30)}
                               fontSize={"16px"}
@@ -1426,7 +1423,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                             <NormalBtn
                               ml={"0px"}
                               background={
-                                rebalancingPeriod === 60 ? "#565656" : "#302d38"
+                                rebalancingPeriod === 60 ? "#8b8a8d" : "#302d38"
                               }
                               onClick={() => setRebalancingPeriod(60)}
                               fontSize={"16px"}
@@ -1439,7 +1436,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                             <NormalBtn
                               ml={"0px"}
                               background={
-                                rebalancingPeriod === 0 ? "#565656" : "#302d38"
+                                rebalancingPeriod === 0 ? "#8b8a8d" : "#302d38"
                               }
                               onClick={() => setRebalancingPeriod(0)}
                               fontSize={"16px"}
@@ -1449,7 +1446,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                             <NormalBtn
                               ml={"0px"}
                               background={
-                                rebalancingPeriod === 1 ? "#565656" : "#302d38"
+                                rebalancingPeriod === 1 ? "#8b8a8d" : "#302d38"
                               }
                               onClick={() => setRebalancingPeriod(1)}
                               fontSize={"16px"}
@@ -1459,7 +1456,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                             <NormalBtn
                               ml={"0px"}
                               background={
-                                rebalancingPeriod === 7 ? "#565656" : "#302d38"
+                                rebalancingPeriod === 7 ? "#8b8a8d" : "#302d38"
                               }
                               onClick={() => setRebalancingPeriod(7)}
                               fontSize={"16px"}
@@ -1469,7 +1466,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                             <NormalBtn
                               ml={"0px"}
                               background={
-                                rebalancingPeriod === 30 ? "#565656" : "#302d38"
+                                rebalancingPeriod === 30 ? "#8b8a8d" : "#302d38"
                               }
                               onClick={() => setRebalancingPeriod(30)}
                               fontSize={"16px"}
@@ -1508,7 +1505,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                               ml={"0px"}
                               background={
                                 minimumContribution === 0.1
-                                  ? "#565656"
+                                  ? "#8b8a8d"
                                   : "#302d38"
                               }
                               onClick={() => setMiniumContribution(0.1)}
@@ -1520,7 +1517,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                               ml={"0px"}
                               background={
                                 minimumContribution === 0.5
-                                  ? "#565656"
+                                  ? "#8b8a8d"
                                   : "#302d38"
                               }
                               onClick={() => setMiniumContribution(0.5)}
@@ -1532,7 +1529,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                               ml={"0px"}
                               background={
                                 minimumContribution === 1
-                                  ? "#565656"
+                                  ? "#8b8a8d"
                                   : "#302d38"
                               }
                               onClick={() => setMiniumContribution(1)}
@@ -1574,7 +1571,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                   ml={"0px"}
                                   background={
                                     miniumWithdrawal === 1
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setMiniumWithdrawal(1)}
@@ -1586,7 +1583,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                   ml={"0px"}
                                   background={
                                     miniumWithdrawal === 7
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setMiniumWithdrawal(7)}
@@ -1598,7 +1595,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                   ml={"0px"}
                                   background={
                                     miniumWithdrawal === 14
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setMiniumWithdrawal(14)}
@@ -1610,7 +1607,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                   ml={"0px"}
                                   background={
                                     miniumWithdrawal === 30
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setMiniumWithdrawal(30)}
@@ -1622,7 +1619,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                   ml={"0px"}
                                   background={
                                     miniumWithdrawal === 60
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setMiniumWithdrawal(60)}
@@ -1637,7 +1634,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                   ml={"0px"}
                                   background={
                                     miniumWithdrawal === 0
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setMiniumWithdrawal(0)}
@@ -1649,7 +1646,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                   ml={"0px"}
                                   background={
                                     miniumWithdrawal === 1
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setMiniumWithdrawal(1)}
@@ -1661,7 +1658,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                   ml={"0px"}
                                   background={
                                     miniumWithdrawal === 7
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setMiniumWithdrawal(7)}
@@ -1673,7 +1670,7 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
                                   ml={"0px"}
                                   background={
                                     miniumWithdrawal === 30
-                                      ? "#565656"
+                                      ? "#8b8a8d"
                                       : "#302d38"
                                   }
                                   onClick={() => setMiniumWithdrawal(30)}
@@ -2765,12 +2762,12 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
     getChartData();
   }, [dataRange]);
   const getChartData = () => {
-    var arrTmp = [];
-    for (var i = 0; i < 7; i++) {
+    let arrTmp = [];
+    for (let i = 0; i < 7; i++) {
       if (dataRange === "3D" && i > 2) {
         continue;
       }
-      var m = "";
+      let m = "";
       switch (dataRange) {
         case "1D":
           m = `${(i + 1) * 2}:00`;
@@ -3134,7 +3131,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
 
   const txtAmountChange = (e: any) => {
     let input = e.target.value;
-    var val = isNaN(parseFloat(input)) ? 0 : parseFloat(input);
+    let val = isNaN(parseFloat(input)) ? 0 : parseFloat(input);
 
     if (val < 0) {
       setAmount("0.0");
@@ -3459,7 +3456,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
 
   const txtAmountChange = (e: any) => {
     let input = e.target.value;
-    var val = isNaN(parseFloat(input)) ? 0 : parseFloat(input);
+    let val = isNaN(parseFloat(input)) ? 0 : parseFloat(input);
 
     if (val < 0) {
       setAmount("0.0");

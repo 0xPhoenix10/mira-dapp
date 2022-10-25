@@ -318,12 +318,12 @@ export const PortfolioModalBody: React.FC<{ [index: string]: any }> = ({
     getChartData();
   }, [dataRange]);
   const getChartData = () => {
-    var arrTmp = [];
-    for (var i = 0; i < 7; i++) {
+    let arrTmp = [];
+    for (let i = 0; i < 7; i++) {
       if (dataRange == "3D" && i > 2) {
         continue;
       }
-      var m = "";
+      let m = "";
       switch (dataRange) {
         case "1D":
           m = `${(i + 1) * 2}:00`;
