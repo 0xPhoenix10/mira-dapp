@@ -7,7 +7,7 @@ import {
   Th,
   Thead,
   Tr,
-  Link
+  Link,
 } from "components/base";
 import { Flex } from "components/base/container";
 import { CustomSelect, RadioBtn, SmOption } from "components/form";
@@ -22,7 +22,7 @@ import {
   WarningIcon,
   IconNarrow,
   SortDirIcon,
-  PencilIcon
+  PencilIcon,
 } from "components/icons";
 import { ModalParent } from "components/modal";
 import { CustomTooltip } from "components/elements/tooptip";
@@ -38,7 +38,7 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis
+  YAxis,
 } from "recharts";
 import { useNavigate } from "react-router-dom";
 import { AptosClient, AptosAccount, CoinClient } from "aptos";
@@ -51,7 +51,7 @@ import {
   ArtButton,
   NormalBtn,
   AddBtn,
-  SwipeBtn
+  SwipeBtn,
 } from "components/elements/buttons";
 import { IndexAllocation } from "../utils/types";
 import { getFormatedDate } from "../utils";
@@ -92,7 +92,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
     "#527da7",
     "#d4901c",
     "#3d6595",
-    "#345882"
+    "#345882",
   ];
 
   const RADIAN = Math.PI / 180;
@@ -102,7 +102,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
     midAngle,
     innerRadius,
     outerRadius,
-    index
+    index,
   }: any) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.3;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -128,7 +128,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
     backgroundColor: "lightgrey",
     color: "black",
     padding: "2px 20px",
-    fontSize: "12px"
+    fontSize: "12px",
   };
 
   const CustomizedTooltip = React.memo((props: any) => {
@@ -304,7 +304,7 @@ export const ChartBox: React.FC<ChartBoxProps> = ({
 };
 
 interface BlankCardProps {
-  type?: "invest" | "index" | "recommend";
+  type?: "invest" | "index" | "recommend" | "loading";
   [index: string]: any;
 }
 
@@ -321,6 +321,7 @@ export const BlankCard: React.FC<BlankCardProps> = ({
       borderRadius={"20px"}
       gridGap={"12px"}
       cursor={"pointer"}
+      minWidth={"400px"}
       {...props}
     >
       <Flex justifyCenter pt={"50px"} alignCenter gridGap={"16px"}>
@@ -330,7 +331,7 @@ export const BlankCard: React.FC<BlankCardProps> = ({
         <Flex col gridGap={"4px"} color={"lightgrey"}>
           <p
             style={{
-              fontSize: "16px"
+              fontSize: "16px",
             }}
           >
             {type === "invest" &&
@@ -338,6 +339,7 @@ export const BlankCard: React.FC<BlankCardProps> = ({
             {type === "index" &&
               "You haven't created an index yet. Click here to get started!"}
             {type === "recommend" && "There is no recommended index now."}
+            {type === "loading" && "Loading..."}
           </p>
         </Flex>
       </Flex>
@@ -377,7 +379,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
     "#527da7",
     "#d4901c",
     "#3d6595",
-    "#345882"
+    "#345882",
   ];
 
   const RADIAN = Math.PI / 180;
@@ -387,12 +389,13 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
     midAngle,
     innerRadius,
     outerRadius,
-    percent
+    percent,
+    value,
+    name
   }: any) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
     return (
       <text
         x={x}
@@ -401,7 +404,8 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
         textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
       >
-        {`${(percent * 100).toFixed(0)}%`}
+        {/* {`${(percent * 100).toFixed(0)}%`} */}
+        {name}
       </text>
     );
   };
@@ -478,9 +482,9 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
         referral_reward,
         index_allocation_key,
         index_allocation_value,
-        private_allocation
+        private_allocation,
       ],
-      type_arguments: []
+      type_arguments: [],
     };
     const result = await signAndSubmitTransaction(transaction);
 
@@ -493,7 +497,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
     backgroundColor: "#000",
     color: "lightgrey",
     padding: "2px 15px",
-    fontSize: "12px"
+    fontSize: "12px",
   };
 
   const CustomizedTooltip = React.memo((props: any) => {
@@ -646,7 +650,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
                           position: "relative",
                           top: "10px",
                           right: "40px",
-                          cursor: "pointer"
+                          cursor: "pointer",
                         }}
                         onClick={() => {
                           setAllocationVisible(true);
@@ -1325,9 +1329,9 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
         referral_reward,
         index_allocation_key,
         index_allocation_value,
-        privacy_allocation
+        privacy_allocation,
       ],
-      type_arguments: []
+      type_arguments: [],
     };
     const result = await signAndSubmitTransaction(transaction);
 
@@ -1834,7 +1838,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
       poolOwner:
         "0xb7273e97383c1c0d77c548b6d7ab903748c6a7fd8406ca8e3d6560294e9c8102",
       managementFee: "1",
-      founded: "Sep 30, 2022"
+      founded: "Sep 30, 2022",
     },
     {
       poolName: "10",
@@ -1843,7 +1847,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
       poolOwner:
         "0xa464f9110ebd5fb70bb56f16b9d863de6221c221c40c7d2ff147fd20e4af5d46",
       managementFee: "10",
-      founded: "Oct 3, 2022"
+      founded: "Oct 3, 2022",
     },
     {
       poolName: "testttt",
@@ -1852,7 +1856,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
       poolOwner:
         "0xb7273e97383c1c0d77c548b6d7ab903748c6a7fd8406ca8e3d6560294e9c8102",
       managementFee: "1",
-      founded: "Oct 3, 2022"
+      founded: "Oct 3, 2022",
     },
     {
       poolName: "abcd",
@@ -1861,7 +1865,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
       poolOwner:
         "0xb4793170e2a45111d813f39c3d746b9e77b5aab1b88c30047d759d9f351e1a26",
       managementFee: "1",
-      founded: "Oct 3, 2022"
+      founded: "Oct 3, 2022",
     },
     {
       poolName: "newtest",
@@ -1870,7 +1874,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
       poolOwner:
         "0xb4793170e2a45111d813f39c3d746b9e77b5aab1b88c30047d759d9f351e1a26",
       managementFee: "1",
-      founded: "Oct 3, 2022"
+      founded: "Oct 3, 2022",
     },
     {
       poolName: "a",
@@ -1879,7 +1883,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
       poolOwner:
         "0xc4603e82c3cf11b69c127b77252d874687e9f8e45094be73343f18b35d91f26e",
       managementFee: "5",
-      founded: "Oct 4, 2022"
+      founded: "Oct 4, 2022",
     },
     {
       poolName: "test2",
@@ -1888,7 +1892,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
       poolOwner:
         "0xb4793170e2a45111d813f39c3d746b9e77b5aab1b88c30047d759d9f351e1a26",
       managementFee: "0",
-      founded: "Oct 5, 2022"
+      founded: "Oct 5, 2022",
     },
     {
       poolName: "mira-test-1",
@@ -1897,7 +1901,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
       poolOwner:
         "0xb5424c1606664d839e855aee375aaa0becbcdf908f374b09616b7f3df1b5f4d0",
       managementFee: "1",
-      founded: "Oct 7, 2022"
+      founded: "Oct 7, 2022",
     },
     {
       poolName: "son",
@@ -1906,7 +1910,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
       poolOwner:
         "0x1956d5ee9a7a0e9679ba9fd797f6846e0a7766d71ba8a8fdbb3fb6251d0f2dc7",
       managementFee: "1",
-      founded: "Oct 7, 2022"
+      founded: "Oct 7, 2022",
     },
     {
       poolName: "test1",
@@ -1915,7 +1919,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
       poolOwner:
         "0x405bdfc954f3e04d7ba4abe80912ee7d323ec4d3757cba9dbfffc713083fd1cb",
       managementFee: "1",
-      founded: "Oct 7, 2022"
+      founded: "Oct 7, 2022",
     },
     {
       poolName: "name1",
@@ -1924,7 +1928,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
       poolOwner:
         "0x5ed9883e2cbf957dd7525357df0e51f592d4210ac9000f5554b355243efe0b03",
       managementFee: "3",
-      founded: "Oct 9, 2022"
+      founded: "Oct 9, 2022",
     },
     {
       poolName: "BestIndex",
@@ -1933,7 +1937,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
       poolOwner:
         "0x598f9b869e6879d7daf0efcfff9c60f78ff7e772e94887885fb743121843e117",
       managementFee: "1",
-      founded: "Oct 9, 2022"
+      founded: "Oct 9, 2022",
     },
     {
       poolName: "abc",
@@ -1942,7 +1946,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
       poolOwner:
         "0xb4793170e2a45111d813f39c3d746b9e77b5aab1b88c30047d759d9f351e1a26",
       managementFee: "10",
-      founded: "Oct 10, 2022"
+      founded: "Oct 10, 2022",
     },
     {
       poolName: "ab",
@@ -1951,8 +1955,8 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
       poolOwner:
         "0xb4793170e2a45111d813f39c3d746b9e77b5aab1b88c30047d759d9f351e1a26",
       managementFee: "1",
-      founded: "Oct 10, 2022"
-    }
+      founded: "Oct 10, 2022",
+    },
   ];
 
   const [visiblePortfolio, setVisiblePortfolio] = useState(false);
@@ -2002,7 +2006,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
     managementFeeMin,
     managementFeeMax,
     foundedMin,
-    foundedMax
+    foundedMax,
   ]);
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [indexAllocationModalVisible, setIndexAllocationModalVisible] =
@@ -2010,12 +2014,12 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
   const [allocationData, setAllocationData] = useState<IndexAllocation[]>([
     {
       name: "BTC",
-      value: 50
+      value: 50,
     },
     {
       name: "USDT",
-      value: 50
-    }
+      value: 50,
+    },
   ]);
 
   return (
@@ -2280,7 +2284,7 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
                             onClick={() => {
                               setProfile({
                                 username: miraIndex.poolName,
-                                owner: miraIndex.poolOwner
+                                owner: miraIndex.poolOwner,
                               });
                               setVisibleProfile(true);
                             }}
@@ -2610,7 +2614,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
         indexList: data?.index_list,
         amount: data?.amount,
         gasPool: data?.gas_pool,
-        settings: data?.settings
+        settings: data?.settings,
       };
 
       setMyPoolInfo(pool_info);
@@ -2619,7 +2623,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
       for (let i = 0; i < pool_info.indexAllocation.length; i++) {
         allocation.push({
           name: pool_info.indexList[i],
-          value: pool_info.indexAllocation[i] * 1
+          value: pool_info.indexAllocation[i] * 1,
         });
       }
 
@@ -2644,7 +2648,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
     "#527da7",
     "#d4901c",
     "#3d6595",
-    "#345882"
+    "#345882",
   ];
 
   const request_friend = async () => {
@@ -2662,7 +2666,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
     midAngle,
     innerRadius,
     outerRadius,
-    percent
+    percent,
   }: any) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.45;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -2686,7 +2690,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
     backgroundColor: "lightgrey",
     color: "black",
     padding: "2px 15px",
-    fontSize: "12px"
+    fontSize: "12px",
   };
 
   const CustomizedTooltip = React.memo((props: any) => {
@@ -2719,7 +2723,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
           fontSize: "12px",
           float: "right",
           textAlign: "right",
-          fill: "#fff"
+          fill: "#fff",
         }}
         x={x - 24}
         y={y}
@@ -2739,7 +2743,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
             padding: "12px",
             background: "#222129",
             color: "#ffffff",
-            fontSize: "12px"
+            fontSize: "12px",
           }}
         >
           <div>Value: {props.payload[0].payload.value}</div>
@@ -2754,7 +2758,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
     customizedTick: CustomizedTick2,
     tickFormatter: null,
     renderTooltip: renderTooltip,
-    uniqueId: 2
+    uniqueId: 2,
   };
 
   useEffect(() => {
@@ -2783,7 +2787,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
       }
       arrTmp.push({
         month: m,
-        value: 100 + Math.floor(Math.random() * (500 - 100))
+        value: 100 + Math.floor(Math.random() * (500 - 100)),
       });
     }
     setChartData(arrTmp);
@@ -2795,6 +2799,7 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
         visible={allocVisible}
         setVisible={setAllocVisible}
         zIndex={"1004"}
+        minWidth={"auto"}
       >
         <IndexAllocationModalBody
           flex={1}
@@ -3106,7 +3111,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
   setVisibleWithdraw,
   poolInfo,
   depositAmnt,
-  accountBalance
+  accountBalance,
 }) => {
   const { walletConnected, openConnectModal, signAndSubmitTransaction } =
     useWalletHook();
@@ -3157,7 +3162,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
         type: "entry_function_payload",
         function: `${MODULE_ADDR}::mira::add_to_gas_pool`,
         type_arguments: [],
-        arguments: [poolInfo.poolName, amnt]
+        arguments: [poolInfo.poolName, amnt],
       };
       const result = await signAndSubmitTransaction(transaction);
     } catch (error) {
@@ -3176,7 +3181,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
         type: "entry_function_payload",
         function: `${MODULE_ADDR}::mira::withdraw_from_gas_pool`,
         type_arguments: [],
-        arguments: [poolInfo.poolName, amnt]
+        arguments: [poolInfo.poolName, amnt],
       };
       const result = await signAndSubmitTransaction(transaction);
     } catch (error) {
@@ -3393,7 +3398,7 @@ type BuySellSectionProps = {
 export const BuySellSection: React.FC<BuySellSectionProps> = ({
   miraInfo,
   depositAmnt,
-  accountBalance
+  accountBalance,
 }) => {
   const { walletConnected, openConnectModal, signAndSubmitTransaction } =
     useWalletHook();
@@ -3425,7 +3430,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
         type: "entry_function_payload",
         function: `${MODULE_ADDR}::mira::invest`,
         type_arguments: [],
-        arguments: [miraInfo.poolName, miraInfo.poolOwner, amnt]
+        arguments: [miraInfo.poolName, miraInfo.poolOwner, amnt],
       };
       const result = await signAndSubmitTransaction(transaction);
     } catch (error) {
@@ -3444,7 +3449,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
         type: "entry_function_payload",
         function: `${MODULE_ADDR}::mira::withdraw`,
         type_arguments: [],
-        arguments: [miraInfo.poolName, miraInfo.poolOwner, amnt]
+        arguments: [miraInfo.poolName, miraInfo.poolOwner, amnt],
       };
       const result = await signAndSubmitTransaction(transaction);
     } catch (error) {

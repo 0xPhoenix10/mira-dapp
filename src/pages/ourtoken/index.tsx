@@ -7,7 +7,7 @@ import { PortfolioModalBody } from "../dashboard/portfolio.modal.body";
 import { useWalletHook } from "common/hooks/wallet";
 import { ModalParent } from "components/modal";
 import { ProfileModalBody } from "../otherprofile";
-import { IndexAllocation } from '../../utils/types'
+import { IndexAllocation } from "../../utils/types";
 import "./ourtoken.css";
 import { styled } from "@mui/material/styles";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
@@ -16,40 +16,40 @@ import MuiAccordionSummary, {
   AccordionSummaryProps,
 } from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
-import { AptosClient } from 'aptos'
-import { MODULE_ADDR, NODE_URL } from 'config'
-import { getFormatedDate, getStringFee } from '../../utils'
+import { AptosClient } from "aptos";
+import { MODULE_ADDR, NODE_URL } from "config";
+import { getFormatedDate, getStringFee } from "../../utils";
 
 interface MiraPoolSettings {
-  management_fee: number
-  rebalancing_period: number
-  minimum_contribution: number
-  minimum_withdrawal_period: number
-  referral_reward: number
-  privacy_allocation: number
+  management_fee: number;
+  rebalancing_period: number;
+  minimum_contribution: number;
+  minimum_withdrawal_period: number;
+  referral_reward: number;
+  privacy_allocation: number;
 }
 
 interface MiraIndex {
-  poolName: string
-  poolAddress: string
-  poolOwner: string
-  managementFee: string
-  founded: string
-  ownerName: string
-  rebalancingGas: number
-  indexAllocation: Array<IndexAllocation>
-  amount: number
-  gasPool: number
-  settings: MiraPoolSettings
+  poolName: string;
+  poolAddress: string;
+  poolOwner: string;
+  managementFee: string;
+  founded: string;
+  ownerName: string;
+  rebalancingGas: number;
+  indexAllocation: Array<IndexAllocation>;
+  amount: number;
+  gasPool: number;
+  settings: MiraPoolSettings;
 }
 
 interface CreatePoolEvent {
-  pool_name: string
-  pool_address: string
-  pool_owner: string
-  privacy_allocation: number
-  management_fee: number
-  founded: number
+  pool_name: string;
+  pool_address: string;
+  pool_owner: string;
+  privacy_allocation: number;
+  management_fee: number;
+  founded: number;
 }
 
 const Accordion = styled((props: AccordionProps) => (
@@ -62,9 +62,7 @@ const Accordion = styled((props: AccordionProps) => (
 }));
 
 const AccordionSummary = styled((props: AccordionSummaryProps) => (
-  <MuiAccordionSummary
-    {...props}
-  />
+  <MuiAccordionSummary {...props} />
 ))(({ theme }) => ({
   backgroundColor: "transparent",
   flexDirection: "row-reverse",
@@ -82,22 +80,22 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 const OurTokenPage: React.FC = () => {
-  const { walletAddress } = useWalletHook()
   const [showPortfolio, setPortfolioModal] = useState<boolean>(false);
   const [profile, setProfile] = useState({});
   const [profileModalVisible, setProfileModalVisible] = useState(false);
 
   const [expanded, setExpanded] = React.useState<string | false>("panel1");
-  const [miraIndexes, setMiraIndexes] = useState<MiraIndex[]>([])
+
+  const [miraIndexes, setMiraIndexes] = useState<MiraIndex[]>([]);
+  const [miraMyIndexLoading, setMiraMyIndexLoading] = useState(false);
+
   const [selectIndexInfo, setSelectIndexInfo] = useState<MiraIndex | null>(
     null
   );
-  
+
   useEffect(() => {
-    if (walletAddress) {
-      fetchMiraIndexes()
-    }
-  }, [walletAddress])
+    fetchMiraIndexes();
+  }, []);
 
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -105,51 +103,51 @@ const OurTokenPage: React.FC = () => {
     };
 
   const fetchMiraIndexes = async () => {
-    const client = new AptosClient(NODE_URL)
-
+    const client = new AptosClient(NODE_URL);
+    setMiraMyIndexLoading(true);
     try {
       let events = await client.getEventsByEventHandle(
         MODULE_ADDR,
         `${MODULE_ADDR}::mira::MiraStatus`,
-        'create_pool_events',
-        { limit: 1000 },
-      )
+        "create_pool_events",
+        { limit: 1000 }
+      );
 
-      let create_pool_events: MiraIndex[] = []
+      let create_pool_events: MiraIndex[] = [];
       for (let ev of events) {
-        let e: CreatePoolEvent = ev.data
-        if (MODULE_ADDR !== e.pool_owner) continue
+        let e: CreatePoolEvent = ev.data;
+        if (MODULE_ADDR !== e.pool_owner) continue;
 
         let resource = await client.getAccountResource(
           e.pool_owner,
           `${MODULE_ADDR}::mira::MiraAccount`
         );
-        
+
         let resource_data = resource?.data as {
-          account_name: string
-        }
+          account_name: string;
+        };
 
         try {
           let res = await client.getAccountResource(
             e.pool_address,
-            `${MODULE_ADDR}::mira::MiraPool`,
-          )
-          
-          const data = res?.data as {
-            amount: number
-            gas_pool: number
-            index_allocation: Array<number>
-            index_list: Array<string>
-            rebalancing_gas: number
-            settings: MiraPoolSettings
-          }
+            `${MODULE_ADDR}::mira::MiraPool`
+          );
 
-          let allocation: IndexAllocation[] = []
+          const data = res?.data as {
+            amount: number;
+            gas_pool: number;
+            index_allocation: Array<number>;
+            index_list: Array<string>;
+            rebalancing_gas: number;
+            settings: MiraPoolSettings;
+          };
+
+          let allocation: IndexAllocation[] = [];
           for (let i = 0; i < data?.index_allocation.length; i++) {
             allocation.push({
               name: data?.index_list[i],
               value: data?.index_allocation[i] * 1,
-            })
+            });
           }
 
           create_pool_events.push({
@@ -163,24 +161,24 @@ const OurTokenPage: React.FC = () => {
             indexAllocation: allocation,
             amount: data?.amount,
             gasPool: data?.gas_pool,
-            settings: data?.settings
-          })
+            settings: data?.settings,
+          });
         } catch (error) {
-          console.log('get mira pools error', error)
+          console.log("get mira pools error", error);
         }
       }
-      setMiraIndexes(create_pool_events)
+      setMiraIndexes(create_pool_events);
     } catch (error) {
-      console.log('set mira indexes error', error)
+      console.log("set mira indexes error", error);
     }
-  }
+    setMiraMyIndexLoading(false);
+  };
 
   return (
     <>
       <Box width={"100%"}>
         <Box>
-          <Flex py={"20px"}
-            px={"32px"}>
+          <Flex py={"20px"} px={"32px"}>
             <Flex
               fontFamily={"art"}
               fontSize={"24px"}
@@ -220,7 +218,9 @@ const OurTokenPage: React.FC = () => {
                   spaceBetween
                 >
                   Broad Crypto
-                  <ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem", color: "#fff" }} />
+                  <ArrowForwardIosSharpIcon
+                    sx={{ fontSize: "0.9rem", color: "#fff" }}
+                  />
                 </Flex>
               </AccordionSummary>
               <AccordionDetails>
@@ -234,39 +234,39 @@ const OurTokenPage: React.FC = () => {
                   gridGap={"18px"}
                   width={"100%"}
                 >
-                  {miraIndexes.length > 0 ? (
+                  {miraMyIndexLoading || miraIndexes.length == 0 ? (
+                    <BlankCard
+                      flex={1}
+                      maxWidth={"70%"}
+                      minHeight={"245px"}
+                      type={miraMyIndexLoading ? "loading" : "index"}
+                    />
+                  ) : (
                     miraIndexes.map((item, index) => {
                       return (
                         <ChartBox
                           key={index}
                           flex={1}
-                          width={'100%'}
+                          width={"100%"}
                           title={item.poolName}
                           owner={item.ownerName}
                           indexAllocation={item.indexAllocation}
-                          cursor={'pointer'}
+                          cursor={"pointer"}
                           onClickPieChart={() => {
-                            setPortfolioModal(true)
-                            setSelectIndexInfo(item)
+                            setPortfolioModal(true);
+                            setSelectIndexInfo(item);
                           }}
                           onClickTitle={() => {
                             setProfile({
                               username: item.poolName,
                               owner: item.ownerName,
-                              owner_address: item.poolOwner
-                            })
-                            setProfileModalVisible(true)
+                              owner_address: item.poolOwner,
+                            });
+                            setProfileModalVisible(true);
                           }}
                         />
-                      )
-                    }
-                  )) : (
-                    <BlankCard
-                      flex={1}
-                      maxWidth={'70%'}
-                      minHeight={'245px'}
-                      type={'index'}
-                    />
+                      );
+                    })
                   )}
                 </Box>
               </AccordionDetails>
@@ -290,11 +290,13 @@ const OurTokenPage: React.FC = () => {
                   spaceBetween
                 >
                   Aptos
-                  <ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem", color: "#fff" }} />
+                  <ArrowForwardIosSharpIcon
+                    sx={{ fontSize: "0.9rem", color: "#fff" }}
+                  />
                 </Flex>
               </AccordionSummary>
               <AccordionDetails>
-              <Box
+                <Box
                   py={"20px"}
                   px={"32px"}
                   display={"grid"}
@@ -304,39 +306,39 @@ const OurTokenPage: React.FC = () => {
                   gridGap={"18px"}
                   width={"100%"}
                 >
-                  {miraIndexes.length > 0 ? (
+                  {miraMyIndexLoading || miraIndexes.length == 0 ? (
+                    <BlankCard
+                      flex={1}
+                      maxWidth={"70%"}
+                      minHeight={"245px"}
+                      type={miraMyIndexLoading ? "loading" : "index"}
+                    />
+                  ) : (
                     miraIndexes.map((item, index) => {
                       return (
                         <ChartBox
                           key={index}
                           flex={1}
-                          width={'100%'}
+                          width={"100%"}
                           title={item.poolName}
                           owner={item.ownerName}
                           indexAllocation={item.indexAllocation}
-                          cursor={'pointer'}
+                          cursor={"pointer"}
                           onClickPieChart={() => {
-                            setPortfolioModal(true)
-                            setSelectIndexInfo(item)
+                            setPortfolioModal(true);
+                            setSelectIndexInfo(item);
                           }}
                           onClickTitle={() => {
                             setProfile({
                               username: item.poolName,
                               owner: item.ownerName,
-                              owner_address: item.poolOwner
-                            })
-                            setProfileModalVisible(true)
+                              owner_address: item.poolOwner,
+                            });
+                            setProfileModalVisible(true);
                           }}
                         />
-                      )
-                    }
-                  )) : (
-                    <BlankCard
-                      flex={1}
-                      maxWidth={'70%'}
-                      minHeight={'245px'}
-                      type={'index'}
-                    />
+                      );
+                    })
                   )}
                 </Box>
               </AccordionDetails>
@@ -360,11 +362,13 @@ const OurTokenPage: React.FC = () => {
                   spaceBetween
                 >
                   Sui
-                  <ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem", color: "#fff" }} />
+                  <ArrowForwardIosSharpIcon
+                    sx={{ fontSize: "0.9rem", color: "#fff" }}
+                  />
                 </Flex>
               </AccordionSummary>
               <AccordionDetails>
-              <Box
+                <Box
                   py={"20px"}
                   px={"32px"}
                   display={"grid"}
@@ -374,39 +378,39 @@ const OurTokenPage: React.FC = () => {
                   gridGap={"18px"}
                   width={"100%"}
                 >
-                  {miraIndexes.length > 0 ? (
+                  {miraMyIndexLoading || miraIndexes.length == 0 ? (
+                    <BlankCard
+                      flex={1}
+                      maxWidth={"70%"}
+                      minHeight={"245px"}
+                      type={miraMyIndexLoading ? "loading" : "index"}
+                    />
+                  ) : (
                     miraIndexes.map((item, index) => {
                       return (
                         <ChartBox
                           key={index}
                           flex={1}
-                          width={'100%'}
+                          width={"100%"}
                           title={item.poolName}
                           owner={item.ownerName}
                           indexAllocation={item.indexAllocation}
-                          cursor={'pointer'}
+                          cursor={"pointer"}
                           onClickPieChart={() => {
-                            setPortfolioModal(true)
-                            setSelectIndexInfo(item)
+                            setPortfolioModal(true);
+                            setSelectIndexInfo(item);
                           }}
                           onClickTitle={() => {
                             setProfile({
                               username: item.poolName,
                               owner: item.ownerName,
-                              owner_address: item.poolOwner
-                            })
-                            setProfileModalVisible(true)
+                              owner_address: item.poolOwner,
+                            });
+                            setProfileModalVisible(true);
                           }}
                         />
-                      )
-                    }
-                  )) : (
-                    <BlankCard
-                      flex={1}
-                      maxWidth={'70%'}
-                      minHeight={'245px'}
-                      type={'index'}
-                    />
+                      );
+                    })
                   )}
                 </Box>
               </AccordionDetails>
