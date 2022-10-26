@@ -7,6 +7,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 body {
   user-select: none;
+  background: #27282c;
 }
 #root {
   background: #27282c;
