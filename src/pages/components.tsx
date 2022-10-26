@@ -1691,136 +1691,10 @@ export const UpdateModalBody: React.FC<{ [index: string]: any }> = ({
 
 export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
   title = "???",
+  indexList = [],
   ...props
 }) => {
-  const miraIndexes = [
-    {
-      poolName: "ha",
-      poolAddress:
-        "0xecc36a4b515e44347d40333db3b8aab14971a65e41819159e1ad9182f6006c41",
-      poolOwner:
-        "0xb7273e97383c1c0d77c548b6d7ab903748c6a7fd8406ca8e3d6560294e9c8102",
-      managementFee: "1",
-      founded: "Sep 30, 2022",
-    },
-    {
-      poolName: "10",
-      poolAddress:
-        "0xe28c78edbc8ee93447f488618aab75e60767f05655fec16736d17ec8e9373b08",
-      poolOwner:
-        "0xa464f9110ebd5fb70bb56f16b9d863de6221c221c40c7d2ff147fd20e4af5d46",
-      managementFee: "10",
-      founded: "Oct 3, 2022",
-    },
-    {
-      poolName: "testttt",
-      poolAddress:
-        "0xe3cf662714c1524d0ed2f61e2e903508878fd9e418532814cd196eb28a7a44be",
-      poolOwner:
-        "0xb7273e97383c1c0d77c548b6d7ab903748c6a7fd8406ca8e3d6560294e9c8102",
-      managementFee: "1",
-      founded: "Oct 3, 2022",
-    },
-    {
-      poolName: "abcd",
-      poolAddress:
-        "0x78e1616a36923d36b9c0a5d8a41c51302fe45bd2a6bdbfb1a6f24d78385e8715",
-      poolOwner:
-        "0xb4793170e2a45111d813f39c3d746b9e77b5aab1b88c30047d759d9f351e1a26",
-      managementFee: "1",
-      founded: "Oct 3, 2022",
-    },
-    {
-      poolName: "newtest",
-      poolAddress:
-        "0xc8ff8558f31b7406af670e6117befabfd3473945f4a7c8a9e1652f1e1f51e196",
-      poolOwner:
-        "0xb4793170e2a45111d813f39c3d746b9e77b5aab1b88c30047d759d9f351e1a26",
-      managementFee: "1",
-      founded: "Oct 3, 2022",
-    },
-    {
-      poolName: "a",
-      poolAddress:
-        "0xc295f421b4c792144e569c389137d861e3cad0459256286696cd375771aef4b9",
-      poolOwner:
-        "0xc4603e82c3cf11b69c127b77252d874687e9f8e45094be73343f18b35d91f26e",
-      managementFee: "5",
-      founded: "Oct 4, 2022",
-    },
-    {
-      poolName: "test2",
-      poolAddress:
-        "0x3c1d1c2cae08702ed7b099fe6086da87353f932ae86399f4802b7a9dd1a6552e",
-      poolOwner:
-        "0xb4793170e2a45111d813f39c3d746b9e77b5aab1b88c30047d759d9f351e1a26",
-      managementFee: "0",
-      founded: "Oct 5, 2022",
-    },
-    {
-      poolName: "mira-test-1",
-      poolAddress:
-        "0xd59fba7334a7e79bba413ca4fa19264e24f90a2c0c2b5dbe179e8014215f50f8",
-      poolOwner:
-        "0xb5424c1606664d839e855aee375aaa0becbcdf908f374b09616b7f3df1b5f4d0",
-      managementFee: "1",
-      founded: "Oct 7, 2022",
-    },
-    {
-      poolName: "son",
-      poolAddress:
-        "0x3033e5036f7d68cf22abfc8ba4aa5ff2d53edfafefd1116d9f35e039f6eb376a",
-      poolOwner:
-        "0x1956d5ee9a7a0e9679ba9fd797f6846e0a7766d71ba8a8fdbb3fb6251d0f2dc7",
-      managementFee: "1",
-      founded: "Oct 7, 2022",
-    },
-    {
-      poolName: "test1",
-      poolAddress:
-        "0x9df806e12d20fc0afc6bcd9b455cb0b4b6bfab1a4137517f9367d6cd75973d46",
-      poolOwner:
-        "0x405bdfc954f3e04d7ba4abe80912ee7d323ec4d3757cba9dbfffc713083fd1cb",
-      managementFee: "1",
-      founded: "Oct 7, 2022",
-    },
-    {
-      poolName: "name1",
-      poolAddress:
-        "0xf008e478616d5550ed814d487868545342e5cf40028fdfa2ac89d52c4ddbe764",
-      poolOwner:
-        "0x5ed9883e2cbf957dd7525357df0e51f592d4210ac9000f5554b355243efe0b03",
-      managementFee: "3",
-      founded: "Oct 9, 2022",
-    },
-    {
-      poolName: "BestIndex",
-      poolAddress:
-        "0x33118fea32ff8a208eb704ff5d85b449ed239b1a848ffee57c477d3709e5c32",
-      poolOwner:
-        "0x598f9b869e6879d7daf0efcfff9c60f78ff7e772e94887885fb743121843e117",
-      managementFee: "1",
-      founded: "Oct 9, 2022",
-    },
-    {
-      poolName: "abc",
-      poolAddress:
-        "0xbea557fa971d797e122f7e253f235dc42a3af0a0d1d99829a07ffba3e68199c4",
-      poolOwner:
-        "0xb4793170e2a45111d813f39c3d746b9e77b5aab1b88c30047d759d9f351e1a26",
-      managementFee: "10",
-      founded: "Oct 10, 2022",
-    },
-    {
-      poolName: "ab",
-      poolAddress:
-        "0x2b652d569785137b5a1851d4c72b67ec2dc50ccefc7ddb23037113569811a302",
-      poolOwner:
-        "0xb4793170e2a45111d813f39c3d746b9e77b5aab1b88c30047d759d9f351e1a26",
-      managementFee: "1",
-      founded: "Oct 10, 2022",
-    },
-  ];
+  const miraIndexes = indexList;
 
   const [visiblePortfolio, setVisiblePortfolio] = useState(false);
   const [visibleProfile, setVisibleProfile] = useState(false);
@@ -2033,6 +1907,17 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
                   </Th>
                   <Th>
                     <SortBtn
+                      value={"portfolioManager"}
+                      sortDir={sortDir}
+                      setSortValue={setSortValue}
+                      sortValue={sortValue}
+                      setSortDir={setSortDir}
+                    >
+                      Manager
+                    </SortBtn>
+                  </Th>
+                  <Th>
+                    <SortBtn
                       value={"-"}
                       sortDir={sortDir}
                       setSortValue={setSortValue}
@@ -2147,7 +2032,8 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
                             onClick={() => {
                               setProfile({
                                 username: miraIndex.poolName,
-                                owner: miraIndex.poolOwner,
+                                owner: miraIndex.ownerName,
+                                owner_address: miraIndex.poolOwner
                               });
                               setVisibleProfile(true);
                             }}
@@ -2163,6 +2049,17 @@ export const IndexListModalBody: React.FC<{ [index: string]: any }> = ({
                             {miraIndex.poolName}
                           </Flex>
                         </Td>
+                        <Td 
+                          cursor={"pointer"}
+                          onClick={() => {
+                            setProfile({
+                              username: miraIndex.poolName,
+                              owner: miraIndex.ownerName,
+                              owner_address: miraIndex.poolOwner
+                            })
+                            setVisibleProfile(true)
+                          }}
+                        >{miraIndex.ownerName}</Td>
                         <Td
                           cursor={"pointer"}
                           onClick={() => {

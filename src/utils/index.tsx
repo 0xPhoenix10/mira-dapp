@@ -21,7 +21,7 @@ export const getStringFee = (fee: number): string => {
 };
 
 export const getRandomizeString = (length): string => {
-  let result = "";
+  let result = "user_";
   let characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let charactersLength = characters.length;

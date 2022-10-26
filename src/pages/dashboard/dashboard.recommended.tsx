@@ -227,6 +227,8 @@ const DashboardRecommended = () => {
         let e: DepositPoolEvent = ev.data;
         if (walletAddress !== e.investor) continue;
 
+        const isExist = deposit_pool_events.some((item) => e.pool_address === item.poolAddress);
+        
         try {
           let res = await client.getAccountResource(
             e.pool_address,
@@ -259,23 +261,28 @@ const DashboardRecommended = () => {
           let resource_data = resource?.data as {
             account_name: string;
           };
-
-          deposit_pool_events.push({
-            poolName: e.pool_name,
-            investor: e.investor,
-            poolAddress: e.pool_address,
-            poolOwner: data?.manager_addr,
-            amount: e.amount,
-            ownerName: resource_data.account_name,
-            rebalancingGas: data?.rebalancing_gas,
-            indexAllocation: allocation,
-            gasPool: data?.gas_pool,
-            settings: data?.settings,
-          });
+          if(isExist) {
+            const index = deposit_pool_events.findIndex(x => x.poolAddress === e.pool_address);
+            deposit_pool_events[index].amount = deposit_pool_events[index].amount * 1 + e.amount * 1;
+          } else {
+            deposit_pool_events.push({
+              poolName: e.pool_name,
+              investor: e.investor,
+              poolAddress: e.pool_address,
+              poolOwner: data?.manager_addr,
+              amount: e.amount,
+              ownerName: resource_data.account_name,
+              rebalancingGas: data?.rebalancing_gas,
+              indexAllocation: allocation,
+              gasPool: data?.gas_pool,
+              settings: data?.settings,
+            });
+          }
         } catch (error) {
           console.log("get mira pools error", error);
         }
       }
+
       setMiraMyInvests(deposit_pool_events);
     } catch (error) {
       console.log("set mira invests error", error);
@@ -291,7 +298,7 @@ const DashboardRecommended = () => {
         MODULE_ADDR,
         `${MODULE_ADDR}::mira::MiraStatus`,
         "create_pool_events",
-        { limit: 3 }
+        { limit: 1000 }
       );
       let create_pool_events: MiraIndex[] = [];
       for (let ev of events) {
@@ -450,7 +457,7 @@ const DashboardRecommended = () => {
           visible={recommendedModalVisible}
           setVisible={setRecommendedModalVisible}
         >
-          <IndexListModalBody flex={1} title={"Recommended"} />
+          <IndexListModalBody flex={1} title={"Recommended"} indexList={recommendedIndexes} />
         </ModalParent>
       }
       {
@@ -458,7 +465,7 @@ const DashboardRecommended = () => {
           visible={myIndexesModalVisible}
           setVisible={setMyIndexesModalVisible}
         >
-          <IndexListModalBody flex={1} type={"create"} title={"My Indexes"} />
+          <IndexListModalBody flex={1} type={"create"} title={"My Indexes"} indexList={isInvest ? miraMyInvests : miraMyIndexes} />
         </ModalParent>
       }
       {
@@ -547,7 +554,7 @@ const DashboardRecommended = () => {
                   carouselStop
                 }
               >
-                {recommendedIndexes.map((item, index) => {
+                {recommendedIndexes.slice(0, 3).map((item, index) => {
                   return (
                     <ChartBox
                       key={index}
