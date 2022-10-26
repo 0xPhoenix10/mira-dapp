@@ -2530,6 +2530,8 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
     innerRadius,
     outerRadius,
     percent,
+    value,
+    name
   }: any) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.45;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -2544,7 +2546,8 @@ export const ModifyModalBody: React.FC<{ [index: string]: any }> = ({
         textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
       >
-        {`${(percent * 100).toFixed(0)}%`}
+        {/* {`${(percent * 100).toFixed(0)}%`} */}
+        {name}
       </text>
     );
   };
@@ -3181,7 +3184,7 @@ const UpdateSection: React.FC<UpdateSectionProps> = ({
                 onChange={txtAmountChange}
               />
             </Flex>
-            <Flex>{amount}</Flex>
+            <Flex>{`$${Number(amount) * 9.66}`}</Flex>
           </Flex>
           <Flex bg={"#302d38"} borderRadius={"8px"}>
             <CustomSelect>
@@ -3430,7 +3433,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
                 onChange={txtAmountChange}
               />
             </Flex>
-            <Flex>{amount}</Flex>
+            <Flex>{`$${Number(amount) * 9.66}`}</Flex>
           </Flex>
           <Flex bg={"#302d38"} borderRadius={"8px"}>
             <CustomSelect>
