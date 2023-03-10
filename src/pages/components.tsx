@@ -487,7 +487,7 @@ export const IndexModalBody: React.FC<IndexModalBodyProps> = ({
       type_arguments: [],
     };
     const result = await signAndSubmitTransaction(transaction);
-
+    
     if (result) {
       setVisible(false);
     }
